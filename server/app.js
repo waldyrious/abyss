@@ -14,7 +14,7 @@ app.use(session({
 app.use(bodyParser.json());
 
 function updateDao(req) {
-  if (req.session.phoneNumber && req.session.subscriptionId) {
+  if (req.session.phonenumber && req.session.subscriptionId) {
     dao.addPhoneToSubId(req.session.phoneNumber, req.session.subscriptionId)
   }
 }
