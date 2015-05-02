@@ -11,7 +11,7 @@ var compression = require('compression')
 app.use(compression())
 
 app.use(session({
-  keys: ['bro', 'brah'],
+  keys: [fs.readFileSync('secret/cookie1', 'utf8'), fs.readFileSync('secret/cookie2', 'utf8')],
   signed: true,
   maxAge: 9999999000000
 }));
