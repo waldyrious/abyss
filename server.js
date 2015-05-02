@@ -71,11 +71,6 @@ app.get('/api/registration/phone', function (req, res) {
     }
 });
 
-app.use('/', function (req, res, next) {
-  req.session.poop = 'pee'
-  next()
-})
-
 app.use(express.static('client'));
 
 
