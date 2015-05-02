@@ -2,7 +2,10 @@ var express = require('express')
 var app = express();
 var bodyParser = require('body-parser')
 var session = require('cookie-session');
-var dao = require('./server/dao')
+var dao = require('./lib/dao')
+var fs = require('fs')
+var http =require('http')
+var https = require('https')
 
 app.use(session({
   keys: ['asdf', 'bsdf'],
@@ -75,8 +78,14 @@ app.use('/', function (req, res, next) {
 
 app.use(express.static('client'));
 
-var server = app.listen(3000, function () {
-  var host = server.address().address;
-  var port = server.address().port;
-  console.log('Example app listening at http://%s:%s', host, port);
-});
+
+var privateKey  = fs.readFileSync('secret/yobro_net.key', 'utf8');
+var certificate = fs.readFileSync('secret/yobro_net.crt', 'utf8');
+
+var credentials = {key: privateKey, cert: certificate};
+
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(80);
+httpsServer.listen(443);
