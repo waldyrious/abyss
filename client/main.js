@@ -20,13 +20,12 @@ Bro.controller = function () {
     .then(self.phonenumberapi)
   }
 
-  self.whoami()
-
   this.loginClick = function () {
     console.log(self.phonenumber())
     m.request({method: 'POST', url: '/api/registration/phone', data: { phonenumber: self.phonenumber() } })
     .then(function (response) {
       self.phonenumberapi(response)
+      self.getBros()
     })
   }
 
@@ -41,6 +40,9 @@ Bro.controller = function () {
   this.getBros = function () {
     m.request({method: 'GET', url: '/api/bro'}).then(self.bros)
   }
+  
+  self.whoami()
+  self.getBros()
 }
 Bro.view = function (ctrl) {
   return [
