@@ -1,6 +1,9 @@
 var dao = require('./dao')
 var Promise = require('bluebird')
 var request = Promise.promisify(require('request'))
+var fs = require('fs')
+
+var gcmapikey = fs.readFileSync('secret/gcmapikey', {encoding:'utf8'})
 
 module.exports = function (phonenumber) {
   var ids = dao.getSubIds(phonenumber)
@@ -10,7 +13,7 @@ module.exports = function (phonenumber) {
     uri: 'https://android.googleapis.com/gcm/send',
     method: 'POST',
     headers: {
-      "Authorization": "key=AIzaSyB53BYAtVgei9UAO2SMYGNAzBTzavzrN0k",
+      "Authorization": "key=" + gcmapikey,
       "Content-Type": "application/json"
     },
     json: true,
