@@ -79,8 +79,8 @@ app.use('/', function (req, res, next) {
 app.use(express.static('client'));
 
 
-var privateKey  = fs.readFileSync('secret/yobro_net.key', 'utf8');
-var certificate = fs.readFileSync('secret/yobro_net.crt', 'utf8');
+var privateKey  = fs.readFileSync('secret/server.key', 'utf8');
+var certificate = fs.readFileSync('secret/server.crt', 'utf8');
 
 var credentials = {key: privateKey, cert: certificate};
 
