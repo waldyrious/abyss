@@ -1,5 +1,6 @@
 var _ = require('lodash')
 var phoneToSub = {};
+var msgs = {};
 
 exports.addPhoneToSubId = function (ph, id) {
 	if (!phoneToSub[ph]) {
@@ -13,4 +14,21 @@ exports.addPhoneToSubId = function (ph, id) {
 
 exports.getSubIds = function (ph) {
 	return phoneToSub[ph]
+}
+
+exports.sendBro = function (from, to, text) {
+	if (!msgs[to]) msgs[to] = [];
+	msgs[to].push({
+		from: from,
+		text: text
+	})
+}
+
+exports.getBros = function (ph) {
+	// return msgs[ph];
+	return [{
+		from: 'brodette',
+		to: 'brah',
+		text: 'beer bro!'
+	}]
 }

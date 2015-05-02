@@ -26,6 +26,12 @@ app.post('/api/bro', function (req, res) {
   res.status(200).json("bro'd!")
 })
 
+app.get('/api/bro', function (req, res) {
+  var ph = req.session.phonenumber
+  res.status(200).json(dao.getBros(ph))
+})
+
+
 app.post('/api/registration/subscription', function (req, res) {
     if (req.body.subscriptionId) {
       req.session.subscriptionId = req.body.subscriptionId
