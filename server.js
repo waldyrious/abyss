@@ -2,7 +2,7 @@ var express = require('express')
 var app = express();
 var bodyParser = require('body-parser')
 var session = require('cookie-session');
-var dao = require('./dao')
+var dao = require('./server/dao')
 
 app.use(session({
   keys: ['asdf', 'bsdf'],
