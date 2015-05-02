@@ -1,3 +1,5 @@
+'use strict';
+
 var m = require('mithril')
 var moment = require('moment')
 var regsw = require('./regsw')
@@ -9,12 +11,21 @@ Bro.controller = function () {
   this.noauth = m.prop(true)
   this.phonenumber = m.prop('')
   this.bros = m.prop([])
+  this.phonenumberapi = m.prop('')
+
+  this.whoami = function () {
+    m.request({url:'/api/registration/phone'})
+    .then(self.phonenumberapi)
+  }
+
+  self.whoami()
 
   this.loginClick = function () {
     console.log(self.phonenumber())
     m.request({method: 'POST', url: '/api/registration/phone', data: { phonenumber: self.phonenumber() } })
     .then(function (response) {
       self.noauth(false)
+      self.phonenumberapi(response)
     })
   }
 
@@ -33,6 +44,7 @@ Bro.view = function (ctrl) {
       m('input', {oninput: m.withAttr('value', ctrl.phonenumber) }),
       m('button', {onclick: ctrl.loginClick},'Login'),
     ]),
+    m('div', 'logged in as ' + ctrl.phonenumberapi()),
     m('button', {onclick: ctrl.broMe, disabled: ctrl.noauth() },'Bro Myself!'),
     m('button', {onclick: ctrl.getBros, disabled: ctrl.noauth() },'Get messages!'),
     m('div', ctrl.bros().map(function (bro) {

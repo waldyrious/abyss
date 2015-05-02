@@ -46,9 +46,20 @@ app.post('/api/registration/phone', function (req, res) {
     if (req.body.phonenumber) {
       req.session.phonenumber = req.body.phonenumber
       updateDao(req)
-      res.status(200).json('boop!')
+    }
+
+    if (req.session.phonenumber) {
+      res.status(200).json(req.session.phonenumber)
     } else {
-      res.status(500).json('brah!')
+      res.status(500).json('')
+    }
+});
+
+app.get('/api/registration/phone', function (req, res) {
+    if (req.session.phonenumber) {
+      res.status(200).json(req.session.phonenumber)
+    } else {
+      res.status(500).json('')
     }
 });
 
