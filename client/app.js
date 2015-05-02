@@ -14,6 +14,14 @@ if ('serviceWorker' in navigator) {
     registration.pushManager.subscribe()
     .then(function(subscription) {
         console.log(subscription);
+        fetch('/api/subscription', {
+          credentials: 'include',
+          method: 'post',
+          headers: {  
+            "Content-type": "application/json"  
+          },
+          body: JSON.stringify(subscription)  
+        })
      })
   }).catch(function(err) {
     // registration failed :(
