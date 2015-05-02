@@ -51,10 +51,10 @@ Bro.controller = function () {
 Bro.view = function (ctrl) {
   return [
     m('div', [
+      m('div', 'Logged in as: ' + ctrl.phonenumberapi()),
       m('label', 'Phone number'),
       m('input', {oninput: m.withAttr('value', ctrl.phonenumber) }),
       m('button', {onclick: ctrl.loginClick},'Login'),
-      m('span', 'logged in as ' + ctrl.phonenumberapi()),
     ]),
 
     m('br'),
@@ -62,14 +62,13 @@ Bro.view = function (ctrl) {
     m('div', [
       m('label', 'To: '), m('br'),
       m('input', {oninput: m.withAttr('value', ctrl.to) }),m('br'),
-      m('label', 'Msg: '),m('br'),
+      m('label', 'Message: '),m('br'),
       m('input', {oninput: m.withAttr('value', ctrl.message) }), m('br'),
       m('button', {onclick: ctrl.send, disabled: ctrl.noauth() }, 'Send Bro!'),
     ]),
   	m('br'),
-    m('button', {onclick: ctrl.broMe, disabled: ctrl.noauth() }, 'Bro Myself!'),
     m('button', {onclick: ctrl.getBros, disabled: ctrl.noauth() }, 'Get messages!'),
-    m('button', {onclick: ctrl.clearBros, disabled: ctrl.noauth() }, 'Clear messages!'),
+    m('button', {onclick: ctrl.clearBros, disabled: ctrl.noauth() }, 'Delete all messages!'),
     m('div', ctrl.bros().map(function (bro) {
       return [m('label', 'From: '), m('span', bro.from), m('br'),
       m('label', 'Date: '), m('span', moment(bro.date).fromNow()), m('br'),
