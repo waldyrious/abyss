@@ -2,9 +2,7 @@ var express = require('express')
 var app = express();
 var bodyParser = require('body-parser')
 var session = require('cookie-session');
-
 var dao = require('./dao')
-var notify = require('./notify')
 
 app.use(session({
   keys: ['asdf', 'bsdf'],
@@ -21,8 +19,10 @@ function updateDao(req) {
 }
 
 app.post('/api/bro', function (req, res) {
-  var ph = req.body.phonenumber
-  notify(ph)
+  var to = req.body.to
+  var text = req.body.text
+  var fro = req.session.phonenumber
+  dao.sendBro(fro, to, text)
   res.status(200).json("bro'd!")
 })
 

@@ -18,7 +18,7 @@ Bro.controller = function () {
   }
 
   this.broMe = function () {
-    m.request({method: 'POST', url: '/api/bro', data: { phonenumber: self.phonenumber() , message: 'sup!'} })
+    m.request({method: 'POST', url: '/api/bro', data: { to: self.phonenumber(), text: 'sup bro!'} })
   }
 
   this.getBros = function () {
