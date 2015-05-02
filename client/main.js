@@ -5,10 +5,14 @@ regsw()
 var Bro = {}
 Bro.controller = function () {
   var self = this
+  this.noauth = m.prop(true)
   this.phonenumber = m.prop('')
   this.loginClick = function () {
     console.log(self.phonenumber())
     m.request({method: 'POST', url: '/api/registration/phone', data: { phonenumber: self.phonenumber() } })
+    .then(function (response) {
+      self.noauth(false)
+    })
   }
 
   this.broMe = function () {
@@ -17,10 +21,12 @@ Bro.controller = function () {
 }
 Bro.view = function (ctrl) {
   return [
-    m('label', 'Phone number'),
-    m('input', {oninput: m.withAttr('value', ctrl.phonenumber) }),
-    m('button', {onclick: ctrl.loginClick},'Login'),
-    m('button', {onclick: ctrl.broMe},'Bro Myself!'),
+    m('div', [
+      m('label', 'Phone number'),
+      m('input', {oninput: m.withAttr('value', ctrl.phonenumber) }),
+      m('button', {onclick: ctrl.loginClick},'Login'),
+    ]),
+    m('button', {onclick: ctrl.broMe, disabled: ctrl.noauth() },'Bro Myself!'),
   ]
 }
 

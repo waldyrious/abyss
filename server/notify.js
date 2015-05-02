@@ -20,7 +20,7 @@ module.exports = function (phonenumber) {
   }
 
   return request(options)
-  .then(function (x) {
-    debugger
-  })
+  // .then(function (x) {
+  //   debugger
+  // })
 }
