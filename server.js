@@ -8,9 +8,9 @@ var http =require('http')
 var https = require('https')
 
 app.use(session({
-  keys: ['asdf', 'bsdf'],
+  keys: ['bro', 'brah'],
   signed: true,
-  overwrite: true
+  maxAge: 9999999000000
 }));
 
 app.use(bodyParser.json());
@@ -67,7 +67,7 @@ app.get('/api/registration/phone', function (req, res) {
     if (req.session.phonenumber) {
       res.status(200).json(req.session.phonenumber)
     } else {
-      res.status(500).json('')
+      res.status(200).json('')
     }
 });
 
@@ -79,8 +79,12 @@ var certificate = fs.readFileSync('secret/server.crt', 'utf8');
 
 var credentials = {key: privateKey, cert: certificate};
 
-var httpServer = http.createServer(app);
 var httpsServer = https.createServer(credentials, app);
-
-httpServer.listen(80);
 httpsServer.listen(443);
+
+
+var http = require('http');
+http.createServer(function (req, res) {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+}).listen(80);
