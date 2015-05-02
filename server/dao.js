@@ -35,3 +35,10 @@ exports.getBros = function (ph) {
 	else
 		return []
 }
+
+exports.deleteAllBros = function (ph) {
+	if (msgs[ph])
+		return msgs[ph] = []
+	else
+		return []
+}

@@ -31,6 +31,11 @@ app.get('/api/bro', function (req, res) {
   res.status(200).json(dao.getBros(ph))
 })
 
+app.delete('/api/bro', function (req, res) {
+  var ph = req.session.phonenumber
+  res.status(200).json(dao.deleteAllBros(ph))
+})
+
 
 app.post('/api/registration/subscription', function (req, res) {
     if (req.body.subscriptionId) {
