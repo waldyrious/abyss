@@ -1,0 +1,8 @@
+{  
+  "name": "yobro",  
+  "short_name": "yobro",  
+  "start_url": "/index.html",  
+  "display": "standalone",  
+  "gcm_sender_id": "618223955392",  
+  "gcm_user_visible_only": true  
+}
