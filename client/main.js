@@ -8,10 +8,10 @@ regsw()
 var Bro = {}
 Bro.controller = function () {
   var self = this
-  this.noauth = m.prop(true)
   this.phonenumber = m.prop('')
   this.bros = m.prop([])
   this.phonenumberapi = m.prop('')
+  this.noauth = function () { return self.phonenumberapi() == '' }
 
   this.whoami = function () {
     m.request({url:'/api/registration/phone'})
@@ -24,7 +24,6 @@ Bro.controller = function () {
     console.log(self.phonenumber())
     m.request({method: 'POST', url: '/api/registration/phone', data: { phonenumber: self.phonenumber() } })
     .then(function (response) {
-      self.noauth(false)
       self.phonenumberapi(response)
     })
   }
