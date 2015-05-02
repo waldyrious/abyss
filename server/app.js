@@ -1,6 +1,9 @@
-var app = require('express')();
+var express = require('express')
+var app = express();
 var bodyParser = require('body-parser')
 var session = require('cookie-session');
+
+var dao = require('./dao')
 
 app.use(session({
   keys: ['asdf', 'bsdf'],
@@ -10,11 +13,31 @@ app.use(session({
 
 app.use(bodyParser.json());
 
+function updateDao(req) {
+  if (req.session.phoneNumber && req.session.subscriptionId) {
+    dao.addPhoneToSubId(req.session.phoneNumber, req.session.subscriptionId)
+  }
+}
 
-app.post('/api/subscription', function (req, res) {
-    console.log(req.session)
-    req.session.subscriptionId = req.body.subscriptionId
-    console.log(req.session)
+
+app.post('/api/registration/subscription', function (req, res) {
+    if (req.body.subscriptionId) {
+      req.session.subscriptionId = req.body.subscriptionId
+      updateDao(req)
+      res.status(200).json('boop!')
+    } else {
+      res.status(500).json('brah!') 
+    }
+});
+
+app.post('/api/registration/phone', function (req, res) {
+    if (req.body.phonenumber) {
+      req.session.phonenumber = req.body.phonenumber
+      updateDao(req)
+      res.status(200).json('boop!')
+    } else {
+      res.status(500).json('brah!') 
+    }
 });
 
 app.use('/', function (req, res, next) {

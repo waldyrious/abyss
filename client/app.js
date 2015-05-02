@@ -2,7 +2,7 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
   .then(function(registration) {
     // Registration was successful
-    console.log('ServiceWorker registration successful with scope: ',    registration.scope);
+    console.log('ServiceWorker registration successful with scope: ', registration.scope);
     
     if (!registration.pushManager) {
         showError('Ooops Push Isn\'t Supported', 'This is most likely ' +
@@ -14,7 +14,7 @@ if ('serviceWorker' in navigator) {
     registration.pushManager.subscribe()
     .then(function(subscription) {
         console.log(subscription);
-        fetch('/api/subscription', {
+        fetch('/api/registration/subscription', {
           credentials: 'include',
           method: 'post',
           headers: {  
