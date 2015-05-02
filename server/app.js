@@ -26,7 +26,7 @@ app.post('/api/registration/subscription', function (req, res) {
       updateDao(req)
       res.status(200).json('boop!')
     } else {
-      res.status(500).json('brah!') 
+      res.status(500).json('brah!')
     }
 });
 
@@ -36,7 +36,7 @@ app.post('/api/registration/phone', function (req, res) {
       updateDao(req)
       res.status(200).json('boop!')
     } else {
-      res.status(500).json('brah!') 
+      res.status(500).json('brah!')
     }
 });
 
