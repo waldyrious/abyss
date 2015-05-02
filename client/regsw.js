@@ -24,9 +24,6 @@ module.exports = function () {
           body: JSON.stringify(subscription)
         })
       })
-    }).catch(function(err) {
-      // registration failed :(
-      console.log('ServiceWorker registration failed: ', err);
-    });
+    })
   }
 }
