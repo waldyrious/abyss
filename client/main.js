@@ -1,4 +1,5 @@
 var m = require('mithril')
+var moment = require('moment')
 var regsw = require('./regsw')
 regsw()
 
@@ -36,8 +37,8 @@ Bro.view = function (ctrl) {
     m('button', {onclick: ctrl.getBros, disabled: ctrl.noauth() },'Get messages!'),
     m('div', ctrl.bros().map(function (bro) {
       return [m('label', 'From: '), m('span', bro.from), m('br'),
-      m('label', 'To: '), m('span', bro.to), m('br'),
-      m('label', bro.text), m('hr')]
+      m('label', 'Date: '), m('span', moment(bro.date).fromNow()), m('br'),
+      m('span', bro.text), m('hr')]
     }))
   ]
 }

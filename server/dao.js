@@ -20,19 +20,18 @@ exports.getSubIds = function (ph) {
 
 exports.sendBro = function (from, to, text) {
 	if (!msgs[to]) msgs[to] = [];
-	msgs[to].push({
+	msgs[to].unshift({
 		from: from,
 		text: text,
 		date: new Date
 	})
+	msgs.length = 10
 	return notify(to)
 }
 
 exports.getBros = function (ph) {
-	return msgs[ph];
-	// return [{
-	// 	from: 'brodette',
-	// 	to: 'brah',
-	// 	text: 'beer bro!'
-	// }]
+	if (msgs[ph])
+		return msgs[ph]
+	else
+		return []
 }
