@@ -4,7 +4,8 @@ var phoneToSub = {};
 exports.addPhoneToSubId = function (ph, id) {
 	if (!phoneToSub[ph]) {
 		phoneToSub[ph] = [id]
-		console.log(phoneToSub[ph])
+		console.log(' addPhoneToSubId '+phoneToSub[ph])
+		debugger
 	} else if (phoneToSub[ph].indexOf(id) < 0) {
 		phoneToSub[ph].push(id)
 	}

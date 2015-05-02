@@ -4,6 +4,7 @@ var bodyParser = require('body-parser')
 var session = require('cookie-session');
 
 var dao = require('./dao')
+var notify = require('./notify')
 
 app.use(session({
   keys: ['asdf', 'bsdf'],
@@ -15,10 +16,15 @@ app.use(bodyParser.json());
 
 function updateDao(req) {
   if (req.session.phonenumber && req.session.subscriptionId) {
-    dao.addPhoneToSubId(req.session.phoneNumber, req.session.subscriptionId)
+    dao.addPhoneToSubId(req.session.phonenumber, req.session.subscriptionId)
   }
 }
 
+app.post('/api/bro', function (req, res) {
+  var ph = req.body.phonenumber
+  notify(ph)
+  res.status(200).json("bro'd!")
+})
 
 app.post('/api/registration/subscription', function (req, res) {
     if (req.body.subscriptionId) {
