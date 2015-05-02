@@ -6,6 +6,9 @@ var dao = require('./lib/dao')
 var fs = require('fs')
 var http =require('http')
 var https = require('https')
+var compression = require('compression')
+
+app.use(compression())
 
 app.use(session({
   keys: ['bro', 'brah'],
