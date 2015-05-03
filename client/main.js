@@ -49,12 +49,22 @@ Bro.controller = function () {
   self.getBros()
 }
 Bro.view = function (ctrl) {
+
+  function buttonify (obj) {
+    obj.class="btn btn-default"
+    return obj
+  }
+  function bbuttonify (obj) {
+    obj.class="btn btn-default btn-lg btn-primary"
+    return obj
+  }
+
   return [
     m('div', [
       m('div', 'Logged in as: ' + ctrl.phonenumberapi()),
       m('label', 'Phone number'),
       m('input', {oninput: m.withAttr('value', ctrl.phonenumber) }),
-      m('button', {onclick: ctrl.loginClick},'Login'),
+      m('button', buttonify({onclick: ctrl.loginClick}),'Login'),
     ]),
 
     m('br'),
@@ -64,11 +74,11 @@ Bro.view = function (ctrl) {
       m('input', {oninput: m.withAttr('value', ctrl.to) }),m('br'),
       m('label', 'Message: '),m('br'),
       m('input', {oninput: m.withAttr('value', ctrl.message) }), m('br'),
-      m('button', {onclick: ctrl.send, disabled: ctrl.noauth() }, 'Send Bro!'),
+      m('button', bbuttonify({onclick: ctrl.send, disabled: ctrl.noauth() }), 'Send Bro!'),
     ]),
   	m('br'),
-    m('button', {onclick: ctrl.getBros, disabled: ctrl.noauth() }, 'Get messages!'),
-    m('button', {onclick: ctrl.clearBros, disabled: ctrl.noauth() }, 'Delete all messages!'),
+    m('button', buttonify({onclick: ctrl.getBros, disabled: ctrl.noauth() }), 'Get messages!'),
+    m('button', buttonify({onclick: ctrl.clearBros, disabled: ctrl.noauth() }), 'Delete all messages!'),
     m('div', ctrl.bros().map(function (bro) {
       return [m('label', 'From: '), m('span', bro.from), m('br'),
       m('label', 'Date: '), m('span', moment(bro.date).fromNow()), m('br'),
