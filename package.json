@@ -19,12 +19,14 @@
     "exorcist": "^0.3.0",
     "express": "^4.12.3",
     "express-session": "^1.11.1",
+    "http2": "^3.2.0",
     "json-middleware": "^1.0.2",
     "lodash": "^3.8.0",
     "mithril": "^0.2.0",
     "moment": "^2.10.2",
     "passwordless": "^1.0.9",
     "request": "^2.55.0",
+    "spdy": "^1.32.0",
     "uglifyify": "^3.0.1",
     "watchify": "^3.2.1"
   }

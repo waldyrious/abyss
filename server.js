@@ -82,8 +82,11 @@ var certificate = fs.readFileSync('secret/server.crt', 'utf8');
 
 var credentials = {key: privateKey, cert: certificate};
 
-var httpsServer = https.createServer(credentials, app);
-httpsServer.listen(443);
+// var server = https.createServer(credentials, app);
+var spdy = require('spdy')
+var http2 = require('http2')
+var server = spdy.createServer(credentials, app);
+server.listen(443);
 
 
 var http = require('http');
