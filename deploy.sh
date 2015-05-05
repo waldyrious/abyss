@@ -7,4 +7,4 @@ cp client/bundle.js dist/client
 cp client/index.html dist/client
 cp client/manifest.json dist/client
 cp client/sw.js dist/client
-scp -r dist joe@104.237.135.61:yobro
+scp -r dist/* joe@104.237.135.61:yobro
