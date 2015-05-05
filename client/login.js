@@ -33,6 +33,9 @@ module.exports.view = function (ctrl) {
 		m('input', {oninput: m.withAttr('value', ctrl.phonenumber) }),
 		m('button', buttonify({onclick: ctrl.loginClick}),'Login'),
 
-		m.component(Bro, {'login': ctrl})
+		m.component(Bro, {
+			'phonenumber': ctrl.phonenumber,
+			'noauth': ctrl.noauth
+		})
 	])
 }
