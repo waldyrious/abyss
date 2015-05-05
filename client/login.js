@@ -36,7 +36,7 @@ module.exports.view = function (ctrl) {
 		return m('div', [
 			m('div', 'Log in with your phone number!' + ctrl.phonenumberapi()),
 			// m('label', 'Phone number: '),
-			m('input', {oninput: m.withAttr('value', ctrl.phoneInput) }),
+			m('input', {type:'tel', oninput: m.withAttr('value', ctrl.phoneInput) }),
 			m('button', styler.buttonify({onclick: ctrl.loginClick}), 'Login'),
 
 			m.component(Bro, {

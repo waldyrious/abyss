@@ -44,7 +44,7 @@ module.exports.view = function (ctrl, args, extras) {
   return m('div', [
     m('div', [
       m('label', 'To: '), m('br'),
-      m('input', {oninput: m.withAttr('value', ctrl.to) }),m('br'),
+      m('input', {type:'tel', oninput: m.withAttr('value', ctrl.to) }), m('br'),
       m('label', 'Message: '),m('br'),
       m('input', {oninput: m.withAttr('value', ctrl.message) }), m('br'),
       m('button', bbuttonify({onclick: ctrl.send, disabled: args.noauth() }), 'Send Bro!'),
