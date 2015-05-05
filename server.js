@@ -42,6 +42,10 @@ app.delete('/api/bro', function (req, res) {
   res.status(200).json(dao.deleteAllBros(ph))
 })
 
+app.post('/api/registration/logout', function (req, res) {
+  req.session = null
+  res.status(200).json('Logged out')
+});
 
 app.post('/api/registration/subscription', function (req, res) {
     if (req.body.subscriptionId) {
@@ -49,7 +53,7 @@ app.post('/api/registration/subscription', function (req, res) {
       updateDao(req)
       res.status(200).json('boop!')
     } else {
-      res.status(500).json('brah!')
+      res.status(500).json('bruhhhhh!')
     }
 });
 
