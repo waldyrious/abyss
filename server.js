@@ -8,6 +8,8 @@ var http =require('http')
 var https = require('https')
 var compression = require('compression')
 
+app.set('x-powered-by', false)
+
 app.use(compression())
 
 app.use(session({
