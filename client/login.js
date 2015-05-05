@@ -1,10 +1,6 @@
-var m = require('mithril')
-var Bro = require('./bro')
-
-function buttonify (obj) {
-	obj.class="btn btn-default"
-	return obj
-}
+var m = require('mithril');
+var Bro = require('./bro');
+var styler = require('./styler');
 
 module.exports.controller = function (args, extras) {
 	var self = this
@@ -29,9 +25,9 @@ module.exports.controller = function (args, extras) {
 module.exports.view = function (ctrl) {
 	return m('div', [
 		m('div', 'Logged in as: ' + ctrl.phonenumberapi()),
-		m('label', 'Phone number'),
+		m('label', 'Phone number: '),
 		m('input', {oninput: m.withAttr('value', ctrl.phonenumber) }),
-		m('button', buttonify({onclick: ctrl.loginClick}),'Login'),
+		m('button', styler.buttonify({onclick: ctrl.loginClick}), 'Login'),
 
 		m.component(Bro, {
 			'phonenumber': ctrl.phonenumberapi,

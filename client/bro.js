@@ -50,8 +50,8 @@ module.exports.view = function (ctrl, args, extras) {
     m('button', buttonify({onclick: ctrl.getBros, disabled: args.noauth() }), 'Get messages!'),
     m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth() }), 'Delete all messages!'),
     m('div', ctrl.bros().map(function (bro) {
-      return [m('label', 'From: '), m('span', bro.from), m('br'),
-      m('label', 'Date: '), m('span', moment(bro.date).fromNow()), m('br'),
+      return [m('span', 'From: '), m('b', bro.from + ' '), m('span', moment(bro.date).fromNow()),
+      m('br'),
       m('span', bro.text), m('hr')]
     }))
   ])
