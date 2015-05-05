@@ -1,5 +1,8 @@
 var moment = require('moment')
 var m = require('mithril')
+var Autolinker = require('autolinker')
+
+var autolinker = new Autolinker();
 
 module.exports.controller = function (args, extras) {
   var self = this
@@ -50,9 +53,9 @@ module.exports.view = function (ctrl, args, extras) {
     m('button', buttonify({onclick: ctrl.getBros, disabled: args.noauth() }), 'Get messages!'),
     m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth() }), 'Delete all messages!'),
     m('div', ctrl.bros().map(function (bro) {
-      return [m('span', 'From: '), m('b', bro.from + ' '), m('span', moment(bro.date).fromNow()),
+      return [m('span', 'From: '), m('b', bro.from + ' '), m('i', moment(bro.date).fromNow()),
       m('br'),
-      m('span', bro.text), m('hr')]
+      m('span', m.trust(autolinker.link(bro.text))), m('hr')]
     }))
   ])
 }
