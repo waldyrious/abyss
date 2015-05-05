@@ -1,12 +1,16 @@
-var express = require('express')
-var app = express();
-var bodyParser = require('body-parser')
-var session = require('cookie-session');
-var dao = require('./lib/dao')
-var fs = require('fs')
-var http =require('http')
-var https = require('https')
-var compression = require('compression')
+"use strict";
+
+const express = require('express')
+const app = express();
+const bodyParser = require('body-parser')
+const session = require('cookie-session');
+const dao = require('./lib/dao')
+const fs = require('fs')
+const compression = require('compression')
+
+const SPDY = process.env.SPDY
+const PROD = process.env.PROD
+const HTTP2 = process.env.HTTP2
 
 app.set('x-powered-by', false)
 
@@ -27,20 +31,20 @@ function updateDao(req) {
 }
 
 app.post('/api/bro', function (req, res) {
-  var to = req.body.to
-  var text = req.body.text
-  var fro = req.session.phonenumber
+  const to = req.body.to
+  const text = req.body.text
+  const fro = req.session.phonenumber
   dao.sendBro(fro, to, text)
   res.status(200).json("bro'd!")
 })
 
 app.get('/api/bro', function (req, res) {
-  var ph = req.session.phonenumber
+  const ph = req.session.phonenumber
   res.status(200).json(dao.getBros(ph))
 })
 
 app.delete('/api/bro', function (req, res) {
-  var ph = req.session.phonenumber
+  const ph = req.session.phonenumber
   res.status(200).json(dao.deleteAllBros(ph))
 })
 
@@ -82,28 +86,33 @@ app.get('/api/registration/phone', function (req, res) {
 
 app.use(express.static('client'));
 
+const privateKey  = fs.readFileSync('secret/server.key', 'utf8');
+const certificate = fs.readFileSync('secret/server.crt', 'utf8');
 
-var privateKey  = fs.readFileSync('secret/server.key', 'utf8');
-var certificate = fs.readFileSync('secret/server.crt', 'utf8');
+const credentials = {key: privateKey, cert: certificate};
 
-var credentials = {key: privateKey, cert: certificate};
-
-var server = https.createServer(credentials, app);
-var spdy = require('spdy')
-var http2 = require('http2')
-var server = spdy.createServer(credentials, app);
+var server;
+if (SPDY) {
+  console.log('SPDY enabled')
+  server = require('spdy').createServer(credentials, app);  
+} else if (HTTP2) {
+  console.log('HTTP2 enabled')
+  server = require('http2').createServer(credentials, app);  
+} else {
+  console.log('HTTPS enabled')
+  server = require('https').createServer(credentials, app);  
+}
 server.listen(443);
 
-var redirect = false
 
-if (redirect) {
-  var http = require('http');
+const http =require('http')
+if (PROD) {
+  console.log('HTTP redirect enabled')
   http.createServer(function (req, res) {
       res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
       res.end();
   }).listen(80);
 } else {
-  console.log('here')
-  var http = require('http');
+  console.log('HTTP redirect disabled')
   http.createServer(app).listen(80);
 }

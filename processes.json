@@ -1,0 +1,16 @@
+{
+  "apps" : [{
+    "name"        : "server",
+    "script"      : "server.js",
+    "args"        : [],
+    "watch"       : true,
+    "node_args"   : "",
+    "merge_logs"  : true,
+    "cwd"         : "/home/joe/yobro",
+    "env": {
+        "PROD": "true",
+        "SPDY": "true"
+    }
+  }]
+}
+

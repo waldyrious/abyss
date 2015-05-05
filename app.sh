@@ -1,2 +1,2 @@
 #!/bin/bash
-node server.js
+sudo SPDY=true node server.js
