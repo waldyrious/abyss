@@ -1,4 +1,5 @@
 #!/bin/sh
+rm -rf dist
 npm run build
 mkdir dist
 mkdir dist/client

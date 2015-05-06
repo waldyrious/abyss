@@ -9,7 +9,8 @@
     "cwd"         : "/home/joe/yobro",
     "env": {
         "PROD": "true",
-        "SPDY": "true"
+        "SPDY": "true",
+        "SEND_CODES": "true"
     }
   }]
 }

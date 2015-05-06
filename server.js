@@ -10,9 +10,15 @@ const compression = require('compression');
 const text = Promise.promisifyAll(require('./lib/textbelt/text'));
 const Phone = require('./node_modules/phones/src/phone.js');
 
-const SPDY = process.env.SPDY
-const PROD = process.env.PROD
-const HTTP2 = process.env.HTTP2
+const SPDY = process.env.SPDY === 'true'
+const PROD = process.env.PROD === 'true'
+const HTTP2 = process.env.HTTP2 === 'true'
+const SEND_CODES = process.env.SEND_CODES === 'true'
+
+if (SEND_CODES)
+console.log("Sending codes")
+else
+console.log("NOT sending codes")
 
 app.set('x-powered-by', false)
 
@@ -66,26 +72,50 @@ app.post('/api/registration/subscription', function (req, res) {
 });
 
 function genRand() {
-  var a = [];
-  for (var i=0; i<6; i++) {
-    a.push(Math.round(Math.random()*10));
-  }
-  return a.join('')
+  return Math.random().toString(10).substring(2, 8);
 }
+
+const auths = new Map();
 
 app.post('/api/registration/phone', function (req, res) {
     if (req.body.phonenumber) {
-      var ph = new Phone(req.body.phonenumber).strip();
-      req.session.phonenumber = ph
-      req.session.rand = genRand();
-      text.send(ph, "Bro code: " + req.session.rand)
-      updateDao(req)
+      const ph = new Phone(req.body.phonenumber).strip();
+      const rand = genRand();
+      req.session.phonenumberUnauthed = ph;
+      auths.set(ph, rand);
+      console.log("Code: " +rand + " for " + ph);
+
+      if (SEND_CODES) {
+        text.send(ph, "Bro code: " + rand);
+      }
+    }
+
+    if (req.session.phonenumberUnauthed) {
+      res.status(200).json('code sent')
+    } else {
+      res.status(500).json('invalid phone number')
+    }
+});
+
+app.post('/api/registration/code', function (req, res) {
+    if (req.body.code) {
+      const ph = req.session.phonenumberUnauthed;
+      const code = req.body.code;
+      const realCode = auths.get(ph);
+
+      if (req.body.code === realCode) {
+        console.log(code + " matched code " + realCode + " for " + ph);
+        req.session.phonenumber = ph;
+        req.session.phonenumberUnauthed = null;
+        auths.delete(ph);
+        updateDao(req)
+      }
     }
 
     if (req.session.phonenumber) {
       res.status(200).json(req.session.phonenumber)
     } else {
-      res.status(500).json('')
+      res.status(500).json('invalid code')
     }
 });
 
