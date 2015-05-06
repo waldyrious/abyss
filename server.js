@@ -38,11 +38,18 @@ function updateDao(req) {
   }
 }
 
+const Message = require('./model/message')
+
 app.post('/api/bro', function (req, res) {
   const to = req.body.to
   const text = req.body.text
-  const fro = req.session.phonenumber
-  dao.sendBro(fro, to, text)
+  const from = req.session.phonenumber
+
+  var message = new Message();
+  message.to = to
+  message.from = from
+  message.text = text;
+  dao.sendBro(message)
   res.status(200).json("bro'd!")
 })
 

@@ -6,4 +6,5 @@ module.exports = function Message () {
 	this.to = [];
 	this.id = uuid();
 	this.deletedBy = [];
+	this.date = new Date();
 }

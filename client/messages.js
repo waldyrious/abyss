@@ -17,6 +17,7 @@ module.exports.controller = function (args, extras) {
 
   this.send = function () {
     m.request({method: 'POST', url: '/api/bro', data: { to: self.to(), text: self.message() } })
+    .then(self.getBros)
   }
 
   this.getBros = function () {
@@ -32,6 +33,10 @@ module.exports.controller = function (args, extras) {
 
 module.exports.view = function (ctrl, args, extras) {
 
+  function fromMe(message) {
+    return message.from === args.phonenumber();
+  }
+
   return m('div', [
     m('div', [
       m('label', 'To: '), m('br'),
@@ -45,12 +50,13 @@ module.exports.view = function (ctrl, args, extras) {
     m('button', styler.buttonify({onclick: ctrl.getBros, disabled: args.noauth() }), 'Get messages!'),
     m('button', styler.buttonify({onclick: ctrl.clearBros, disabled: args.noauth() }), 'Delete all messages!'),
     m('div', ctrl.bros().map(function (bro) {
-      return m('div', {onclick: function(e) { ctrl.to(bro.from)}
+      return m('div', {onclick: function(e) { ctrl.to( fromMe(bro)?bro.to:bro.from)}
         , style: {
           cursor:'pointer'
         }
-      }
-        ,[m('span','From: '), m('b', bro.from + ' '), m('i', moment(bro.date).fromNow()),
+      },
+       [ m('span', fromMe(bro)?'To: ':'From: '), m('b', (fromMe(bro)?bro.to:bro.from) + ' '),
+        m('i', moment(bro.date).fromNow()),
         m('br'),
         m('span', m.trust(autolinker.link(bro.text))), m('hr')])}))])
 }
