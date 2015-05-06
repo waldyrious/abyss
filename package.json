@@ -27,6 +27,7 @@
     "mithril": "^0.2.0",
     "moment": "^2.10.2",
     "passwordless": "^1.0.9",
+    "phones": "^0.1.0",
     "request": "^2.55.0",
     "spdy": "^1.32.0",
     "superb": "^1.1.4",

@@ -1,12 +1,14 @@
 "use strict";
-
-const express = require('express')
+const Promise = require('bluebird');
+const express = require('express');
 const app = express();
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 const session = require('cookie-session');
-const dao = require('./lib/dao')
-const fs = require('fs')
-const compression = require('compression')
+const dao = require('./lib/dao');
+const fs = require('fs');
+const compression = require('compression');
+const text = Promise.promisifyAll(require('./lib/textbelt/text'));
+const Phone = require('./node_modules/phones/src/phone.js');
 
 const SPDY = process.env.SPDY
 const PROD = process.env.PROD
@@ -63,9 +65,20 @@ app.post('/api/registration/subscription', function (req, res) {
     }
 });
 
+function genRand() {
+  var a = [];
+  for (var i=0; i<6; i++) {
+    a.push(Math.round(Math.random()*10));
+  }
+  return a.join('')
+}
+
 app.post('/api/registration/phone', function (req, res) {
     if (req.body.phonenumber) {
-      req.session.phonenumber = req.body.phonenumber
+      var ph = new Phone(req.body.phonenumber).strip();
+      req.session.phonenumber = ph
+      req.session.rand = genRand();
+      text.send(ph, "Bro code: " + req.session.rand)
       updateDao(req)
     }
 
