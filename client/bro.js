@@ -1,8 +1,8 @@
 var moment = require('moment')
 var m = require('mithril')
 var Autolinker = require('autolinker')
-
 var autolinker = new Autolinker();
+var styler = require('./styler');
 
 module.exports.controller = function (args, extras) {
   var self = this
@@ -32,15 +32,6 @@ module.exports.controller = function (args, extras) {
 
 module.exports.view = function (ctrl, args, extras) {
 
-  function buttonify (obj) {
-    obj.class="btn btn-default"
-    return obj
-  }
-  function bbuttonify (obj) {
-    obj.class="btn btn-default btn-lg btn-primary"
-    return obj
-  }
-
   return m('div', [
     m('div', [
       m('label', 'To: '), m('br'),
@@ -48,11 +39,11 @@ module.exports.view = function (ctrl, args, extras) {
       m('br'),
       m('label', 'Message: '),m('br'),
       m('input', {oninput: m.withAttr('value', ctrl.message) }), m('br'),
-      m('button', bbuttonify({onclick: ctrl.send, disabled: args.noauth() }), 'Send Bro!'),
+      m('button', styler.bbuttonify({onclick: ctrl.send, disabled: args.noauth() }), 'Send Bro!'),
     ]),
   	m('br'),
-    m('button', buttonify({onclick: ctrl.getBros, disabled: args.noauth() }), 'Get messages!'),
-    m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth() }), 'Delete all messages!'),
+    m('button', styler.buttonify({onclick: ctrl.getBros, disabled: args.noauth() }), 'Get messages!'),
+    m('button', styler.buttonify({onclick: ctrl.clearBros, disabled: args.noauth() }), 'Delete all messages!'),
     m('div', ctrl.bros().map(function (bro) {
       return m('div', {onclick: function(e) { ctrl.to(bro.from)}
         , style: {
