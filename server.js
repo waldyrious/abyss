@@ -80,6 +80,12 @@ const auths = new Map();
 app.post('/api/registration/phone', function (req, res) {
     if (req.body.phonenumber) {
       const ph = new Phone(req.body.phonenumber).strip();
+
+      if (ph.length != 10) {
+        res.status(400).json('phone number must be 10 digits');
+        return;
+      }
+
       const rand = genRand();
       req.session.phonenumberUnauthed = ph;
       auths.set(ph, rand);
@@ -93,7 +99,7 @@ app.post('/api/registration/phone', function (req, res) {
     if (req.session.phonenumberUnauthed) {
       res.status(200).json('code sent')
     } else {
-      res.status(500).json('invalid phone number')
+      res.status(400).json('invalid phone number')
     }
 });
 
