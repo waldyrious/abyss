@@ -44,7 +44,8 @@ module.exports.view = function (ctrl, args, extras) {
   return m('div', [
     m('div', [
       m('label', 'To: '), m('br'),
-      m('input', {type:'tel', oninput: m.withAttr('value', ctrl.to) }), m('br'),
+      m('input', {type:'tel', oninput: m.withAttr('value', ctrl.to), value: ctrl.to() }),
+      m('br'),
       m('label', 'Message: '),m('br'),
       m('input', {oninput: m.withAttr('value', ctrl.message) }), m('br'),
       m('button', bbuttonify({onclick: ctrl.send, disabled: args.noauth() }), 'Send Bro!'),
@@ -53,9 +54,12 @@ module.exports.view = function (ctrl, args, extras) {
     m('button', buttonify({onclick: ctrl.getBros, disabled: args.noauth() }), 'Get messages!'),
     m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth() }), 'Delete all messages!'),
     m('div', ctrl.bros().map(function (bro) {
-      return [m('span', 'From: '), m('b', bro.from + ' '), m('i', moment(bro.date).fromNow()),
-      m('br'),
-      m('span', m.trust(autolinker.link(bro.text))), m('hr')]
-    }))
-  ])
+      return m('div', {onclick: function(e) { ctrl.to(bro.from)}
+        , style: {
+          cursor:'pointer'
+        }
+      }
+        ,[m('span','From: '), m('b', bro.from + ' '), m('i', moment(bro.date).fromNow()),
+        m('br'),
+        m('span', m.trust(autolinker.link(bro.text))), m('hr')])}))])
 }
