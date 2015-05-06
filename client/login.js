@@ -1,5 +1,5 @@
 var m = require('mithril');
-var Bro = require('./bro');
+var messages = require('./messages');
 var styler = require('./styler');
 
 module.exports.controller = function (args, extras) {
@@ -70,7 +70,7 @@ module.exports.view = function (ctrl) {
 			m('div', 'Logged in as: ' + ctrl.phonenumberapi()),
 			m('button', styler.buttonify({onclick: ctrl.logout}), 'Logout'),
 
-			m.component(Bro, {
+			m.component(messages, {
 				'phonenumber': ctrl.phonenumberapi,
 				'noauth': ctrl.noauth
 			})
