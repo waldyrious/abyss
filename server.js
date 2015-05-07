@@ -22,6 +22,8 @@ console.log("NOT sending codes")
 
 app.set('x-powered-by', false)
 
+const morgan  = require('morgan')
+app.use(morgan('combined'))
 app.use(compression())
 
 app.use(session({
