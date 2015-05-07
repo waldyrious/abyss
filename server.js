@@ -62,7 +62,6 @@ app.get('/api/bro', function (req, res) {
 app.delete('/api/bro/:id', function (req, res) {
   const ph = req.session.phonenumber;
   const id = req.params.id;
-  console.log('id is ' + id)
   res.status(204).json(dao.delete(ph, id));
 })
 
