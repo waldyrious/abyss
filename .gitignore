@@ -1,4 +1,4 @@
 node_modules/
 secret/
 dist/
-messages.json
+server-saved-messages.json

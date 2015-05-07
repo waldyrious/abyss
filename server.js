@@ -48,11 +48,11 @@ app.post('/api/bro', function (req, res) {
   const from = req.session.phonenumber
 
   var message = new Message();
-  message.to = to
-  message.from = from
+  message.to = message.to.concat(to);
+  message.from = from;
   message.text = text;
-  dao.sendBro(message)
-  console.log(message)
+  dao.sendBro(message);
+  console.log(message);
   res.status(200).json("bro'd!")
 })
 
