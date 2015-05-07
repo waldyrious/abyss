@@ -50,6 +50,7 @@ app.post('/api/bro', function (req, res) {
   message.from = from
   message.text = text;
   dao.sendBro(message)
+  console.log(message)
   res.status(200).json("bro'd!")
 })
 
@@ -58,10 +59,17 @@ app.get('/api/bro', function (req, res) {
   res.status(200).json(dao.getBros(ph))
 })
 
-app.delete('/api/bro', function (req, res) {
-  const ph = req.session.phonenumber
-  res.status(200).json(dao.deleteAllBros(ph))
+app.delete('/api/bro/:id', function (req, res) {
+  const ph = req.session.phonenumber;
+  const id = req.params.id;
+  console.log('id is ' + id)
+  res.status(204).json(dao.delete(ph, id));
 })
+
+// app.delete('/api/bro', function (req, res) {
+//   const ph = req.session.phonenumber
+//   res.status(200).json(dao.deleteAllBros(ph))
+// })
 
 app.post('/api/registration/logout', function (req, res) {
   req.session = null

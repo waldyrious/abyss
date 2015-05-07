@@ -21,11 +21,18 @@ module.exports.controller = function (args, extras) {
   }
 
   this.getBros = function () {
-    m.request({method: 'GET', url: '/api/bro'}).then(self.bros)
+    m.request({method: 'GET', url: '/api/bro'})
+    .then(self.bros)
   }
 
   this.clearBros = function () {
-    m.request({method: 'DELETE', url: '/api/bro'}).then(self.bros)
+    m.request({method: 'DELETE', url: '/api/bro'})
+    .then(self.bros)
+  }
+
+  this.delete = function(message) {
+    m.request({method: 'DELETE', url: '/api/bro/' + encodeURIComponent(message.id)})
+    .then(self.getBros)
   }
 
   self.getBros()
@@ -58,5 +65,9 @@ module.exports.view = function (ctrl, args, extras) {
        [ m('span', fromMe(bro)?'To: ':'From: '), m('b', (fromMe(bro)?bro.to:bro.from) + ' '),
         m('i', moment(bro.date).fromNow()),
         m('br'),
-        m('span', m.trust(autolinker.link(bro.text))), m('hr')])}))])
+        m('span', m.trust(autolinker.link(bro.text))),
+        m('br'),
+        m('button', styler.buttonify({onclick: function () { ctrl.delete(bro)}}), 'X'),
+        m('hr')
+        ])}))])
 }
