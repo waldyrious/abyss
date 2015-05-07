@@ -67,10 +67,10 @@ app.delete('/api/bro/:id', function (req, res) {
   res.status(204).json(dao.delete(ph, id));
 })
 
-// app.delete('/api/bro', function (req, res) {
-//   const ph = req.session.phonenumber
-//   res.status(200).json(dao.deleteAllBros(ph))
-// })
+app.delete('/api/bro', function (req, res) {
+  const ph = req.session.phonenumber
+  res.status(200).json(dao.deleteAllBros(ph))
+})
 
 app.post('/api/registration/logout', function (req, res) {
   req.session = null
