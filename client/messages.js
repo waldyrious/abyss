@@ -7,30 +7,38 @@ var styler = require('./styler');
 module.exports.controller = function (args, extras) {
   var self = this
 
-  this.bros = m.prop([])
-  this.to = m.prop('')
-  this.message = m.prop('')
+  self.bros = m.prop([]);
+  self.to = [m.prop('')];
+  self.message = m.prop('')
 
-  this.broMe = function () {
-    m.request({method: 'POST', url: '/api/bro', data: { to: args.phonenumber(), text: 'sup bro!'} })
+  self.toPlus = function () {
+    self.to.push(m.prop(''))
   }
 
-  this.send = function () {
-    m.request({method: 'POST', url: '/api/bro', data: { to: self.to(), text: self.message() } })
+  self.toMinus = function () {
+    if (self.to.length > 1) {
+      self.to.pop();
+    } else {
+      self.to[0]('');
+    }
+  }
+
+  self.send = function () {
+    m.request({method: 'POST', url: '/api/bro', data: { to: self.to, text: self.message() } })
     .then(self.getBros)
   }
 
-  this.getBros = function () {
+  self.getBros = function () {
     m.request({method: 'GET', url: '/api/bro'})
     .then(self.bros)
   }
 
-  this.clearBros = function () {
+  self.clearBros = function () {
     m.request({method: 'DELETE', url: '/api/bro'})
     .then(self.bros)
   }
 
-  this.delete = function(message) {
+  self.delete = function(message) {
     m.request({method: 'DELETE', url: '/api/bro/' + encodeURIComponent(message.id)})
     .then(self.getBros)
   }
@@ -54,8 +62,13 @@ module.exports.view = function (ctrl, args, extras) {
 
   return m('div', [
     m('div', [
-      m('label', 'To: '), m('br'),
-      m('input', {type:'tel', oninput: m.withAttr('value', ctrl.to), value: ctrl.to() }),
+      m('label', 'To: '),m('span', ' '),
+      m('button', styler.buttonify({onclick: ctrl.toPlus}), '+'),
+      m('button', styler.buttonify({onclick: ctrl.toMinus}), '-'),
+      m('br'),
+      ctrl.to.map(function (item, index) {
+        return m('input', {type:'tel', oninput: m.withAttr('value', ctrl.to[index]), value: ctrl.to[index]() })
+      }),
       m('br'),
       m('label', 'Message: '),m('br'),
       m('input', {oninput: m.withAttr('value', ctrl.message) }), m('br'),
