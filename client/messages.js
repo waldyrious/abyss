@@ -44,6 +44,14 @@ module.exports.view = function (ctrl, args, extras) {
     return message.from === args.phonenumber();
   }
 
+  function clickTo(message) {
+    return styler.pointer({
+      onclick: function(e) {
+        ctrl.to(fromMe(message)?message.to:message.from)
+      }
+    })
+  }
+
   return m('div', [
     m('div', [
       m('label', 'To: '), m('br'),
@@ -57,15 +65,14 @@ module.exports.view = function (ctrl, args, extras) {
     m('button', styler.buttonify({onclick: ctrl.getBros, disabled: args.noauth() }), 'Get messages!'),
     m('button', styler.buttonify({onclick: ctrl.clearBros, disabled: args.noauth() }), 'Delete all messages!'),
     m('div', ctrl.bros().map(function (bro) {
-      return m('div',
-       styler.pointer({onclick: function(e) { ctrl.to( fromMe(bro)?bro.to:bro.from)}})
-      ,
-       [ m('span', fromMe(bro)?'To: ':'From: '), m('b', (fromMe(bro)?bro.to:bro.from) + ' '),
-        m('i', moment(bro.date).fromNow()),
-        m('br'),
-        m('span', m.trust(autolinker.link(bro.text))),
-        m('br'),
-        m('button', styler.buttonify({onclick: function () { ctrl.delete(bro)}}), 'X'),
-        m('hr')
-        ])}))])
-}
+      return [m('span', clickTo(bro), fromMe(bro)?'To: ':'From: '),
+          m('b', clickTo(bro), (fromMe(bro)?bro.to:bro.from) + ' '),
+          m('i', moment(bro.date).fromNow()),
+          m('br'),
+          m('span', m.trust(autolinker.link(bro.text))),
+          m('br'),
+          m('button', styler.buttonify({onclick: function () { ctrl.delete(bro)}}), 'X'),
+          m('hr')
+      ]}))
+    ])
+  }
