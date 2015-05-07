@@ -3,6 +3,7 @@ var m = require('mithril')
 var Autolinker = require('autolinker')
 var autolinker = new Autolinker();
 var styler = require('./styler');
+var _ = require('lodash');
 
 module.exports.controller = function (args, extras) {
   var self = this
@@ -10,6 +11,36 @@ module.exports.controller = function (args, extras) {
   self.bros = m.prop([]);
   self.to = [m.prop('')];
   self.message = m.prop('')
+
+  function fromMe(message) {
+    return message.from === args.phonenumber();
+  }
+
+  function multiTo(message) {
+    return !fromMe(message) && message.to.length && message.to.length > 1;
+  }
+
+  self.replyTo = function (message) {
+    if(fromMe(message)) {
+      if (!_.isArray(message.to)) {
+        self.to = [m.prop(message.to)];
+      } else {
+        self.to = [];
+        for (var i=0; i<message.to.length; i++) {
+          self.to.push(m.prop(message.to[i]));
+        }  
+      }
+    } else {
+      self.to = [];
+      self.to.push(m.prop(message.from));
+      for (var i=0; i<message.to.length; i++) {
+        if (message.to[i] !== args.phonenumber()) {
+          self.to.push(m.prop(message.to[i])); 
+        } else {
+        }
+      }
+    }
+  }
 
   self.toPlus = function () {
     self.to.push(m.prop(''))
@@ -52,10 +83,14 @@ module.exports.view = function (ctrl, args, extras) {
     return message.from === args.phonenumber();
   }
 
-  function clickTo(message) {
+  function multiTo(message) {
+    return !fromMe(message) && message.to.length && message.to.length > 1;
+  }
+
+  function replyTo(message) {
     return styler.pointer({
       onclick: function(e) {
-        ctrl.to(fromMe(message)?message.to:message.from)
+        ctrl.replyTo(message)
       }
     })
   }
@@ -78,14 +113,22 @@ module.exports.view = function (ctrl, args, extras) {
     m('button', styler.buttonify({onclick: ctrl.getBros, disabled: args.noauth() }), 'Get messages!'),
     m('button', styler.buttonify({onclick: ctrl.clearBros, disabled: args.noauth() }), 'Delete all messages!'),
     m('div', ctrl.bros().map(function (bro) {
-      return [m('span', clickTo(bro), fromMe(bro)?'To: ':'From: '),
-          m('b', clickTo(bro), (fromMe(bro)?bro.to:bro.from) + ' '),
+      var ret = [m('span', replyTo(bro), fromMe(bro)?'To: ':'From: '),
+          m('b', replyTo(bro), (fromMe(bro)?bro.to:bro.from) + ' '),
           m('i', moment(bro.date).fromNow()),
-          m('br'),
+          m('br')];
+      if (multiTo(bro)) {
+        ret.push(m('span', replyTo(bro), 'To: '+bro.to.join(', ')));
+        ret.push(m('br'));
+      }
+      ret = ret.concat([
           m('span', m.trust(autolinker.link(bro.text))),
           m('br'),
           m('button', styler.buttonify({onclick: function () { ctrl.delete(bro)}}), 'X'),
           m('hr')
-      ]}))
+      ])
+      return ret;
+    }))
+
     ])
   }
