@@ -1,5 +1,16 @@
 "use strict";
 const Promise = require('bluebird');
+
+const net = require('net');
+const socket80 = new net.Server();
+socket80.listen(80);
+const socket443 = new net.Server();
+socket443.listen(443);
+
+process.setgid('nobody');
+process.setuid('nobody');
+
+
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -194,7 +205,7 @@ if (SPDY) {
   console.log('HTTPS enabled')
   server = require('https').createServer(credentials, app);  
 }
-server.listen(443);
+server.listen(socket443);
 
 
 const http =require('http')
@@ -203,8 +214,8 @@ if (PROD) {
   http.createServer(function (req, res) {
       res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
       res.end();
-  }).listen(80);
+  }).listen(socket80);
 } else {
   console.log('HTTP redirect disabled')
-  http.createServer(app).listen(80);
+  http.createServer(app).listen(socket80);
 }

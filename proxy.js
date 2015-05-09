@@ -1,3 +1,10 @@
+var net = require('net');
+var socket = new net.Server();
+socket.listen(8000);
+
+process.setgid('nobody');
+process.setuid('nobody');
+
 var httpProxy = require('http-proxy');
 var proxy = httpProxy.createProxyServer();
 var http = require('http');
@@ -13,5 +20,5 @@ http.createServer(function (req, res) {
     res.end();
   } else 
     proxy.web(req, res, { target: 'http://localhost:8080/' });
-}).listen(8000);
+}).listen(socket);
 
