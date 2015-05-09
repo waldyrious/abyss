@@ -3,7 +3,7 @@ rm -rf dist
 npm run build
 mkdir dist
 mkdir dist/client
-cp -R lib package.json server.js model dist
+cp -R proxy.js lib package.json server.js model dist
 cp client/bundle.js dist/client
 cp client/index.html dist/client
 cp client/manifest.json dist/client
