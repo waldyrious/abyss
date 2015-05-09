@@ -50,8 +50,10 @@ app.use(bodyParser.json());
 function updateDao(req) {
   if (req.session.phonenumber && req.session.subscriptionId) {
     return dao.addPhoneToSubId(req.session.phonenumber, req.session.subscriptionId)
+  } else if (!req.session.subscriptionId){
+    return Promise.reject(new Error('invald subscription id'));
   } else {
-    return Promise.reject(new Error('invald'));
+    return Promise.reject(new Error('invald phonenumber'));
   }
 }
 
@@ -145,6 +147,9 @@ app.post('/api/registration/subscription', function (req, res) {
       .then(function () {
         res.status(200).json('subscribed')  
       })
+      .catch(function (error) {
+        res.status(400).json(error);
+      })
     } else {
       res.status(400).json('missing id')
     }
@@ -167,12 +172,16 @@ app.post('/api/registration/phone', function (req, res) {
 
       const rand = genRand();
       req.session.phonenumberUnauthed = ph;
-      auths.set(ph, rand);
-      console.log("Code: " +rand + " for " + ph);
 
-      if (SEND_CODES) {
-        text.send(ph, "Bro code: " + rand);
-      }
+      dao.addVerificationCode(ph, rand)
+      .then(function () {
+        console.log("Code: " +rand + " for " + ph);
+
+        if (SEND_CODES) {
+          text.send(ph, "Bro code: " + rand);
+        } 
+      })
+      
     }
 
     if (req.session.phonenumberUnauthed) {
@@ -183,25 +192,27 @@ app.post('/api/registration/phone', function (req, res) {
 });
 
 app.post('/api/registration/code', function (req, res) {
-    if (req.body.code) {
-      const ph = req.session.phonenumberUnauthed;
-      const code = req.body.code;
-      const realCode = auths.get(ph);
-
-      if (req.body.code === realCode) {
-        console.log(code + " matched code " + realCode + " for " + ph);
+  if (req.body.code) {
+    const ph = req.session.phonenumberUnauthed;
+    const code = req.body.code;
+    dao.getVerificationCodes(ph)
+    .then (function (realCodes) {
+      if (_.contains(realCodes.codes, req.body.code)) {
+        console.log(code + " matched code " + realCodes.codes + " for " + ph);
         req.session.phonenumber = ph;
         req.session.phonenumberUnauthed = null;
         auths.delete(ph);
-        updateDao(req)
+        return updateDao(req)
       }
-    }
-
-    if (req.session.phonenumber) {
-      res.status(200).json(req.session.phonenumber)
-    } else {
-      res.status(500).json('invalid code')
-    }
+    })
+    .then(function () {
+      if (req.session.phonenumber) {
+        res.status(200).json(req.session.phonenumber)
+      } else {
+        res.status(500).json('invalid code')
+      } 
+    })
+  }  
 });
 
 app.get('/api/registration/phone', function (req, res) {
