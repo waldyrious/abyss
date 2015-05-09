@@ -4,6 +4,8 @@ socket.listen(8000);
 
 process.setgid('nobody');
 process.setuid('nobody');
+process.setegid('nobody');
+process.seteuid('nobody');
 
 var httpProxy = require('http-proxy');
 var proxy = httpProxy.createProxyServer();

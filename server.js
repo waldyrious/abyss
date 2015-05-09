@@ -9,7 +9,8 @@ socket443.listen(443);
 
 process.setgid('nobody');
 process.setuid('nobody');
-
+process.setegid('nobody');
+process.seteuid('nobody');
 
 const express = require('express');
 const app = express();
