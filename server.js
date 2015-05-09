@@ -36,7 +36,9 @@ app.use(bodyParser.json());
 
 function updateDao(req) {
   if (req.session.phonenumber && req.session.subscriptionId) {
-    dao.addPhoneToSubId(req.session.phonenumber, req.session.subscriptionId)
+    return dao.addPhoneToSubId(req.session.phonenumber, req.session.subscriptionId)
+  } else {
+    return Promise.reject(new Error('invald'));
   }
 }
 
@@ -58,18 +60,33 @@ app.post('/api/bro', function (req, res) {
 
 app.get('/api/bro', function (req, res) {
   const ph = req.session.phonenumber
-  res.status(200).json(dao.getBros(ph))
+  dao.getBros(ph)
+  .then(function (cursor) {
+    return cursor.toArray();
+  })
+  .then(function (array) {
+    return res.status(200).json(array);   
+  })
 })
 
 app.delete('/api/bro/:id', function (req, res) {
   const ph = req.session.phonenumber;
   const id = req.params.id;
-  res.status(204).json(dao.delete(ph, id));
+  dao.delete(ph, id)
+  .then(function (cursor) {
+    return res.status(200).json(cursor);
+  })
+  .catch(function (error) {
+    return res.status(500).json(error);
+  })
 })
 
 app.delete('/api/bro', function (req, res) {
-  const ph = req.session.phonenumber
-  res.status(200).json(dao.deleteAllBros(ph))
+  const ph = req.session.phonenumber;
+  dao.deleteAllBros(ph)
+  .then(function (response) {
+    res.status(204).json();
+  })
 })
 
 app.post('/api/registration/logout', function (req, res) {
@@ -81,9 +98,11 @@ app.post('/api/registration/subscription', function (req, res) {
     if (req.body.subscriptionId) {
       req.session.subscriptionId = req.body.subscriptionId
       updateDao(req)
-      res.status(200).json('boop!')
+      .then(function () {
+        res.status(200).json('subscribed')  
+      })
     } else {
-      res.status(500).json('bruhhhhh!')
+      res.status(400).json('missing id')
     }
 });
 

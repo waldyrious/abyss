@@ -30,6 +30,7 @@
     "passwordless": "^1.0.9",
     "phones": "^0.1.0",
     "request": "^2.55.0",
+    "rethinkdb": "^2.0.0",
     "spdy": "^1.32.0",
     "superb": "^1.1.4",
     "uglifyify": "^3.0.1",
