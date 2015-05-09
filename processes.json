@@ -4,7 +4,6 @@
     "script"      : "server.js",
     "args"        : [],
     "watch"       : true,
-    "ignoreWatch" : "server-saved-messages.json",
     "node_args"   : "",
     "merge_logs"  : true,
     "cwd"         : "/home/joe/yobro",
@@ -13,6 +12,14 @@
         "SPDY": "true",
         "SEND_CODES": "true"
     }
+  }, {
+    "name"        : "proxy",
+    "script"      : "proxy.js",
+    "args"        : [],
+    "watch"       : true,
+    "node_args"   : "",
+    "merge_logs"  : true,
+    "cwd"         : "/home/joe/yobro"
   }]
 }
 
