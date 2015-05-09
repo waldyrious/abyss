@@ -20,7 +20,8 @@ const dao = require('./lib/dao');
 const fs = require('fs');
 const compression = require('compression');
 const text = Promise.promisifyAll(require('./lib/textbelt/text'));
-const Phone = require('./node_modules/phones/src/phone.js');
+const Phone = require('./model/phone.js');
+const _ = require('lodash');
 
 const SPDY = process.env.SPDY === 'true'
 const PROD = process.env.PROD === 'true'
@@ -60,7 +61,30 @@ app.post('/api/bro', function (req, res) {
   const from = req.session.phonenumber
   if (!from) res.status(401).send();
 
-  const to = req.body.to
+  var to = req.body.to
+
+  if (!_.isArray(to)) {
+    res.status(400).json('to must be array');
+  }
+
+  var to = to.map(function (item) {
+    return new Phone(item).strip()
+  });
+
+  var invalid = false;
+
+  to.forEach(function (item) {
+    var x = new Phone(item);
+    if (x.strip().length != 10) {
+        invalid = true;
+    }  
+  });
+
+  if (invalid) {
+    res.status(400).json('bad to');
+    return;
+  }
+  
   const text = req.body.text
 
   var message = new Message();

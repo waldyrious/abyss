@@ -34,6 +34,7 @@
     "rethinkdb": "^2.0.0",
     "spdy": "^1.32.0",
     "superb": "^1.1.4",
+    "tape": "^4.0.0",
     "uglifyify": "^3.0.1",
     "uuid": "^2.0.1",
     "watchify": "^3.2.1"
