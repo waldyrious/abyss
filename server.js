@@ -45,9 +45,11 @@ function updateDao(req) {
 const Message = require('./model/message')
 
 app.post('/api/bro', function (req, res) {
+  const from = req.session.phonenumber
+  if (!from) res.status(401).send();
+
   const to = req.body.to
   const text = req.body.text
-  const from = req.session.phonenumber
 
   var message = new Message();
   message.to = message.to.concat(to);
@@ -59,7 +61,9 @@ app.post('/api/bro', function (req, res) {
 })
 
 app.get('/api/bro', function (req, res) {
-  const ph = req.session.phonenumber
+  const ph = req.session.phonenumber;
+  if (!ph) res.status(401).send();
+
   dao.getBros(ph)
   .then(function (cursor) {
     return cursor.toArray();
@@ -71,6 +75,8 @@ app.get('/api/bro', function (req, res) {
 
 app.delete('/api/bro/:id', function (req, res) {
   const ph = req.session.phonenumber;
+  if (!ph) res.status(401).send();
+
   const id = req.params.id;
   dao.delete(ph, id)
   .then(function (cursor) {
@@ -83,6 +89,8 @@ app.delete('/api/bro/:id', function (req, res) {
 
 app.delete('/api/bro', function (req, res) {
   const ph = req.session.phonenumber;
+  if (!ph) res.status(401).send();
+
   dao.deleteAllBros(ph)
   .then(function (response) {
     res.status(204).json();

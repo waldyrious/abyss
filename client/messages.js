@@ -66,7 +66,7 @@ module.exports.controller = function (args, extras) {
 
   self.clearBros = function () {
     m.request({method: 'DELETE', url: '/api/bro'})
-    .then(self.bros)
+    .then(self.getBros)
   }
 
   self.delete = function(message) {
