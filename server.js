@@ -59,10 +59,12 @@ function updateDao(req) {
 
 const Message = require('./model/message')
 
-app.post('/api/bro', function (req, res) {
-  const from = req.session.phonenumber
-  if (!from) res.status(401).send();
+app.all('/api/bro*', function (req, res, next) {
+  if (!req.session.phonenumber) res.status(401).send();
+  else next();
+})
 
+app.post('/api/bro', function (req, res) {
   var to = req.body.to
 
   if (!_.isArray(to)) {
@@ -99,9 +101,6 @@ app.post('/api/bro', function (req, res) {
 })
 
 app.get('/api/bro', function (req, res) {
-  const ph = req.session.phonenumber;
-  if (!ph) res.status(401).send();
-
   dao.getBros(ph)
   .then(function (cursor) {
     return cursor.toArray();
@@ -112,9 +111,6 @@ app.get('/api/bro', function (req, res) {
 })
 
 app.delete('/api/bro/:id', function (req, res) {
-  const ph = req.session.phonenumber;
-  if (!ph) res.status(401).send();
-
   const id = req.params.id;
   dao.delete(ph, id)
   .then(function (cursor) {
@@ -126,9 +122,6 @@ app.delete('/api/bro/:id', function (req, res) {
 })
 
 app.delete('/api/bro', function (req, res) {
-  const ph = req.session.phonenumber;
-  if (!ph) res.status(401).send();
-
   dao.deleteAllBros(ph)
   .then(function (response) {
     res.status(204).json();
@@ -148,7 +141,7 @@ app.post('/api/registration/subscription', function (req, res) {
         res.status(200).json('subscribed')  
       })
       .catch(function (error) {
-        res.status(400).json(error);
+        res.status(500).json(error);
       })
     } else {
       res.status(400).json('missing id')
@@ -209,9 +202,11 @@ app.post('/api/registration/code', function (req, res) {
       if (req.session.phonenumber) {
         res.status(200).json(req.session.phonenumber)
       } else {
-        res.status(500).json('invalid code')
+        res.status(401).json('invalid code')
       } 
     })
+  } else {
+    res.status(401).json('not logged in')
   }  
 });
 
