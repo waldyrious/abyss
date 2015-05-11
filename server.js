@@ -50,14 +50,21 @@ app.use(bodyParser.json());
 function updateDao(req) {
   if (req.session.phonenumber && req.session.subscriptionId) {
     return dao.addPhoneToSubId(req.session.phonenumber, req.session.subscriptionId)
-  } else if (!req.session.subscriptionId){
-    return Promise.reject(new Error('invald subscription id'));
-  } else {
-    return Promise.reject(new Error('invald phonenumber'));
-  }
+    .catch(function (error) {
+      console.error(error);
+    })
+  } 
 }
 
 const Message = require('./model/message')
+
+app.all('/*', function(req, res, next) {
+  if (req.host.match(/^www/) !== null ) {
+    res.redirect(301, req.protocol + req.headers.host.replace(/^www\./, '') + req.url);
+  } else {
+    next();     
+  }
+})
 
 app.all('/api/bro*', function (req, res, next) {
   if (!req.session.phonenumber) res.status(401).send();
