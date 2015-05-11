@@ -101,7 +101,7 @@ app.post('/api/bro', function (req, res) {
 })
 
 app.get('/api/bro', function (req, res) {
-  dao.getBros(ph)
+  dao.getBros(req.session.phonenumber)
   .then(function (cursor) {
     return cursor.toArray();
   })
@@ -112,7 +112,7 @@ app.get('/api/bro', function (req, res) {
 
 app.delete('/api/bro/:id', function (req, res) {
   const id = req.params.id;
-  dao.delete(ph, id)
+  dao.delete(req.session.phonenumber, id)
   .then(function (cursor) {
     return res.status(200).json(cursor);
   })
@@ -122,7 +122,7 @@ app.delete('/api/bro/:id', function (req, res) {
 })
 
 app.delete('/api/bro', function (req, res) {
-  dao.deleteAllBros(ph)
+  dao.deleteAllBros(req.session.phonenumber)
   .then(function (response) {
     res.status(204).json();
   })
