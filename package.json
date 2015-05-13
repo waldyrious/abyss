@@ -33,7 +33,7 @@
     "passwordless": "^1.0.9",
     "phones": "^0.1.0",
     "request": "^2.55.0",
-    "rethinkdb": "^2.0.0",
+    "rethinkdbdash": "^2.0.10",
     "spdy": "^1.32.0",
     "superb": "^1.1.4",
     "tape": "^4.0.0",

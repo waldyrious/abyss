@@ -2,3 +2,4 @@ node_modules/
 secret/
 dist/
 server-saved-messages.json
+rethinkdb_data/
