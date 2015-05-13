@@ -1,31 +1,13 @@
 var m = require('mithril');
 var messages = require('./messages');
 var styler = require('./styler');
-var _ = require('lodash');
+
+var Error = require('./error');
 
 module.exports.controller = function (args, extras) {
 	var self = this
 	
-	this.error = (function() {
-		var error = null;
-		var timeout;
-
-		return function (value) {
-			if (value) {
-				error = value;
-
-				if (timeout) {
-					clearTimeout(timeout);
-				}
-				timeout = setTimeout(function () {
-					error = null;
-					m.redraw();
-				}.bind(this), 4000);
-			} else {
-				return error;
-			}
-		}.bind(this);
-	})();
+	this.error = Error.ErrorHolder();
 
 	this.phoneInput = m.prop('')
 	this.needCode = m.prop(false)
@@ -70,27 +52,12 @@ module.exports.controller = function (args, extras) {
 	this.whoami()
 }
 
-function renderError(error) {
-	if (!error) return null;
-
-	var value;
-
-	if (_.isObject(error())) {
-		if (error().error && error().error.text)
-			value = error().error.text;
-	} else {
-		value = error();
-	}
-
-	return m('div', {class:'bg-danger'}, value);
-}
-
 module.exports.view = function (ctrl) {
 
 	if (ctrl.noauth()) {
 		if (ctrl.needCode()) {
 			return m('div', [
-				renderError(ctrl.error),
+				Error.renderError(ctrl.error),
 				m('div', 'Enter verification code: '),
 				m('input', {type:'tel', oninput: m.withAttr('value', ctrl.codeInput), value: ctrl.codeInput()}),
 				m('button', styler.buttonify({onclick: ctrl.submitCode}), 'Submit Code'),
@@ -98,7 +65,7 @@ module.exports.view = function (ctrl) {
 			])
 		} else {
 			return m('div', [
-				renderError(ctrl.error),
+				Error.renderError(ctrl.error),
 				m('div', 'Log in with your phone number!' + ctrl.phonenumberapi()),
 				m('input', {type:'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
 				m('button', styler.buttonify({onclick: ctrl.loginClick}), 'Login'),
