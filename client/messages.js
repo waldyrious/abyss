@@ -4,6 +4,7 @@ var Autolinker = require('autolinker')
 var autolinker = new Autolinker();
 var styler = require('./styler');
 var _ = require('lodash');
+var Error = require('./error');
 
 module.exports.controller = function (args, extras) {
   var self = this
@@ -11,6 +12,7 @@ module.exports.controller = function (args, extras) {
   self.bros = m.prop([]);
   self.to = [m.prop('')];
   self.message = m.prop('')
+  self.error = Error.ErrorHolder();
 
   function fromMe(message) {
     return message.from === args.phonenumber();
@@ -56,22 +58,22 @@ module.exports.controller = function (args, extras) {
 
   self.send = function () {
     m.request({method: 'POST', url: '/api/bro', data: { to: self.to, text: self.message() } })
-    .then(self.getBros)
+    .then(self.getBros, self.error)
   }
 
   self.getBros = function () {
     m.request({method: 'GET', url: '/api/bro'})
-    .then(self.bros)
+    .then(self.bros, self.error)
   }
 
   self.clearBros = function () {
     m.request({method: 'DELETE', url: '/api/bro'})
-    .then(self.getBros)
+    .then(self.getBros, self.error)
   }
 
   self.delete = function(message) {
     m.request({method: 'DELETE', url: '/api/bro/' + encodeURIComponent(message.id)})
-    .then(self.getBros)
+    .then(self.getBros, self.error)
   }
 
   self.getBros()
@@ -97,6 +99,7 @@ module.exports.view = function (ctrl, args, extras) {
 
   return m('div', [
     m('div', [
+      Error.renderError(ctrl.error),
       m('label', 'To: '),m('span', ' '),
       m('button', styler.buttonify({onclick: ctrl.toPlus}), '+'),
       m('button', styler.buttonify({onclick: ctrl.toMinus}), '-'),
