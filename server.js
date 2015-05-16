@@ -8,19 +8,21 @@ const socket443 = new net.Server();
 
 if (process.getuid() === 0) { // if we are root
 
-  socket80.listen(80);
-  socket443.listen(443);
+	socket80.listen(80);
+	socket443.listen(443);
 
-  process.setgid('nobody');
-  process.setuid('nobody');
+	// we have opened the sockets, now drop our root privileges
+	process.setgid('nobody');
+	process.setuid('nobody');
 
-  if (process.setegit) { // we have opened the sockets, now drop our root privileges
-    process.setegid('nobody');
-    process.seteuid('nobody');
-  }
+	// Newer node versions allow you to set the effective uid/gid
+	if (process.setegit) {
+		process.setegid('nobody');
+		process.seteuid('nobody');
+	}
 } else { // we are not root, can only use sockets >1024
-  socket80.listen(3000);
-  socket443.listen(8443);
+	socket80.listen(3000);
+	socket443.listen(8443);
 }
 
 const express = require('express');
@@ -30,7 +32,7 @@ const secret = require('./secret/secret.json');
 var credentials;
 
 try {
-	var privateKey  = fs.readFileSync('secret/server.key', 'utf8');
+	var privateKey = fs.readFileSync('secret/server.key', 'utf8');
 	var certificate = fs.readFileSync('secret/server.crt', 'utf8');
 	credentials = {key: privateKey, cert: certificate};
 } catch (e) {
@@ -61,13 +63,13 @@ if (server) {
 
 const http = require('http');
 if (secret.httpredirect) {
-  console.log('HTTP redirect enabled');
-  http.createServer(function (req, res) {
-      res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
-      res.end();
-  }).listen(socket80);
+	console.log('HTTP redirect enabled');
+	http.createServer(function (req, res) {
+		res.writeHead(301, {"Location": "https://" + req.headers['host'] + req.url});
+		res.end();
+	}).listen(socket80);
 } else {
-  console.log('HTTP redirect disabled');
-  http.createServer(app).listen(socket80);
+	console.log('HTTP redirect disabled');
+	http.createServer(app).listen(socket80);
 	console.log('HTTP server listening on port ' + socket80.address().port);
 }
