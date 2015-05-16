@@ -56,29 +56,28 @@ module.exports.controller = function (args, extras) {
 module.exports.view = function (ctrl) {
 
 	with (sugarTags) {
-
 		if (ctrl.noauth()) {
 			if (ctrl.needCode()) {
-				return m('div', [
+				return DIV([
 					Error.renderError(ctrl.error),
-					m('div', 'Enter verification code: '),
-					m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.codeInput), value: ctrl.codeInput()}),
-					m('button', styler.buttonify({onclick: ctrl.submitCode}), 'Submit Code'),
-					m('button', styler.buttonify({onclick: ctrl.cancelCode}), 'Cancel')
+					DIV( 'Enter verification code: '),
+					INPUT( {type: 'tel', oninput: m.withAttr('value', ctrl.codeInput), value: ctrl.codeInput()}),
+					BUTTON(styler.buttonify({onclick: ctrl.submitCode}), 'Submit Code'),
+					BUTTON(styler.buttonify({onclick: ctrl.cancelCode}), 'Cancel')
 				])
 			} else {
 				debugger;
-				return m('div', [
+				return DIV([
 					Error.renderError(ctrl.error),
-					m('div', 'Log in with your phone number!' + ctrl.phonenumberapi()),
-					m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
-					m('button', styler.buttonify({onclick: ctrl.loginClick}), 'Login')
+					DIV('Log in with your phone number!' + ctrl.phonenumberapi()),
+					INPUT({type: 'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
+					BUTTON(styler.buttonify({onclick: ctrl.loginClick}), 'Login')
 				])
 			}
 		} else {
 			return m('div', [
 				DIV('Logged in as: ' + ctrl.phonenumberapi()),
-				m('button', styler.buttonify({onclick: ctrl.logout}), 'Logout'),
+				BUTTON(styler.buttonify({onclick: ctrl.logout}), 'Logout'),
 
 				m.component(messages, {
 					'phonenumber': ctrl.phonenumberapi,
