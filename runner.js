@@ -11,7 +11,8 @@ nodemon({
 	},
 	"ignore": [
 		".git",
-		"client/**"
+		"client/**",
+		"**/*.spec.js"
 	]
 });
 
