@@ -97,26 +97,29 @@ module.exports.view = function (ctrl, args, extras) {
 		})
 	}
 
+	var bbuttonify = styler.bbuttonify;
+	var buttonify = styler.buttonify;
+
 	return m('div', [
 		m('div', [
 			Error.renderError(ctrl.error),
 			m('label', 'To: '), m('span', ' '),
-			m('button', styler.buttonify({onclick: ctrl.toPlus}), '+'),
-			m('button', styler.buttonify({onclick: ctrl.toMinus}), '-'),
+			m('button', buttonify({onclick: ctrl.toPlus}), '+'),
+			m('button', buttonify({onclick: ctrl.toMinus}), '-'),
 			m('br'),
 			ctrl.to.map(function (item, index) {
-				return m('input', {type: 'tel', oninput: m.withAttr('value', function (value) { ctrl.to[index] = value }), value: ctrl.to[index]})
+				return m('input', {type: 'tel', oninput: m.withAttr('value', function (value) { ctrl.to[index] = value }), value: ctrl.to[index] })
 			}),
 			m('br'),
 			m('label', 'Message: '), m('br'),
 			m('input', {'style': {'width': '100%'}, oninput: m.withAttr('value', ctrl.message), value: ctrl.message()}),
 			m('br'),
 			m('br'),
-			m('button', styler.bbuttonify({onclick: ctrl.send, disabled: args.noauth()}), 'Send Bro!')
+			m('button', bbuttonify({onclick: ctrl.send, disabled: args.noauth()}), 'Send Bro!')
 		]),
 		m('br'),
-		m('button', styler.buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Get messages!'),
-		m('button', styler.buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
+		m('button', buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Get messages!'),
+		m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
 		m('div', ctrl.messages().map(function (bro) {
 			var ret = [m('span', replyTo(bro), fromMe(bro) ? 'To: ' : 'From: '),
 				m('b', replyTo(bro), (fromMe(bro) ? bro.to : bro.from) + ' '),
@@ -129,7 +132,7 @@ module.exports.view = function (ctrl, args, extras) {
 			ret = ret.concat([
 				m('span', m.trust(autolinker.link(bro.text))),
 				m('br'),
-				m('button', styler.buttonify({
+				m('button', buttonify({
 					onclick: function () {
 						ctrl.delete(bro)
 					}
