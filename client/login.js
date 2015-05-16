@@ -66,7 +66,6 @@ module.exports.view = function (ctrl) {
 					BUTTON(styler.buttonify({onclick: ctrl.cancelCode}), 'Cancel')
 				])
 			} else {
-				debugger;
 				return DIV([
 					Error.renderError(ctrl.error),
 					DIV('Log in with your phone number!' + ctrl.phonenumberapi()),
