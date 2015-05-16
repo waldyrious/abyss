@@ -46,6 +46,8 @@ Be prepared to get accustomed to using the debuggers! You will find yourself ins
 [Bluebird](https://github.com/petkaantonov/bluebird/blob/master/API.md) Promise API. Most Node modules use callback-based APIs for performance.
 Bluebird lets you easily convert them to Promise based APIs, which are much easier to use, but incurs a small perf hit.
 
+[Lodash API](https://lodash.com/docs)
+
 [Express](http://expressjs.com) minimalist web application framework
 
 [Mithril](https://lhorie.github.io/mithril) minimalist MVC frontend framework
