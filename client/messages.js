@@ -9,7 +9,7 @@ var Error = require('./error');
 module.exports.controller = function (args, extras) {
 	var self = this;
 
-	self.bros = m.prop([]);
+	self.messages = m.prop([]);
 	self.to = [m.prop('')];
 	self.message = m.prop('');
 	self.error = Error.ErrorHolder();
@@ -63,7 +63,7 @@ module.exports.controller = function (args, extras) {
 
 	self.getBros = function () {
 		m.request({method: 'GET', url: '/api/bro'})
-		.then(self.bros, self.error)
+		.then(self.messages, self.error)
 	};
 
 	self.clearBros = function () {
@@ -85,7 +85,7 @@ module.exports.view = function (ctrl, args, extras) {
 		return message.from === args.phonenumber();
 	}
 
-	function multiTo(message) {
+	function groupMessage(message) {
 		return !fromMe(message) && message.to.length && message.to.length > 1;
 	}
 
@@ -117,12 +117,12 @@ module.exports.view = function (ctrl, args, extras) {
 		m('br'),
 		m('button', styler.buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Get messages!'),
 		m('button', styler.buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
-		m('div', ctrl.bros().map(function (bro) {
+		m('div', ctrl.messages().map(function (bro) {
 			var ret = [m('span', replyTo(bro), fromMe(bro) ? 'To: ' : 'From: '),
 				m('b', replyTo(bro), (fromMe(bro) ? bro.to : bro.from) + ' '),
 				m('i', moment(bro.date).fromNow()),
 				m('br')];
-			if (multiTo(bro)) {
+			if (groupMessage(bro)) {
 				ret.push(m('span', replyTo(bro), 'To: ' + bro.to.join(', ')));
 				ret.push(m('br'));
 			}
