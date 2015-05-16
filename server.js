@@ -63,13 +63,13 @@ if (server) {
 
 const http = require('http');
 if (secret.httpredirect) {
-	console.log('HTTP redirect enabled');
+	console.log('redirect-to-HTTPS enabled');
 	http.createServer(function (req, res) {
 		res.writeHead(301, {"Location": "https://" + req.headers['host'] + req.url});
 		res.end();
 	}).listen(socket80);
 } else {
-	console.log('HTTP redirect disabled');
+	console.log('redirect-to-HTTPS disabled');
 	http.createServer(app).listen(socket80);
 	console.log('HTTP server listening on port ' + socket80.address().port);
 }
