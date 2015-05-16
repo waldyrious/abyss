@@ -58,6 +58,8 @@ Bluebird lets you easily convert them to Promise based APIs, which are much easi
 
 [MomentJS](http://momentjs.com/) Date and time handling library
 
+[Tape](https://github.com/substack/tape) Tape: minimalist, TAP producing test library.
+
 # Set up DB tables
 
 r.db('test').tableCreate('verifications')
