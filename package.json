@@ -5,7 +5,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "watch": "watchify client/main.js -o 'exorcist client/bundle.js.map > client/bundle.js' -d -v",
+    "watch": "watchify ./client/main.js -o 'exorcist ./client/bundle.js.map > ./client/bundle.js' -d -v",
     "build": "browserify -d -g uglifyify client/main.js | exorcist client/bundle.js.map > client/bundle.js"
   },
   "author": "",
@@ -28,6 +28,7 @@
     "json-middleware": "^1.0.2",
     "lodash": "^3.8.0",
     "mithril": "^0.2.0",
+    "mithril.sugartags": "0.0.8",
     "moment": "^2.10.2",
     "morgan": "^1.5.2",
     "passwordless": "^1.0.9",

@@ -1,4 +1,5 @@
 var m = require('mithril');
+var sugarTags = require('mithril.sugartags')(m);
 var messages = require('./messages');
 var styler = require('./styler');
 
@@ -54,32 +55,36 @@ module.exports.controller = function (args, extras) {
 
 module.exports.view = function (ctrl) {
 
-	if (ctrl.noauth()) {
-		if (ctrl.needCode()) {
-			return m('div', [
-				Error.renderError(ctrl.error),
-				m('div', 'Enter verification code: '),
-				m('input', {type:'tel', oninput: m.withAttr('value', ctrl.codeInput), value: ctrl.codeInput()}),
-				m('button', styler.buttonify({onclick: ctrl.submitCode}), 'Submit Code'),
-				m('button', styler.buttonify({onclick: ctrl.cancelCode}), 'Cancel'),
-			])
+	with (sugarTags) {
+
+		if (ctrl.noauth()) {
+			if (ctrl.needCode()) {
+				return m('div', [
+					Error.renderError(ctrl.error),
+					m('div', 'Enter verification code: '),
+					m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.codeInput), value: ctrl.codeInput()}),
+					m('button', styler.buttonify({onclick: ctrl.submitCode}), 'Submit Code'),
+					m('button', styler.buttonify({onclick: ctrl.cancelCode}), 'Cancel')
+				])
+			} else {
+				debugger;
+				return m('div', [
+					Error.renderError(ctrl.error),
+					m('div', 'Log in with your phone number!' + ctrl.phonenumberapi()),
+					m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
+					m('button', styler.buttonify({onclick: ctrl.loginClick}), 'Login')
+				])
+			}
 		} else {
 			return m('div', [
-				Error.renderError(ctrl.error),
-				m('div', 'Log in with your phone number!' + ctrl.phonenumberapi()),
-				m('input', {type:'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
-				m('button', styler.buttonify({onclick: ctrl.loginClick}), 'Login'),
+				DIV('Logged in as: ' + ctrl.phonenumberapi()),
+				m('button', styler.buttonify({onclick: ctrl.logout}), 'Logout'),
+
+				m.component(messages, {
+					'phonenumber': ctrl.phonenumberapi,
+					'noauth': ctrl.noauth
+				})
 			])
 		}
-	} else {
-		return m('div', [
-			m('div', 'Logged in as: ' + ctrl.phonenumberapi()),
-			m('button', styler.buttonify({onclick: ctrl.logout}), 'Logout'),
-
-			m.component(messages, {
-				'phonenumber': ctrl.phonenumberapi,
-				'noauth': ctrl.noauth
-			})
-		])	
 	}
 };
