@@ -4,13 +4,13 @@ const Promise = require('bluebird');
 const fs = require('fs');
 
 const net = require('net');
-const socket80 = new net.Server();
-const socket443 = new net.Server();
+const httpSocket = new net.Server();
+const httpsSocket = new net.Server();
 
 if (process.getuid() === 0) { // if we are root
 
-	socket80.listen(80);
-	socket443.listen(443);
+	httpSocket.listen(80);
+	httpsSocket.listen(443);
 
 	// we have opened the sockets, now drop our root privileges
 	process.setgid('nobody');
@@ -22,8 +22,8 @@ if (process.getuid() === 0) { // if we are root
 		process.seteuid('nobody');
 	}
 } else { // we are not root, can only use sockets >1024
-	socket80.listen(3000);
-	socket443.listen(8443);
+	httpSocket.listen(3000);
+	httpsSocket.listen(8443);
 }
 
 const express = require('express');
@@ -57,8 +57,8 @@ if (secret.spdy) {
 	server = require('https').createServer(credentials, app);
 }
 if (server) {
-	server.listen(socket443);
-	console.log('HTTPS server listening on port ' + socket443.address().port);
+	server.listen(httpsSocket);
+	console.log('HTTPS server listening on port ' + httpsSocket.address().port);
 }
 
 
@@ -68,9 +68,9 @@ if (secret.httpredirect) {
 	http.createServer(function (req, res) {
 		res.writeHead(301, {"Location": "https://" + req.headers['host'] + req.url});
 		res.end();
-	}).listen(socket80);
+	}).listen(httpSocket);
 } else {
 	console.log('redirect-to-HTTPS disabled');
-	http.createServer(app).listen(socket80);
-	console.log('HTTP server listening on port ' + socket80.address().port);
+	http.createServer(app).listen(httpSocket);
+	console.log('HTTP server listening on port ' + httpSocket.address().port);
 }
