@@ -8,14 +8,24 @@ const HTTP2 = process.env.HTTP2 === 'true'
 
 const net = require('net');
 const socket80 = new net.Server();
-socket80.listen(80);
 const socket443 = new net.Server();
-socket443.listen(443);
 
-process.setgid('nobody');
-process.setuid('nobody');
-process.setegid('nobody');
-process.seteuid('nobody');
+if (process.getuid() === 0) { // if we are root
+
+  socket80.listen(80);
+  socket443.listen(443);
+
+  process.setgid('nobody');
+  process.setuid('nobody');
+
+  if (process.setegit) { // we have opened the sockets, now drop our root privileges
+    process.setegid('nobody');
+    process.seteuid('nobody');
+  }
+} else { // we are not root, can only use sockets >1024
+  socket80.listen(8080);
+  socket443.listen(8443);
+}
 
 const express = require('express');
 const app = require('./lib/app')
