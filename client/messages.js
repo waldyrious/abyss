@@ -10,7 +10,7 @@ module.exports.controller = function (args, extras) {
 	var self = this;
 
 	self.messages = m.prop([]);
-	self.to = [m.prop('')];
+	self.to = [''];
 	self.message = m.prop('');
 	self.error = Error.ErrorHolder();
 
@@ -25,19 +25,19 @@ module.exports.controller = function (args, extras) {
 	self.replyTo = function (message) {
 		if (fromMe(message)) {
 			if (!_.isArray(message.to)) {
-				self.to = [m.prop(message.to)];
+				throw new TypeError('To field must be array');
 			} else {
 				self.to = [];
 				for (var i = 0; i < message.to.length; i++) {
-					self.to.push(m.prop(message.to[i]));
+					self.to.push(message.to[i]);
 				}
 			}
 		} else {
 			self.to = [];
-			self.to.push(m.prop(message.from));
+			self.to.push(message.from);
 			for (var i = 0; i < message.to.length; i++) {
 				if (message.to[i] !== args.phonenumber()) {
-					self.to.push(m.prop(message.to[i]));
+					self.to.push(message.to[i]);
 				} else {
 				}
 			}
@@ -45,14 +45,14 @@ module.exports.controller = function (args, extras) {
 	};
 
 	self.toPlus = function () {
-		self.to.push(m.prop(''))
+		self.to.push('')
 	};
 
 	self.toMinus = function () {
 		if (self.to.length > 1) {
 			self.to.pop();
 		} else {
-			self.to[0]('');
+			self.to[0] = '';
 		}
 	};
 
@@ -105,7 +105,7 @@ module.exports.view = function (ctrl, args, extras) {
 			m('button', styler.buttonify({onclick: ctrl.toMinus}), '-'),
 			m('br'),
 			ctrl.to.map(function (item, index) {
-				return m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.to[index]), value: ctrl.to[index]()})
+				return m('input', {type: 'tel', oninput: m.withAttr('value', function (value) { ctrl.to[index] = value }), value: ctrl.to[index]})
 			}),
 			m('br'),
 			m('label', 'Message: '), m('br'),
