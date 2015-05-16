@@ -15,6 +15,12 @@ On Mac...
 
 Also get [https://www.jetbrains.com/webstorm/](https://www.jetbrains.com/webstorm/) seriously, its the best thing for JavaScript.
 
+# Webstorm config
+
+1. Check use tab character in Default Indent Options
+2. Tab size 4, Indent 4, Continuation indent 0
+3. JavaScript: Tab size 4, Indent 4, Continuation indent 0
+
 # Running locally
 
 1. git clone the repo and cd into the project
