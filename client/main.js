@@ -7,7 +7,7 @@ function receiveMessage(message) {
 }
 
 var m = require('mithril');
-var moment = require('moment');
+
 var regsw = require('./regsw');
 regsw();
 
