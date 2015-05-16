@@ -41,18 +41,22 @@ Be prepared to get accustomed to using the debuggers! You will find yourself ins
 
 # API reference
 
-[NodeJS API](https://nodejs.org/api)
+[Mozilla MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript) The JavaScript reference.
+
+[NodeJS API](https://nodejs.org/api) NodeJS APIs.
 
 [Bluebird](https://github.com/petkaantonov/bluebird/blob/master/API.md) Promise API. Most Node modules use callback-based APIs for performance.
-Bluebird lets you easily convert them to Promise based APIs, which are much easier to use, but incurs a small perf hit.
-
-[Lodash API](https://lodash.com/docs)
+Bluebird lets you easily convert them to Promise based APIs, which are much easier to use, and have better error handling and stacktraces, though they incur a small perf hit.
+ 
+[Lodash API](https://lodash.com/docs) Utility belt library. Useful for working with arrays and objects.
 
 [Express](http://expressjs.com) minimalist web application framework
 
 [Mithril](https://lhorie.github.io/mithril) minimalist MVC frontend framework
 
-[JavaScript Design Patterns](http://addyosmani.com/resources/essentialjsdesignpatterns/book/) good read
+[JavaScript Design Patterns](http://addyosmani.com/resources/essentialjsdesignpatterns/book/)
+
+[MomentJS](http://momentjs.com/) Date and time handling library
 
 # Set up DB tables
 
