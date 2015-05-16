@@ -3,3 +3,4 @@ secret/
 dist/
 server-saved-messages.json
 rethinkdb_data/
+.idea/

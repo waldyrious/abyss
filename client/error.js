@@ -35,4 +35,4 @@ module.exports.renderError = function (error) {
 	}
 
 	return m('div', {class:'bg-danger'}, value);
-}
+};

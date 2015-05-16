@@ -5,52 +5,52 @@ var styler = require('./styler');
 var Error = require('./error');
 
 module.exports.controller = function (args, extras) {
-	var self = this
+	var self = this;
 	
 	this.error = Error.ErrorHolder();
 
-	this.phoneInput = m.prop('')
-	this.needCode = m.prop(false)
-	this.codeInput = m.prop('')
-	this.phonenumberapi = m.prop('')
+	this.phoneInput = m.prop('');
+	this.needCode = m.prop(false);
+	this.codeInput = m.prop('');
+	this.phonenumberapi = m.prop('');
 
 	this.cancelCode = function () {
 		self.codeInput('');
 		self.needCode(false);
-	}
+	};
 
 	this.logout = function () {
 		return m.request({method: 'POST',
 		 url: '/api/registration/logout', data: { phonenumber: self.phonenumberapi() } })
 		.then(function (response) {
-			self.phonenumberapi('')
-			self.codeInput('')
+			self.phonenumberapi('');
+			self.codeInput('');
 		}, self.error)
-	}
+	};
 	this.whoami = function () {
 	    m.request({url:'/api/registration/phone'})
 	    .then(self.phonenumberapi, self.error)
-	  }
-	this.noauth = function () { return self.phonenumberapi() == '' }
+	  };
+	this.noauth = function () { return self.phonenumberapi() == '' };
 	this.loginClick = function () {
 		return m.request({method: 'POST',
 		 url: '/api/registration/phone', data: { phonenumber: self.phoneInput().trim() } })
 		.then(function (response) {
-			self.needCode(true)
-			self.codeInput('')
+			self.needCode(true);
+			self.codeInput('');
 		}, self.error)		
-	}
+	};
 	this.submitCode = function () {
 		return m.request({method: 'POST',
 		 url: '/api/registration/code', data: { code: self.codeInput().trim() } })
 		.then(function (response) {
-			self.phonenumberapi(response)
-			self.needCode(false)
-			self.codeInput('')
-		}, self.error)
-	}
+			self.phonenumberapi(response);
+			self.needCode(false);
+			self.codeInput('');
+		}, self.error);
+	};
 	this.whoami()
-}
+};
 
 module.exports.view = function (ctrl) {
 
@@ -82,6 +82,4 @@ module.exports.view = function (ctrl) {
 			})
 		])	
 	}
-
-	
-}
+};

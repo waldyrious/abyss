@@ -5,8 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "watch": "cd client && watchify main.js -o 'exorcist bundle.js.map > bundle.js' -d -v",
-    "build": "cd client && browserify -g uglifyify -d main.js | exorcist bundle.js.map > bundle.js"
+    "watch": "watchify client/main.js -o 'exorcist client/bundle.js.map > client/bundle.js' -d -v",
+    "build": "browserify -d -g uglifyify client/main.js | exorcist client/bundle.js.map > client/bundle.js"
   },
   "author": "",
   "license": "ISC",

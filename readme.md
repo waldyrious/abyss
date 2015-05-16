@@ -42,3 +42,8 @@ Bluebird lets you easily convert them to Promise based APIs, which are much easi
 
 [JavaScript Design Patterns](http://addyosmani.com/resources/essentialjsdesignpatterns/book/) good read
 
+# Set up DB tables
+
+r.db('test').tableCreate('verifications')
+
+
