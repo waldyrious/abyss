@@ -2,10 +2,10 @@
 
 # Installing
 
-You need two tools
+You need to install:
 
-1. [http://rethinkdb.com/](http://rethinkdb.com/)
-2. [https://nodejs.org/](https://nodejs.org/) 0.12 or later
+1. [RethinkDB](http://rethinkdb.com/)
+2. [Node.js](https://nodejs.org/) 0.12 or later
 
 On Mac...
     
@@ -13,7 +13,7 @@ On Mac...
     brew install rethinkdb    
     brew install node
 
-Also get [https://www.jetbrains.com/webstorm/](https://www.jetbrains.com/webstorm/) seriously, its the best thing for JavaScript.
+Also get [WebStorm](https://www.jetbrains.com/webstorm/)! Seriously, its the best thing for JavaScript!
 
 # Webstorm config
 
@@ -30,7 +30,7 @@ Also get [https://www.jetbrains.com/webstorm/](https://www.jetbrains.com/webstor
 1. Build front end: `npm run watch` This continually builds the front end. Leave it running in a terminal tab too.
 1. Now you can run the server.js from WebStorm. Add --harmony to the Node parameters in the run config!
 
-Other ways to run:
+Command line ways to run:
 
 1. From the command line, `node --harmony server.js` to run.
 1. Run `node debug --harmony server.js` to use the debugger. The command line debugger is very easy to use
