@@ -17,7 +17,7 @@ if (process.getuid() === 0) { // if we are root
 	process.setuid('nobody');
 
 	// Newer node versions allow you to set the effective uid/gid
-	if (process.setegit) {
+	if (process.setegid) {
 		process.setegid('nobody');
 		process.seteuid('nobody');
 	}
