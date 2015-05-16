@@ -46,4 +46,6 @@ Bluebird lets you easily convert them to Promise based APIs, which are much easi
 
 r.db('test').tableCreate('verifications')
 
+r.db('test').tableCreate('subscriptions')
 
+r.db('test').tableCreate('messages')
