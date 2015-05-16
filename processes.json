@@ -6,12 +6,7 @@
     "watch"       : true,
     "node_args"   : "",
     "merge_logs"  : true,
-    "cwd"         : "/home/joe/yobro",
-    "env": {
-        "PROD": "true",
-        "SPDY": "true",
-        "SEND_CODES": "true"
-    }
+    "cwd"         : "/home/joe/yobro"
   }, {
     "name"        : "proxy",
     "script"      : "proxy.js",
