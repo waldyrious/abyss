@@ -2,10 +2,10 @@
 
 # Installing
 
-You need two tools
+You need to install:
 
-1. [http://rethinkdb.com/](http://rethinkdb.com/)
-2. [https://nodejs.org/](https://nodejs.org/) 0.12 or later
+1. [RethinkDB](http://rethinkdb.com/)
+2. [Node.js](https://nodejs.org/) 0.12 or later
 
 On Mac...
     
@@ -13,7 +13,13 @@ On Mac...
     brew install rethinkdb    
     brew install node
 
-Also get [https://www.jetbrains.com/webstorm/](https://www.jetbrains.com/webstorm/) seriously, its the best thing for JavaScript.
+Also get [WebStorm](https://www.jetbrains.com/webstorm/)! Seriously, its the best thing for JavaScript!
+
+# Webstorm config
+
+1. Check use tab character in Default Indent Options
+2. Tab size 4, Indent 4, Continuation indent 0
+3. JavaScript: Tab size 4, Indent 4, Continuation indent 0
 
 # Running locally
 
@@ -22,9 +28,9 @@ Also get [https://www.jetbrains.com/webstorm/](https://www.jetbrains.com/webstor
  to access the RethinkDB admin tool. Leave this running in a terminal tab.
 1. Install npms: `npm i`  This installs the node_modules for the project.
 1. Build front end: `npm run watch` This continually builds the front end. Leave it running in a terminal tab too.
-1. Now you can run the server.js from WebStorm. Add --harmony to the Node parameters in the run config!
+1. Now you can run the server.js from WebStorm. Add *--harmony* to the Node parameters in the run config! This flag enables ES6 features like *const*. The need to use this flag will go away soon with Node 3.0.0.
 
-Other ways to run:
+Command line ways to run:
 
 1. From the command line, `node --harmony server.js` to run.
 1. Run `node debug --harmony server.js` to use the debugger. The command line debugger is very easy to use
@@ -35,16 +41,24 @@ Be prepared to get accustomed to using the debuggers! You will find yourself ins
 
 # API reference
 
-[NodeJS API](https://nodejs.org/api)
+[Mozilla MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript) The JavaScript reference.
+
+[NodeJS API](https://nodejs.org/api) NodeJS APIs.
 
 [Bluebird](https://github.com/petkaantonov/bluebird/blob/master/API.md) Promise API. Most Node modules use callback-based APIs for performance.
-Bluebird lets you easily convert them to Promise based APIs, which are much easier to use, but incurs a small perf hit.
+Bluebird lets you easily convert them to Promise based APIs, which are much easier to use, and have better error handling and stacktraces, though they incur a small perf hit.
+ 
+[Lodash API](https://lodash.com/docs) Utility belt library. Useful for working with arrays and objects.
 
 [Express](http://expressjs.com) minimalist web application framework
 
 [Mithril](https://lhorie.github.io/mithril) minimalist MVC frontend framework
 
-[JavaScript Design Patterns](http://addyosmani.com/resources/essentialjsdesignpatterns/book/) good read
+[JavaScript Design Patterns](http://addyosmani.com/resources/essentialjsdesignpatterns/book/)
+
+[MomentJS](http://momentjs.com/) Date and time handling library
+
+[Tape](https://github.com/substack/tape) Tape: minimalist, TAP producing test library.
 
 # Set up DB tables
 
