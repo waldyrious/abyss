@@ -1,6 +1,6 @@
 #!/bin/sh
 rm -rf dist
-npm run build
+browserify -g uglifyify client/main.js > client/bundle.js
 mkdir dist
 mkdir dist/client
 cp -R proxy.js lib package.json server.js model dist
