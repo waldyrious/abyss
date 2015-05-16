@@ -18,16 +18,20 @@ Also get [https://www.jetbrains.com/webstorm/](https://www.jetbrains.com/webstor
 # Running locally
 
 1. git clone the repo and cd into the project
-1. Start an instance of Rethinkdb:  `rethinkdb -o 1` This will run an instance of RethinkDB with datafiles in the working directory. Once running, go to [http://localhost:8081](http://localhost:8081)
+1. Start an instance of Rethinkdb:  `rethinkdb` This will start an instance of RethinkDB with datafiles in the working directory. Once running, go to [http://localhost:8080](http://localhost:8080)
  to access the RethinkDB admin tool. Leave this running in a terminal tab.
-1. Install npms: `npm i`  This installs the node_modules
+1. Install npms: `npm i`  This installs the node_modules for the project.
 1. Build front end: `npm run watch` This continually builds the front end. Leave it running in a terminal tab too.
-1. Now you can run `node --harmony server.js` to run.
-1. Also can run `node debug --harmony server.js` to use the debugger. The command line debugger is very easy to use
-and quite fast. 
-1. You can also run the server.js from WebStorm. Add --harmony to the Node parameters in the run config.
+1. Now you can run the server.js from WebStorm. Add --harmony to the Node parameters in the run config!
 
-Get accustomed to using the debuggers! You will find yourself inserting 'debugger' to trace code frequently and inspect variables. 
+Other ways to run:
+
+1. From the command line, `node --harmony server.js` to run.
+1. Run `node debug --harmony server.js` to use the debugger. The command line debugger is very easy to use
+and quite fast. 
+1.  Run `node-debug -p 8081 --harmony server.js` to use the web based debugger. First you'll need to have run `npm i -g node-inspector` to install this program.
+
+Be prepared to get accustomed to using the debuggers! You will find yourself inserting 'debugger' to trace code frequently, inspect variables and experiment.
 
 # API reference
 
