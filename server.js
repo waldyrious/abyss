@@ -55,7 +55,7 @@ if (secret.spdy) {
 }
 if (server) {
 	server.listen(socket443);
-	console.log('HTTPS server listening on port' + socket443.address().port);
+	console.log('HTTPS server listening on port ' + socket443.address().port);
 }
 
 
