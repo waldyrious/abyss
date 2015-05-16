@@ -28,7 +28,8 @@ Also get [WebStorm](https://www.jetbrains.com/webstorm/)! Seriously, its the bes
  to access the RethinkDB admin tool. Leave this running in a terminal tab.
 1. Install npms: `npm i`  This installs the node_modules for the project.
 1. Build front end: `npm run watch` This continually builds the front end. Leave it running in a terminal tab too.
-1. Now you can run the server.js from WebStorm. Add *--harmony* to the Node parameters in the run config! This flag enables ES6 features like *const*. The need to use this flag will go away soon with Node 3.0.0.
+1. Now you can run the server.js from WebStorm. Add *--harmony* to the Node parameters in the run config! This flag enables ES6 features like *const*. (The need to use this flag will go away soon with Node 3.0.0.)
+1. You can also run `runner.js`. This one reloads the server on every file change and rebuilds the client on every client/* file change. However, debugging does not work in it.
 
 Command line ways to run:
 
