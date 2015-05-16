@@ -10,3 +10,10 @@ nodemon({
 		"js": "node --harmony"
 	}
 });
+
+//var browserify = require('browserify');
+//var watchify = require('watchify');
+//var fromArgs = require('watchify/bin/args');
+//
+//var b = browserify({ cache: {}, packageCache: {} });
+//var w = watchify(b);
