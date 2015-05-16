@@ -132,7 +132,7 @@ module.exports.view = function (ctrl, args, extras) {
 			BUTTON(buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
 			DIV(ctrl.messages().map(function (bro) {
 				var ret = [SPAN(replyTo(bro), fromMe(bro) ? 'To: ' : 'From: '),
-					B(replyTo(bro), (fromMe(bro) ? bro.to : bro.from) + ' '),
+					B(replyTo(bro), (fromMe(bro) ? (bro.to.join(', ')): bro.from) + ' '),
 					I(moment(bro.date).fromNow()),
 					BR()];
 				if (groupMessage(bro)) {
