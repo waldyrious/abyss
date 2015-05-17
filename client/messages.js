@@ -110,7 +110,7 @@ module.exports.view = function (ctrl, args, extras) {
 				BUTTON(buttonify({onclick: ctrl.toMinus}), '-'),
 				BR(),
 				ctrl.to.map(function (item, index) {
-					return m('input', {
+					return INPUT({
 						type: 'tel', oninput: m.withAttr('value', function (value) {
 							ctrl.to[index] = value
 						}), value: ctrl.to[index]
@@ -118,7 +118,7 @@ module.exports.view = function (ctrl, args, extras) {
 				}),
 				BR(),
 				LABEL('Message: '), BR(),
-				m('input', {
+				INPUT({
 					'style': {'width': '100%'},
 					oninput: m.withAttr('value', ctrl.message),
 					value: ctrl.message()
@@ -131,15 +131,11 @@ module.exports.view = function (ctrl, args, extras) {
 			BUTTON(buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Get messages!'),
 			BUTTON(buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
 			DIV(ctrl.messages().map(function (bro) {
-				var ret = [SPAN(replyTo(bro), fromMe(bro) ? 'To: ' : 'From: '),
+				return [SPAN(replyTo(bro), fromMe(bro) ? 'To: ' : 'From: '),
 					B(replyTo(bro), (fromMe(bro) ? (bro.to.join(', ')): bro.from) + ' '),
 					I(moment(bro.date).fromNow()),
-					BR()];
-				if (groupMessage(bro)) {
-					ret.push(m('span', replyTo(bro), 'To: ' + bro.to.join(', ')));
-					ret.push(BR());
-				}
-				ret = ret.concat([
+					BR(),
+					groupMessage(bro) ? SPAN(replyTo(bro), 'To: ' + bro.to.join(', ')) : BR(),
 					SPAN(m.trust(autolinker.link(bro.text))),
 					BR(),
 					BUTTON(buttonify({
@@ -148,10 +144,8 @@ module.exports.view = function (ctrl, args, extras) {
 						}
 					}), 'X'),
 					HR()
-				]);
-				return ret;
+				];
 			}))
-
 		])
 	}
 };
