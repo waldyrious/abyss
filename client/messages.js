@@ -130,17 +130,17 @@ module.exports.view = function (ctrl, args, extras) {
 			BR(),
 			BUTTON(buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Get messages!'),
 			BUTTON(buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
-			DIV(ctrl.messages().map(function (bro) {
-				return [SPAN(replyTo(bro), fromMe(bro) ? 'To: ' : 'From: '),
-					B(replyTo(bro), (fromMe(bro) ? (bro.to.join(', ')): bro.from) + ' '),
-					I(moment(bro.date).fromNow()),
+			DIV(ctrl.messages().map(function (message) {
+				return [SPAN(replyTo(message), fromMe(message) ? 'To: ' : 'From: '),
+					B(replyTo(message), (fromMe(message) ? (message.to.join(', ')): message.from) + ' '),
+					I(moment(message.date).fromNow()),
 					BR(),
-					groupMessage(bro) ? SPAN(replyTo(bro), 'To: ' + bro.to.join(', ')) : BR(),
-					SPAN(m.trust(autolinker.link(bro.text))),
+					groupMessage(message) ? SPAN(replyTo(message), 'To: ' + message.to.join(', ')) : null,
+					SPAN(m.trust(autolinker.link(message.text))),
 					BR(),
 					BUTTON(buttonify({
 						onclick: function () {
-							ctrl.delete(bro)
+							ctrl.delete(message)
 						}
 					}), 'X'),
 					HR()
