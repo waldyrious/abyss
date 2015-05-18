@@ -116,7 +116,7 @@ module.exports.view = function (ctrl, args, extras) {
 			m('br'),
 			ctrl.to.map(function (item, index) {
 				return m('input', {
-					type: 'tel', oninput: m.withAttr('value', function (value) {
+					type: 'tel', onchange: m.withAttr('value', function (value) {
 						ctrl.to[index] = value
 					}), value: ctrl.to[index]
 				})
@@ -125,7 +125,7 @@ module.exports.view = function (ctrl, args, extras) {
 			m('label', 'Message: '), m('br'),
 			m('input', {
 				'style': {'width': '100%'},
-				oninput: m.withAttr('value', ctrl.message),
+				onchange: m.withAttr('value', ctrl.message),
 				value: ctrl.message()
 			}),
 			m('br'),
