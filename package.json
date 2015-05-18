@@ -42,5 +42,8 @@
     "uglifyify": "^3.0.1",
     "uuid": "^2.0.1",
     "watchify": "^3.2.1"
+  },
+  "devDependencies": {
+    "casual": "^1.4.7"
   }
 }
