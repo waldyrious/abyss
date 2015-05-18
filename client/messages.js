@@ -73,7 +73,13 @@ module.exports.controller = function (args, extras) {
 
 	self.delete = function (message) {
 		m.request({method: 'DELETE', url: '/api/bro/' + encodeURIComponent(message.id)})
-		.then(self.getBros, self.error)
+		.then(function () {
+			self.messages(_.filter(self.messages(), function (item) {
+				"use strict";
+				return item.id !== message.id;
+			}))
+
+		}, self.error)
 	};
 
 	self.getBros()
