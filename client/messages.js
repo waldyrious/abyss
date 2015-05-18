@@ -1,6 +1,5 @@
 var moment = require('moment');
 var m = require('mithril');
-var sugarTags = require('mithril.sugartags')(m);
 var Autolinker = require('autolinker');
 var autolinker = new Autolinker();
 var styler = require('./styler');
@@ -101,51 +100,50 @@ module.exports.view = function (ctrl, args, extras) {
 	var bbuttonify = styler.bbuttonify;
 	var buttonify = styler.buttonify;
 
-	with (sugarTags) {
-		return DIV([
-			DIV([
-				Error.renderError(ctrl.error),
-				LABEL('To: '), SPAN(' '),
-				BUTTON(buttonify({onclick: ctrl.toPlus}), '+'),
-				BUTTON(buttonify({onclick: ctrl.toMinus}), '-'),
-				BR(),
-				ctrl.to.map(function (item, index) {
-					return INPUT({
-						type: 'tel', oninput: m.withAttr('value', function (value) {
-							ctrl.to[index] = value
-						}), value: ctrl.to[index]
-					})
-				}),
-				BR(),
-				LABEL('Message: '), BR(),
-				INPUT({
-					'style': {'width': '100%'},
-					oninput: m.withAttr('value', ctrl.message),
-					value: ctrl.message()
-				}),
-				BR(),
-				BR(),
-				BUTTON(bbuttonify({onclick: ctrl.send, disabled: args.noauth()}), 'Send Bro!')
-			]),
-			BR(),
-			BUTTON(buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Get messages!'),
-			BUTTON(buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
-			DIV(ctrl.messages().map(function (message) {
-				return [SPAN(replyTo(message), fromMe(message) ? 'To: ' : 'From: '),
-					B(replyTo(message), (fromMe(message) ? (message.to.join(', ')): message.from) + ' '),
-					I(moment(message.date).fromNow()),
-					BR(),
-					groupMessage(message) ? SPAN(replyTo(message), 'To: ' + message.to.join(', ')) : null,
-					SPAN(m.trust(autolinker.link(message.text))),
-					BR(),
-					BUTTON(buttonify({
-						onclick: function () {
-							ctrl.delete(message)
-						}
-					}), 'X'),
-					HR()
-				];
-			}))
-		])
-	}
+	return m('div', [
+		m('div', [
+			Error.renderError(ctrl.error),
+			m('label', 'To: '), m('span', ' '),
+			m('button', buttonify({onclick: ctrl.toPlus}), '+'),
+			m('button', buttonify({onclick: ctrl.toMinus}), '-'),
+			m('br'),
+			ctrl.to.map(function (item, index) {
+				return m('input', {
+					type: 'tel', oninput: m.withAttr('value', function (value) {
+						ctrl.to[index] = value
+					}), value: ctrl.to[index]
+				})
+			}),
+			m('br'),
+			m('label', 'Message: '), m('br'),
+			m('input', {
+				'style': {'width': '100%'},
+				oninput: m.withAttr('value', ctrl.message),
+				value: ctrl.message()
+			}),
+			m('br'),
+			m('br'),
+			m('button', bbuttonify({onclick: ctrl.send, disabled: args.noauth()}), 'Send Bro!')
+		]),
+		m('br'),
+		m('button', buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Get messages!'),
+		m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
+		m('div', ctrl.messages().map(function (message) {
+			return [m('span', replyTo(message), fromMe(message) ? 'To: ' : 'From: '),
+				m('b', replyTo(message), (fromMe(message) ? (message.to.join(', ')): message.from) + ' '),
+				m('i', moment(message.date).fromNow()),
+				m('br'),
+				groupMessage(message) ? m('span', replyTo(message), 'To: ' + message.to.join(', ')) : null,
+				m('br'),
+				m('span', m.trust(autolinker.link(message.text))),
+				m('br'),
+				m('button', buttonify({
+					onclick: function () {
+						ctrl.delete(message)
+					}
+				}), 'X'),
+				m('hr')
+			];
+		}))
+	])
 };
