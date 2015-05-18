@@ -136,7 +136,7 @@ module.exports.view = function (ctrl, args, extras) {
 		m('button', buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Get messages!'),
 		m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
 		m('div', ctrl.messages().map(function (message) {
-			return [m('span', replyTo(message), fromMe(message) ? 'To: ' : 'From: '),
+			return m('div', {key: message.id}, [m('span', replyTo(message), fromMe(message) ? 'To: ' : 'From: '),
 				m('b', replyTo(message), (fromMe(message) ? (message.to.join(', ')): message.from) + ' '),
 				m('i', moment(message.date).fromNow()),
 				m('br'),
@@ -150,7 +150,7 @@ module.exports.view = function (ctrl, args, extras) {
 					}
 				}), 'X'),
 				m('hr')
-			];
+			])
 		}))
 	])
 };
