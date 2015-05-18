@@ -28,10 +28,17 @@ Also get [WebStorm](https://www.jetbrains.com/webstorm/)! Seriously, its the bes
  to access the RethinkDB admin tool. Leave this running in a terminal tab.
 1. Install npms: `npm i`  This installs the node_modules for the project.
 1. Build front end: `npm run watch` This continually builds the front end. Leave it running in a terminal tab too.
-1. Now you can run the server.js from WebStorm. Add *--harmony* to the Node parameters in the run config! This flag enables ES6 features like *const*. (The need to use this flag will go away soon with Node 3.0.0.)
-1. You can also run `runner.js`. This one reloads the server on every file change and rebuilds the client on every client/* file change. So don't use npm run watch. However, debugging does not work in it.
 
-Command line ways to run:
+## Setup DB Schema
+
+Run schema.js. It's safe to re-run this as it won't drop anything.
+
+## Run system from WebStorm:
+1. Run the server.js from file. You have to add *--harmony* to the Node parameters in the run config! This flag enables ES6 features like *const*. (The need to use this flag will go away soon with Node 3.0.0.)
+
+1. You can also run `runner.js`. This one reloads the server on every file change and rebuilds the client on every client/* file change, so don't use npm run watch with this one. However, debugging does not work in it.
+
+## Command line ways to run:
 
 1. From the command line, `node --harmony server.js` to run.
 1. Run `node debug --harmony server.js` to use the debugger. The command line debugger is very easy to use
@@ -41,6 +48,8 @@ and quite fast.
 Be prepared to get accustomed to using the debuggers! You will find yourself inserting 'debugger' to trace code frequently, inspect variables and experiment.
 
 # API reference
+
+[Node.js Cheat Sheet](https://gist.github.com/LeCoupa/985b82968d8285987dc3)
 
 [Mozilla MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript) The JavaScript reference.
 
@@ -60,7 +69,3 @@ Bluebird lets you easily convert them to Promise based APIs, which are much easi
 [MomentJS](http://momentjs.com/) Date and time handling library
 
 [Tape](https://github.com/substack/tape) Tape: minimalist, TAP producing test library.
-
-# Set up DB tables
-
-Run schema.js. It's safe to re-run this as it won't drop anything.
