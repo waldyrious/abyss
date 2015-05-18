@@ -63,10 +63,4 @@ Bluebird lets you easily convert them to Promise based APIs, which are much easi
 
 # Set up DB tables
 
-Do this in the RethinkDB admin page. Eventually this will be automated.
-
-r.db('test').tableCreate('verifications')
-
-r.db('test').tableCreate('subscriptions')
-
-r.db('test').tableCreate('messages')
+Run schema.js. It's safe to re-run this as it won't drop anything.
