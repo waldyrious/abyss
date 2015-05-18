@@ -1,3 +1,5 @@
+"use strict";
+
 var moment = require('moment');
 var m = require('mithril');
 var Autolinker = require('autolinker');
@@ -75,7 +77,6 @@ module.exports.controller = function (args, extras) {
 		m.request({method: 'DELETE', url: '/api/bro/' + encodeURIComponent(message.id)})
 		.then(function () {
 			self.messages(_.filter(self.messages(), function (item) {
-				"use strict";
 				return item.id !== message.id;
 			}))
 
