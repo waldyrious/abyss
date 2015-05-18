@@ -15,7 +15,8 @@ Promise.join(r.tableCreate('messages').catch(ignore)
 )
 .then(function () {
 	return Promise.join(r.table('messages').indexCreate('from').catch(ignore),
-	r.table('messages').indexCreate('from').catch(ignore))
+	r.table('messages').indexCreate('from').catch(ignore)
+	, r.table('messages').indexCreate('deletedBy').catch(ignore))
 })
 .then(function () {
 	"use strict";
