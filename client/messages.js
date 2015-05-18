@@ -5,7 +5,6 @@ var m = require('mithril');
 var Autolinker = require('autolinker');
 var autolinker = new Autolinker();
 var styler = require('./styler');
-var _ = require('lodash');
 var Error = require('./error');
 
 module.exports.controller = function (args, extras) {
@@ -26,7 +25,7 @@ module.exports.controller = function (args, extras) {
 
 	self.replyTo = function (message) {
 		if (fromMe(message)) {
-			if (!_.isArray(message.to)) {
+			if (Array.isArray(message.to)) {
 				throw new TypeError('To field must be array');
 			} else {
 				self.to = [];
@@ -76,7 +75,7 @@ module.exports.controller = function (args, extras) {
 	self.delete = function (message) {
 		m.request({method: 'DELETE', url: '/api/bro/' + encodeURIComponent(message.id)})
 		.then(function () {
-			self.messages(_.filter(self.messages(), function (item) {
+			self.messages(self.messages().filter(function (item) {
 				return item.id !== message.id;
 			}))
 

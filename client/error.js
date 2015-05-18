@@ -1,5 +1,4 @@
 var m = require('mithril');
-var _ = require('lodash');
 
 module.exports.ErrorHolder = function() {
 	var error = null;
@@ -27,8 +26,7 @@ module.exports.renderError = function (error) {
 
 	var value;
 
-	if (_.isObject(error())) {
-		if (error().error && error().error.text)
+	if (error() != null && error().error && error().error.text) {
 			value = error().error.text;
 	} else {
 		value = error();
