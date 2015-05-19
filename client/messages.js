@@ -20,8 +20,18 @@ module.exports.controller = function (args, extras) {
 		return message.from === args.phonenumber();
 	}
 
+	function async(fn) {
+		m.startComputation();
+		setTimeout(function () {
+			fn();
+			m.endComputation();
+		}, 0);
+	}
+
 	function setMessages(value) {
-		self.messages = value;
+		async(function () {
+			self.messages = value;
+		});
 	}
 	function multiTo(message) {
 		return !fromMe(message) && message.to.length && message.to.length > 1;
@@ -78,16 +88,22 @@ module.exports.controller = function (args, extras) {
 
 	self.delete = function (message) {
 		m.request({method: 'DELETE', url: '/api/bro/' + encodeURIComponent(message.id)})
-		.then(function () {
+		.then(async(function () {
 			self.messages.splice(self.messages.indexOf(message), 1);
-		}, self.error)
+		}), self.error)
 	};
 
-	self.getBros()
+	setTimeout(self.getBros, 0);
 };
 
 module.exports.view = function (ctrl, args, extras) {
 
+	var fadesIn = function(element, isInitialized, context) {
+		if (!isInitialized) {
+			element.style.opacity = 0;
+			Velocity(element, {opacity: 1})
+		}
+	};
 
 	var fadesOut = function(callback) {
 		return function(e) {
@@ -98,7 +114,7 @@ module.exports.view = function (ctrl, args, extras) {
 				complete: function() {
 					//now that the animation finished, redraw
 					m.startComputation();
-					callback()
+					callback();
 					m.endComputation()
 				}
 			})
@@ -124,7 +140,7 @@ module.exports.view = function (ctrl, args, extras) {
 	var bbuttonify = styler.bbuttonify;
 	var buttonify = styler.buttonify;
 
-	return m('div', [
+	return m('div', {config: fadesIn}, [
 		m('div', [
 			Error.renderError(ctrl.error),
 			m('label', 'To: '), m('span', ' '),
@@ -153,7 +169,7 @@ module.exports.view = function (ctrl, args, extras) {
 		m('button', buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Get messages!'),
 		m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
 		m('div', ctrl.messages.map(function (message) {
-			return m('div', {key: message.id}, [m('span', replyTo(message), fromMe(message) ? 'To: ' : 'From: '),
+			return m('div', {key: message.id, config: fadesIn }, [m('span', replyTo(message), fromMe(message) ? 'To: ' : 'From: '),
 				m('b', replyTo(message), (fromMe(message) ? (message.to.join(', ')): message.from) + ' '),
 				m('i', moment(message.date).fromNow()),
 				m('br'),
