@@ -7,6 +7,9 @@ var autolinker = new Autolinker();
 var styler = require('./styler');
 var Error = require('./error');
 var Velocity = require('velocity-animate');
+var request = require('request');
+var JSONStream = require('JSONStream');
+var es = require('event-stream');
 
 module.exports.controller = function (args, extras) {
 	var self = this;
@@ -79,6 +82,16 @@ module.exports.controller = function (args, extras) {
 	self.getBros = function () {
 		m.request({method: 'GET', url: '/api/bro'})
 		.then(setMessages, self.error)
+	};
+
+	self.getBrosStreaming = function () {
+		request({url: location.protocol + "//" + location.host + '/api/bro'})
+		.pipe(JSONStream.parse('*'))
+		.pipe(es.mapSync(function (data) {
+			m.startComputation();
+			self.messages.push(data);
+			m.endComputation();
+		}))
 	};
 
 	self.clearBros = function () {
