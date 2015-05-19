@@ -6,7 +6,7 @@ var Autolinker = require('autolinker');
 var autolinker = new Autolinker();
 var styler = require('./styler');
 var Error = require('./error');
-var velocity = require('velocity-animate');
+var Velocity = require('velocity-animate');
 
 module.exports.controller = function (args, extras) {
 	var self = this;
@@ -88,6 +88,23 @@ module.exports.controller = function (args, extras) {
 
 module.exports.view = function (ctrl, args, extras) {
 
+
+	var fadesOut = function(callback) {
+		return function(e) {
+			//don't redraw yet
+			m.redraw.strategy("none");
+
+			Velocity(e.target.parentNode, {opacity: 0}, {
+				complete: function() {
+					//now that the animation finished, redraw
+					m.startComputation();
+					callback()
+					m.endComputation()
+				}
+			})
+		}
+	};
+
 	function fromMe(message) {
 		return message.from === args.phonenumber();
 	}
@@ -145,7 +162,7 @@ module.exports.view = function (ctrl, args, extras) {
 				m('span', m.trust(autolinker.link(message.text))),
 				m('br'),
 				m('button', buttonify({
-					onclick: ctrl.delete.bind(this, message)
+					onclick: fadesOut(ctrl.delete.bind(this, message))
 				}), 'X'),
 				m('hr')
 			])
