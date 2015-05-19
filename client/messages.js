@@ -6,11 +6,12 @@ var Autolinker = require('autolinker');
 var autolinker = new Autolinker();
 var styler = require('./styler');
 var Error = require('./error');
+var velocity = require('velocity-animate');
 
 module.exports.controller = function (args, extras) {
 	var self = this;
 
-	self.messages = m.prop([]);
+	self.messages = [];
 	self.to = [''];
 	self.message = m.prop('');
 	self.error = Error.ErrorHolder();
@@ -19,6 +20,9 @@ module.exports.controller = function (args, extras) {
 		return message.from === args.phonenumber();
 	}
 
+	function setMessages(value) {
+		self.messages = value;
+	}
 	function multiTo(message) {
 		return !fromMe(message) && message.to.length && message.to.length > 1;
 	}
@@ -64,7 +68,7 @@ module.exports.controller = function (args, extras) {
 
 	self.getBros = function () {
 		m.request({method: 'GET', url: '/api/bro'})
-		.then(self.messages, self.error)
+		.then(setMessages, self.error)
 	};
 
 	self.clearBros = function () {
@@ -75,10 +79,7 @@ module.exports.controller = function (args, extras) {
 	self.delete = function (message) {
 		m.request({method: 'DELETE', url: '/api/bro/' + encodeURIComponent(message.id)})
 		.then(function () {
-			self.messages(self.messages().filter(function (item) {
-				return item.id !== message.id;
-			}))
-
+			self.messages.splice(self.messages.indexOf(message), 1);
 		}, self.error)
 	};
 
@@ -134,7 +135,7 @@ module.exports.view = function (ctrl, args, extras) {
 		m('br'),
 		m('button', buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Get messages!'),
 		m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
-		m('div', ctrl.messages().map(function (message) {
+		m('div', ctrl.messages.map(function (message) {
 			return m('div', {key: message.id}, [m('span', replyTo(message), fromMe(message) ? 'To: ' : 'From: '),
 				m('b', replyTo(message), (fromMe(message) ? (message.to.join(', ')): message.from) + ' '),
 				m('i', moment(message.date).fromNow()),

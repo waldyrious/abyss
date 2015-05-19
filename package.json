@@ -41,6 +41,7 @@
     "tape": "^4.0.0",
     "uglifyify": "^3.0.1",
     "uuid": "^2.0.1",
+    "velocity-animate": "^1.2.2",
     "watchify": "^3.2.1",
     "xtend": "^4.0.0"
   },
