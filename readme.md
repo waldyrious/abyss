@@ -17,6 +17,8 @@ Also get [WebStorm](https://www.jetbrains.com/webstorm/)! Seriously, its the bes
 
 # Webstorm config
 
+Use tabs for indent and turn of continuation indents, which get annoying with promises.
+
 1. Check use tab character in Default Indent Options
 2. Tab size 4, Indent 4, Continuation indent 0
 3. JavaScript: Tab size 4, Indent 4, Continuation indent 0
@@ -26,12 +28,13 @@ Also get [WebStorm](https://www.jetbrains.com/webstorm/)! Seriously, its the bes
 1. git clone the repo and cd into the project
 1. Start an instance of Rethinkdb:  `rethinkdb` This will start an instance of RethinkDB with datafiles in the working directory. Once running, go to [http://localhost:8080](http://localhost:8080)
  to access the RethinkDB admin tool. Leave this running in a terminal tab.
-1. Install npms: `npm i`  This installs the node_modules for the project.
+1. Install node modules: `npm i`  This installs the node_modules for the project.
 1. Build front end: `npm run watch` This continually builds the front end. Leave it running in a terminal tab too.
+`npm run build` does a single build. These are defined in package.json.
 
 ## Setup DB Schema
 
-Run schema.js. It's safe to re-run this as it won't drop anything.
+Run schema.js. It's safe to accidentally re-run this as it won't drop anything.
 
 ## Run system from WebStorm:
 1. Run the server.js from file. You have to add *--harmony* to the Node parameters in the run config! This flag enables ES6 features like *const*. (The need to use this flag will go away soon with Node 3.0.0.)
@@ -39,6 +42,8 @@ Run schema.js. It's safe to re-run this as it won't drop anything.
 1. You can also run `runner.js`. This one reloads the server on every file change and rebuilds the client on every client/* file change, so don't use npm run watch with this one. However, debugging does not work in it.
 
 ## Command line ways to run:
+
+Don't really need to do this with WebStorm. WebStorm provides the best debugger.
 
 1. From the command line, `node --harmony server.js` to run.
 1. Run `node debug --harmony server.js` to use the debugger. The command line debugger is very easy to use
