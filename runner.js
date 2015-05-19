@@ -32,7 +32,7 @@ w.on('update', function () {
 	w.bundle(function (err, src) {
 		if (err) {
 			console.error(err);
-			w.close();
+			//w.close();
 		} else if (src) {
 			lastWrite.then(function () {
 				console.log('Rebundling front end');
