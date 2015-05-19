@@ -145,9 +145,7 @@ module.exports.view = function (ctrl, args, extras) {
 				m('span', m.trust(autolinker.link(message.text))),
 				m('br'),
 				m('button', buttonify({
-					onclick: function () {
-						ctrl.delete(message)
-					}
+					onclick: ctrl.delete.bind(this, message)
 				}), 'X'),
 				m('hr')
 			])
