@@ -1,5 +1,4 @@
 "use strict";
-
 var moment = require('moment');
 var m = require('mithril');
 var Autolinker = require('autolinker');
@@ -8,8 +7,7 @@ var styler = require('./styler');
 var Error = require('./error');
 var Velocity = require('velocity-animate');
 var request = require('request');
-var JSONStream = require('JSONStream');
-var es = require('event-stream');
+var oboe = require('oboe');
 
 module.exports.controller = function (args, extras) {
 	var self = this;
@@ -84,14 +82,57 @@ module.exports.controller = function (args, extras) {
 		.then(setMessages, self.error)
 	};
 
+	//self.getBrosStreaming = function () {
+	//	// Stream in first 10 messages and try to render them ASAP as we load the rest
+	//	var count = 0;
+	//	var show = 9;
+	//
+	//	request({url: location.protocol + "//" + location.host + '/api/bro'})
+	//	.pipe(JSONStream.parse('*'))
+	//	.pipe(es.mapSync(function (data) {
+	//		if (count == 0) {
+	//			m.startComputation();
+	//		}
+	//
+	//		if (count < show) {
+	//			self.messages.push(data);
+	//			count++;
+	//		} else if (count == show) {
+	//			self.messages.push(data);
+	//			m.endComputation();
+	//			m.startComputation();
+	//			count++;
+	//		} else {
+	//			self.messages.push(data);
+	//		}
+	//	}))
+	//	.on('end', function () {
+	//		if (count == show + 1) {
+	//			m.endComputation();
+	//		} else if (count > show + 1) {
+	//			throw new Error('program error');
+	//		} else if (count < show ) {
+	//			m.endComputation();
+	//		}
+	//	})
+	//};
+
+
 	self.getBrosStreaming = function () {
-		request({url: location.protocol + "//" + location.host + '/api/bro'})
-		.pipe(JSONStream.parse('*'))
-		.pipe(es.mapSync(function (data) {
-			m.startComputation();
-			self.messages.push(data);
-			m.endComputation();
-		}))
+		// Stream in first 10 messages and try to render them ASAP as we load the rest
+		var count = 0;
+		var show = 9;
+
+		m.startComputation();
+		oboe('/api/bro').node('![*]', function (item) {
+			self.messages.push(item);
+			count++;
+			if (count == show) {
+				m.endComputation();
+				m.startComputation();
+			}
+		})
+		.done(m.endComputation);
 	};
 
 	self.clearBros = function () {
@@ -106,7 +147,7 @@ module.exports.controller = function (args, extras) {
 		}), self.error)
 	};
 
-	setTimeout(self.getBros, 0);
+	immediate(self.getBrosStreaming);
 };
 
 module.exports.view = function (ctrl, args, extras) {
