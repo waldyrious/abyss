@@ -20,16 +20,16 @@ module.exports.controller = function (args, extras) {
 		return message.from === args.phonenumber();
 	}
 
-	function async(fn) {
+	function immediate(fn) {
 		m.startComputation();
-		setTimeout(function () {
+		setImmediate(function () {
 			fn();
 			m.endComputation();
-		}, 0);
+		});
 	}
 
 	function setMessages(value) {
-		async(function () {
+		immediate(function () {
 			self.messages = value;
 		});
 	}
@@ -88,7 +88,7 @@ module.exports.controller = function (args, extras) {
 
 	self.delete = function (message) {
 		m.request({method: 'DELETE', url: '/api/bro/' + encodeURIComponent(message.id)})
-		.then(async(function () {
+		.then(immediate(function () {
 			self.messages.splice(self.messages.indexOf(message), 1);
 		}), self.error)
 	};

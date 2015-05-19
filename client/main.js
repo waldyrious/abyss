@@ -1,5 +1,7 @@
 'use strict';
 
+require('setimmediate');
+
 window.addEventListener("message", receiveMessage, false);
 
 function receiveMessage(message) {
