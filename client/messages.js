@@ -25,7 +25,7 @@ module.exports.controller = function (args, extras) {
 
 	self.replyTo = function (message) {
 		if (fromMe(message)) {
-			if (Array.isArray(message.to)) {
+			if (!Array.isArray(message.to)) {
 				throw new TypeError('To field must be array');
 			} else {
 				self.to = [];
