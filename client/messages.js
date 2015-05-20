@@ -276,23 +276,26 @@ module.exports.view = function (ctrl, args, extras) {
 		m('br'),
 		m('button', buttonify({onclick: ctrl.refresh, disabled: args.noauth()}), 'Refresh messages!'),
 		m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
-		m('table.table', [
-			m('thead', [
-				m('tr', [m('td', 'Participants'), m('td', 'Messages')])
-			]),
-			m('tbody', m('tr', [m('td', ctrl.messages.map(function (grouping) {
-					return m('div', styler.pointer({onclick: function () { ctrl.selectedGroup(grouping.group) }}), [simplify(grouping.group).map(function (ph) {
-						return m('div', ph)
-					}),
+		m('div', [m('div.col-sm-4#left',
+		[m('h3', 'Conversation'),
+			ctrl.messages.map(function (grouping) {
+				return m('div', styler.pointer({
+					onclick: function () {
+						ctrl.selectedGroup(grouping.group)
+					}
+				}),
+				[simplify(grouping.group).map(function (ph) {
+					return m('div', ph)
+				}),
 					m('hr')
-					])
-				}))
-				, ctrl.selectedGroup() ? m('td', ctrl.messages
-				.filter(function (grouping) {
+				])
+			})]),
+			m('div.col-sm-8#right', [m('h3', 'Messages'),
+				ctrl.messages.filter(function (grouping) {
 					return isEqual(flatten(grouping.group), ctrl.selectedGroup());
-				})
-				.map(function (grouping) { return grouping.reduction.map(displayMessage) }))
-				: null
-			]))
-		])])
+				}).map(function (grouping) {
+					return grouping.reduction.map(displayMessage)
+				})])
+		])
+	])
 };
