@@ -209,11 +209,9 @@ module.exports.view = function (ctrl, args, extras) {
 		return m('div', {
 			key: message.id,
 			config: fadesIn
-		}, [m('span', replyTo(message), fromMe(message) ? 'To: ' : 'From: '),
-			m('b', replyTo(message), (fromMe(message) ? (message.to.join(', ')) : message.from) + ' '),
+		}, [m('span', replyTo(message), 'From: '),
+			m('b', replyTo(message), message.from),
 			m('i', moment(message.date).fromNow()),
-			m('br'),
-			groupMessage(message) ? m('span', replyTo(message), 'To: ' + message.to.join(', ')) : null,
 			m('br'),
 			m('span', m.trust(autolinker.link(message.text))),
 			m('br'),
@@ -257,7 +255,7 @@ module.exports.view = function (ctrl, args, extras) {
 				m('tr', [m('td', 'Participants'), m('td', 'Messages')])
 			]),
 			m('tbody', m('tr', [m('td', ctrl.messages.map(function (grouping) {
-					return m('div', styler.pointer({onclick: function () { ctrl.selectedGroup(grouping.group) }}), [_.flattenDeep(grouping.group).map(function (ph) {
+					return m('div', styler.pointer({onclick: function () { ctrl.selectedGroup(grouping.group) }}), [_.unique(_.flattenDeep(grouping.group)).map(function (ph) {
 						return m('div', ph)
 					}),
 					m('hr')
