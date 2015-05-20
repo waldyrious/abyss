@@ -167,9 +167,12 @@ module.exports.controller = function (args, extras) {
 
 	self.delete = function (message) {
 		m.request({method: 'DELETE', url: '/api/bro/' + encodeURIComponent(message.id)})
-		.then(immediate(function () {
-			self.messages.splice(self.messages.indexOf(message), 1);
-		}), self.error)
+		.then(self.getBros, self.error)
+
+		// this dont work anymore with grouping of msgs
+		//.then(immediate(function () {
+		//	self.messages.splice(self.messages.indexOf(message), 1);
+		//}), self.error)
 	};
 
 	immediate(self.refresh);
