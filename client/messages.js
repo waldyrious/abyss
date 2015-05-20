@@ -8,7 +8,10 @@ var Error = require('./error');
 var Velocity = require('velocity-animate');
 var request = require('request');
 var oboe = require('oboe');
-var _ = require('lodash');
+var flatten = require('lodash/array/flatten');
+var uniq = require('lodash/array/uniq');
+var without = require('lodash/array/without');
+var difference = require('lodash/array/difference');
 
 module.exports.controller = function (args, extras) {
 	var self = this;
@@ -23,7 +26,9 @@ module.exports.controller = function (args, extras) {
 
 		return function (group) {
 			if (group) {
-				myGroup = _.flatten(group);
+				myGroup = flatten(group);
+			} else if (group === null) {
+				myGroup = null;
 			} else {
 				return myGroup;
 			}
@@ -92,6 +97,7 @@ module.exports.controller = function (args, extras) {
 	};
 
 	self.getBros = function () {
+		self.selectedGroup(null);
 		m.request({method: 'GET', url: '/api/bro'})
 		.then(setMessages, self.error)
 	};
@@ -136,6 +142,8 @@ module.exports.controller = function (args, extras) {
 		// Stream in first 10 messages and try to render them ASAP as we load the rest
 		var count = 0;
 		var show = 9;
+
+		self.selectedGroup(null);
 
 		m.startComputation();
 		oboe('/api/bro').node('![*]', function (item) {
@@ -206,7 +214,7 @@ module.exports.view = function (ctrl, args, extras) {
 	}
 
 	function simplify(group) {
-		var ret = _.uniq(_.without(_.flatten(group), args.phonenumber()));
+		var ret = uniq(without(flatten(group), args.phonenumber()));
 		if (ret.length === 0)
 			ret = [args.phonenumber()];
 		return ret;
@@ -260,7 +268,7 @@ module.exports.view = function (ctrl, args, extras) {
 			m('button', bbuttonify({onclick: ctrl.send, disabled: args.noauth()}), 'Send Bro!')
 		]),
 		m('br'),
-		m('button', buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Get messages!'),
+		m('button', buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Refresh messages!'),
 		m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
 		m('table.table', [
 			m('thead', [
@@ -273,11 +281,12 @@ module.exports.view = function (ctrl, args, extras) {
 					m('hr')
 					])
 				}))
-				, m('td', ctrl.messages
+				, ctrl.selectedGroup() ? m('td', ctrl.messages
 				.filter(function (grouping) {
-					return _.difference(_.flatten(grouping.group), ctrl.selectedGroup()).length === 0;
+					return difference(flatten(grouping.group), ctrl.selectedGroup()).length === 0;
 				})
 				.map(function (grouping) { return grouping.reduction.map(displayMessage) }))
+				: null
 			]))
 		])])
 };
