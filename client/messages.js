@@ -8,6 +8,7 @@ var Error = require('./error');
 var Velocity = require('velocity-animate');
 var request = require('request');
 var oboe = require('oboe');
+var _ = require('lodash');
 
 module.exports.controller = function (args, extras) {
 	var self = this;
@@ -34,6 +35,7 @@ module.exports.controller = function (args, extras) {
 			self.messages = value;
 		});
 	}
+
 	function multiTo(message) {
 		return !fromMe(message) && message.to.length && message.to.length > 1;
 	}
@@ -152,20 +154,20 @@ module.exports.controller = function (args, extras) {
 
 module.exports.view = function (ctrl, args, extras) {
 
-	var fadesIn = function(element, isInitialized, context) {
+	var fadesIn = function (element, isInitialized, context) {
 		if (!isInitialized) {
 			element.style.opacity = 0;
 			Velocity(element, {opacity: 1})
 		}
 	};
 
-	var fadesOut = function(callback) {
-		return function(e) {
+	var fadesOut = function (callback) {
+		return function (e) {
 			//don't redraw yet
 			m.redraw.strategy("none");
 
 			Velocity(e.target.parentNode, {opacity: 0}, {
-				complete: function() {
+				complete: function () {
 					//now that the animation finished, redraw
 					m.startComputation();
 					callback();
@@ -193,6 +195,25 @@ module.exports.view = function (ctrl, args, extras) {
 
 	var bbuttonify = styler.bbuttonify;
 	var buttonify = styler.buttonify;
+
+	function displayMessage(message) {
+		return m('div', {
+			key: message.id,
+			config: fadesIn
+		}, [m('span', replyTo(message), fromMe(message) ? 'To: ' : 'From: '),
+			m('b', replyTo(message), (fromMe(message) ? (message.to.join(', ')) : message.from) + ' '),
+			m('i', moment(message.date).fromNow()),
+			m('br'),
+			groupMessage(message) ? m('span', replyTo(message), 'To: ' + message.to.join(', ')) : null,
+			m('br'),
+			m('span', m.trust(autolinker.link(message.text))),
+			m('br'),
+			m('button', buttonify({
+				onclick: fadesOut(ctrl.delete.bind(this, message))
+			}), 'X'),
+			m('hr')
+		])
+	}
 
 	return m('div', {config: fadesIn}, [
 		m('div', [
@@ -222,20 +243,14 @@ module.exports.view = function (ctrl, args, extras) {
 		m('br'),
 		m('button', buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Get messages!'),
 		m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
-		m('div', ctrl.messages.map(function (message) {
-			return m('div', {key: message.id, config: fadesIn }, [m('span', replyTo(message), fromMe(message) ? 'To: ' : 'From: '),
-				m('b', replyTo(message), (fromMe(message) ? (message.to.join(', ')): message.from) + ' '),
-				m('i', moment(message.date).fromNow()),
-				m('br'),
-				groupMessage(message) ? m('span', replyTo(message), 'To: ' + message.to.join(', ')) : null,
-				m('br'),
-				m('span', m.trust(autolinker.link(message.text))),
-				m('br'),
-				m('button', buttonify({
-					onclick: fadesOut(ctrl.delete.bind(this, message))
-				}), 'X'),
-				m('hr')
-			])
-		}))
-	])
+		m('table.table',
+			m('tbody', m('tr', [m('td', ctrl.messages.map(function (grouping) {
+					return m('div', [_.flattenDeep(grouping.group).map(function (ph) {
+						return m('div', ph)
+					}),
+					m('hr')
+					])
+				}))
+				, m('td', ctrl.messages.map(function (grouping) { return grouping.reduction.map(displayMessage) }))
+			])))])
 };
