@@ -1,0 +1,12 @@
+
+@media (min-width: 768px){
+	#left {
+		overflow-y: scroll;
+		height: 50vh;
+	}
+
+	#right {
+		overflow-y: scroll;
+		height: 50vh
+	}
+}
