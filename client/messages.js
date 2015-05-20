@@ -277,12 +277,13 @@ module.exports.view = function (ctrl, args, extras) {
 		m('button', buttonify({onclick: ctrl.refresh, disabled: args.noauth()}), 'Refresh messages!'),
 		m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
 		m('div', [m('div.col-sm-4#left',
-		[m('h3', 'Conversation'),
+		[m('h3', 'Conversations'),
 			ctrl.messages.map(function (grouping) {
 				return m('div', styler.pointer({
 					onclick: function () {
 						ctrl.selectedGroup(grouping.group)
-					}
+					},
+					class: ctrl.selectedGroup() !== null && difference(ctrl.selectedGroup(), grouping.group).length == 0 ? 'bg-info' : null
 				}),
 				[simplify(grouping.group).map(function (ph) {
 					return m('div', ph)
