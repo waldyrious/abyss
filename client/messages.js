@@ -18,6 +18,15 @@ module.exports.controller = function (args, extras) {
 	self.message = m.prop('');
 	self.error = Error.ErrorHolder();
 
+	self.selectedGroup = (function () {
+		var myGroup = null;
+
+		return function (group) {
+			if (group) myGroup = group;
+			else return myGroup;
+		}
+	})();
+
 	function fromMe(message) {
 		return message.from === args.phonenumber();
 	}
@@ -243,14 +252,22 @@ module.exports.view = function (ctrl, args, extras) {
 		m('br'),
 		m('button', buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Get messages!'),
 		m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
-		m('table.table',
+		m('table.table', [
+			m('thead', [
+				m('tr', [m('td', 'Participants'), m('td', 'Messages')])
+			]),
 			m('tbody', m('tr', [m('td', ctrl.messages.map(function (grouping) {
-					return m('div', [_.flattenDeep(grouping.group).map(function (ph) {
+					return m('div', styler.pointer({onclick: function () { ctrl.selectedGroup(grouping.group) }}), [_.flattenDeep(grouping.group).map(function (ph) {
 						return m('div', ph)
 					}),
 					m('hr')
 					])
 				}))
-				, m('td', ctrl.messages.map(function (grouping) { return grouping.reduction.map(displayMessage) }))
-			])))])
+				, m('td', ctrl.messages
+				.filter(function (grouping) {
+					return grouping.group === ctrl.selectedGroup();
+				})
+				.map(function (grouping) { return grouping.reduction.map(displayMessage) }))
+			]))
+		])])
 };
