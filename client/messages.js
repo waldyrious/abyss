@@ -22,8 +22,11 @@ module.exports.controller = function (args, extras) {
 		var myGroup = null;
 
 		return function (group) {
-			if (group) myGroup = group;
-			else return myGroup;
+			if (group) {
+				myGroup = _.flatten(group);
+			} else {
+				return myGroup;
+			}
 		}
 	})();
 
@@ -202,6 +205,13 @@ module.exports.view = function (ctrl, args, extras) {
 		})
 	}
 
+	function simplify(group) {
+		var ret = _.uniq(_.without(_.flatten(group), args.phonenumber()));
+		if (ret.length === 0)
+			ret = [args.phonenumber()];
+		return ret;
+	}
+
 	var bbuttonify = styler.bbuttonify;
 	var buttonify = styler.buttonify;
 
@@ -212,6 +222,8 @@ module.exports.view = function (ctrl, args, extras) {
 		}, [m('span', replyTo(message), 'From: '),
 			m('b', replyTo(message), message.from),
 			m('i', moment(message.date).fromNow()),
+			m('br'),
+			m('span', 'To: ' + message.to.join(', ')),
 			m('br'),
 			m('span', m.trust(autolinker.link(message.text))),
 			m('br'),
@@ -255,7 +267,7 @@ module.exports.view = function (ctrl, args, extras) {
 				m('tr', [m('td', 'Participants'), m('td', 'Messages')])
 			]),
 			m('tbody', m('tr', [m('td', ctrl.messages.map(function (grouping) {
-					return m('div', styler.pointer({onclick: function () { ctrl.selectedGroup(grouping.group) }}), [_.unique(_.flattenDeep(grouping.group)).map(function (ph) {
+					return m('div', styler.pointer({onclick: function () { ctrl.selectedGroup(grouping.group) }}), [simplify(grouping.group).map(function (ph) {
 						return m('div', ph)
 					}),
 					m('hr')
@@ -263,7 +275,7 @@ module.exports.view = function (ctrl, args, extras) {
 				}))
 				, m('td', ctrl.messages
 				.filter(function (grouping) {
-					return grouping.group === ctrl.selectedGroup();
+					return _.difference(_.flatten(grouping.group), ctrl.selectedGroup()).length === 0;
 				})
 				.map(function (grouping) { return grouping.reduction.map(displayMessage) }))
 			]))
