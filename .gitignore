@@ -3,3 +3,4 @@ secret/
 dist/
 rethinkdb_data/
 .idea/
+npm-debug.log
