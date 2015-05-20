@@ -97,8 +97,12 @@ module.exports.controller = function (args, extras) {
 		.then(self.getBros, self.error)
 	};
 
+	self.refresh = function () {
+		//self.selectedGroup(null);
+		self.getBros();
+	};
+
 	self.getBros = function () {
-		self.selectedGroup(null);
 		m.request({method: 'GET', url: '/api/bro'})
 		.then(setMessages, self.error)
 	};
@@ -144,8 +148,6 @@ module.exports.controller = function (args, extras) {
 		var count = 0;
 		var show = 9;
 
-		self.selectedGroup(null);
-
 		m.startComputation();
 		oboe('/api/bro').node('![*]', function (item) {
 			self.messages.push(item);
@@ -170,7 +172,7 @@ module.exports.controller = function (args, extras) {
 		}), self.error)
 	};
 
-	immediate(self.getBrosStreaming);
+	immediate(self.refresh);
 };
 
 module.exports.view = function (ctrl, args, extras) {
@@ -269,7 +271,7 @@ module.exports.view = function (ctrl, args, extras) {
 			m('button', bbuttonify({onclick: ctrl.send, disabled: args.noauth()}), 'Send Bro!')
 		]),
 		m('br'),
-		m('button', buttonify({onclick: ctrl.getBros, disabled: args.noauth()}), 'Refresh messages!'),
+		m('button', buttonify({onclick: ctrl.refresh, disabled: args.noauth()}), 'Refresh messages!'),
 		m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
 		m('table.table', [
 			m('thead', [
