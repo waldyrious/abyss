@@ -12,6 +12,7 @@ var flatten = require('lodash/array/flatten');
 var uniq = require('lodash/array/uniq');
 var without = require('lodash/array/without');
 var difference = require('lodash/array/difference');
+var isEqual = require('lodash/lang/isEqual');
 
 module.exports.controller = function (args, extras) {
 	var self = this;
@@ -214,7 +215,7 @@ module.exports.view = function (ctrl, args, extras) {
 	}
 
 	function simplify(group) {
-		var ret = uniq(without(flatten(group), args.phonenumber()));
+		var ret = without(flatten(group), args.phonenumber());
 		if (ret.length === 0)
 			ret = [args.phonenumber()];
 		return ret;
@@ -229,7 +230,7 @@ module.exports.view = function (ctrl, args, extras) {
 			config: fadesIn
 		}, [m('span', replyTo(message), 'From: '),
 			m('b', replyTo(message), message.from),
-			m('i', moment(message.date).fromNow()),
+			m('i', ' ' + moment(message.date).fromNow()),
 			m('br'),
 			m('span', 'To: ' + message.to.join(', ')),
 			m('br'),
@@ -283,7 +284,7 @@ module.exports.view = function (ctrl, args, extras) {
 				}))
 				, ctrl.selectedGroup() ? m('td', ctrl.messages
 				.filter(function (grouping) {
-					return difference(flatten(grouping.group), ctrl.selectedGroup()).length === 0;
+					return isEqual(flatten(grouping.group), ctrl.selectedGroup());
 				})
 				.map(function (grouping) { return grouping.reduction.map(displayMessage) }))
 				: null
