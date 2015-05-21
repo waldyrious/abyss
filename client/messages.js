@@ -238,7 +238,7 @@ module.exports.view = function (ctrl, args, extras) {
 			m('b', message.from),
 			m('i', ' ' + moment(message.date).fromNow()),
 			m('br'),
-			m('span', 'To: ' + ctrl.to.join(', ')),
+			m('span', 'To: ' + message.to.join(', ')),
 			m('br'),
 			m('span', m.trust(autolinker.link(message.text))),
 			m('br'),
