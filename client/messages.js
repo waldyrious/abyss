@@ -36,6 +36,12 @@ module.exports.controller = function (args, extras) {
 		}
 	})();
 
+	self.selectFirstGroup = function () {
+		if (self.selectedGroup() === null) {
+			self.selectedGroup(self.messages[0].group);
+		}
+	};
+
 	function fromMe(message) {
 		return message.from === args.phonenumber();
 	}
@@ -51,6 +57,7 @@ module.exports.controller = function (args, extras) {
 	function setMessages(value) {
 		immediate(function () {
 			self.messages = value;
+			self.selectFirstGroup();
 		});
 	}
 
