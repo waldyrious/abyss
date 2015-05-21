@@ -286,11 +286,16 @@ module.exports.view = function (ctrl, args, extras) {
 		m('div', [m('div.col-sm-4#left',
 		[m('h3', 'Conversations'),
 			ctrl.messages.map(function (grouping) {
+				//console.log('Selected group');
+				//console.log(ctrl.selectedGroup());
+				//console.log('Grouping group');
+				//console.log(grouping.group);
+
 				return m('div', styler.pointer({
 					onclick: function () {
 						ctrl.selectedGroup(grouping.group)
 					},
-					class: ctrl.selectedGroup() !== null && difference(ctrl.selectedGroup(), grouping.group).length == 0 ? 'bg-info' : null
+					class: isEqual(flatten(grouping.group), ctrl.selectedGroup()) ? 'bg-info' : null
 				}),
 				[simplify(grouping.group).map(function (ph) {
 					return m('div', ph)
