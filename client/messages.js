@@ -12,7 +12,10 @@ var flatten = require('lodash/array/flatten');
 var uniq = require('lodash/array/uniq');
 var without = require('lodash/array/without');
 var difference = require('lodash/array/difference');
+var last = require('lodash/array/last');
 var isEqual = require('lodash/lang/isEqual');
+var clone = require('lodash/lang/clone');
+var union = require('lodash/array/union');
 
 module.exports.controller = function (args, extras) {
 	var self = this;
@@ -22,23 +25,13 @@ module.exports.controller = function (args, extras) {
 	self.message = m.prop('');
 	self.error = Error.ErrorHolder();
 
-	self.selectedGroup = (function () {
-		var myGroup = null;
-
-		return function (group) {
-			if (group) {
-				myGroup = flatten(group);
-			} else if (group === null) {
-				myGroup = null;
-			} else {
-				return myGroup;
-			}
-		}
-	})();
+	self.selectGroup = function (group) {
+		self.to = clone(group);
+	}
 
 	self.selectFirstGroup = function () {
-		if (self.selectedGroup() === null) {
-			self.selectedGroup(self.messages[0].group);
+		if (self.to === ['']) {
+			self.to = clone(self.messages[0].group);
 		}
 	};
 
@@ -65,37 +58,39 @@ module.exports.controller = function (args, extras) {
 		return !fromMe(message) && message.to.length && message.to.length > 1;
 	}
 
-	self.replyTo = function (message) {
-		if (fromMe(message)) {
-			if (!Array.isArray(message.to)) {
-				throw new TypeError('To field must be array');
-			} else {
-				self.to = [];
-				for (var i = 0; i < message.to.length; i++) {
-					self.to.push(message.to[i]);
-				}
-			}
-		} else {
-			self.to = [];
-			self.to.push(message.from);
-			for (var i = 0; i < message.to.length; i++) {
-				if (message.to[i] !== args.phonenumber()) {
-					self.to.push(message.to[i]);
-				} else {
-				}
-			}
-		}
-	};
+	// self.replyTo = function (message) {
+	// 	if (fromMe(message)) {
+	// 		if (!Array.isArray(message.to)) {
+	// 			throw new TypeError('To field must be array');
+	// 		} else {
+	// 			// self.to = [];
+	// 			var to = [];
+	// 			for (var i = 0; i < message.to.length; i++) {
+	// 				to.push(message.to[i]);
+	// 			}
+	// 			self.selectedGroup(to);
+	// 		}
+	// 	} else {
+	// 		self.to = [];
+	// 		self.to.push(message.from);
+	// 		for (var i = 0; i < message.to.length; i++) {
+	// 			if (message.to[i] !== args.phonenumber()) {
+	// 				self.to.push(message.to[i]);
+	// 			} else {
+	// 			}
+	// 		}
+	// 	}
+	// };
 
 	self.toPlus = function () {
-		self.to.push('')
+		self.to.push('');
 	};
 
 	self.toMinus = function () {
-		if (self.to.length > 1) {
-			self.to.pop();
-		} else {
-			self.to[0] = '';
+		self.to.pop();
+
+		if (self.to.length === 0) {
+			self.to.push('');
 		}
 	};
 
@@ -105,7 +100,6 @@ module.exports.controller = function (args, extras) {
 	};
 
 	self.refresh = function () {
-		//self.selectedGroup(null);
 		self.getBros();
 	};
 
@@ -218,13 +212,13 @@ module.exports.view = function (ctrl, args, extras) {
 		return !fromMe(message) && message.to.length && message.to.length > 1;
 	}
 
-	function replyTo(message) {
-		return styler.pointer({
-			onclick: function (e) {
-				ctrl.replyTo(message)
-			}
-		})
-	}
+	// function replyTo(message) {
+	// 	return styler.pointer({
+	// 		onclick: function (e) {
+	// 			ctrl.replyTo(message)
+	// 		}
+	// 	})
+	// }
 
 	function simplify(group) {
 		var ret = without(flatten(group), args.phonenumber());
@@ -240,11 +234,11 @@ module.exports.view = function (ctrl, args, extras) {
 		return m('div', {
 			key: message.id,
 			config: fadesIn
-		}, [m('span', replyTo(message), 'From: '),
-			m('b', replyTo(message), message.from),
+		}, [m('span', 'From: '),
+			m('b', message.from),
 			m('i', ' ' + moment(message.date).fromNow()),
 			m('br'),
-			m('span', 'To: ' + message.to.join(', ')),
+			m('span', 'To: ' + ctrl.to.join(', ')),
 			m('br'),
 			m('span', m.trust(autolinker.link(message.text))),
 			m('br'),
@@ -293,9 +287,9 @@ module.exports.view = function (ctrl, args, extras) {
 
 				return m('div', styler.pointer({
 					onclick: function () {
-						ctrl.selectedGroup(grouping.group)
+						ctrl.selectGroup(grouping.group)
 					},
-					class: isEqual(flatten(grouping.group), ctrl.selectedGroup()) ? 'bg-info' : null
+					class: isEqual(flatten(grouping.group), ctrl.to) ? 'bg-info' : null
 				}),
 				[simplify(grouping.group).map(function (ph) {
 					return m('div', ph)
@@ -305,7 +299,7 @@ module.exports.view = function (ctrl, args, extras) {
 			})]),
 			m('div.col-sm-8#right', [m('h3', 'Messages'),
 				ctrl.messages.filter(function (grouping) {
-					return isEqual(flatten(grouping.group), ctrl.selectedGroup());
+					return isEqual(flatten(grouping.group), ctrl.to);
 				}).map(function (grouping) {
 					return grouping.reduction.map(displayMessage)
 				})])
