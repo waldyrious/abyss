@@ -285,12 +285,12 @@ module.exports.view = function (ctrl, args, extras) {
 				//console.log('Grouping group');
 				//console.log(grouping.group);
 
-				return m('div', styler.pointer({
+				return m('div', styler.pointer(styler.round({
 					onclick: function () {
 						ctrl.selectGroup(grouping.group)
 					},
 					class: isEqual(flatten(grouping.group), ctrl.to) ? 'bg-info' : null
-				}),
+				})),
 				[simplify(grouping.group).map(function (ph) {
 					return m('div', ph)
 				}),
