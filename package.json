@@ -48,6 +48,16 @@
     "xtend": "^4.0.0"
   },
   "devDependencies": {
-    "casual": "^1.4.7"
+    "casual": "^1.4.7",
+    "css-loader": "^0.13.1",
+    "exports-loader": "^0.6.2",
+    "jshint": "^2.7.0",
+    "jshint-loader": "^0.8.3",
+    "less": "^2.5.1",
+    "less-loader": "^2.2.0",
+    "node-libs-browser": "^0.5.2",
+    "style-loader": "^0.12.2",
+    "svg-loader": "0.0.2",
+    "webpack": "^1.9.8"
   }
 }

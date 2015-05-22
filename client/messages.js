@@ -157,6 +157,7 @@ module.exports.controller = function (args, extras) {
 				m.endComputation();
 				m.startComputation();
 			}
+			return oboe.drop;
 		})
 		.done(m.endComputation);
 	};
