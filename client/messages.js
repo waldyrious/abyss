@@ -30,7 +30,7 @@ module.exports.controller = function (args, extras) {
 	}
 
 	self.selectFirstGroup = function () {
-		if (isEqual(self.to, [''])) {
+		if (isEqual(self.to, ['']) && self.messages[0]) {
 			self.to = clone(self.messages[0].group);
 		}
 	};
