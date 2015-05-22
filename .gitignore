@@ -1,5 +1,6 @@
 node_modules/
 secret/
+client/
 dist/
 rethinkdb_data/
 .idea/

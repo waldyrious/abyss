@@ -27,6 +27,7 @@ var file = path.join(__dirname +'/client/main.js');
 
 var lastWrite = Promise.resolve(true);
 
+/*
 var w = watchify(browserify(file, watchify.args));
 w.on('update', function () {
 	w.bundle(function (err, src) {
@@ -46,3 +47,4 @@ w.on('update', function () {
 });
 
 w.emit('update'); // trigger initial build
+*/

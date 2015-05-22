@@ -1,0 +1,7 @@
+bundle.js
+bundle.js.map
+*.woff
+*.svg
+*.ttf
+*.eot
+*.woff2

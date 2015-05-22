@@ -5,8 +5,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "watch": "watchify ./client/main.js -o 'exorcist ./client/bundle.js.map > ./client/bundle.js' -d -v",
-    "build": "browserify -d -g uglifyify client/main.js | exorcist client/bundle.js.map > client/bundle.js"
+    "watch": "webpack --watch",
+    "build": "webpack"
   },
   "author": "",
   "license": "ISC",
@@ -51,6 +51,7 @@
     "casual": "^1.4.7",
     "css-loader": "^0.13.1",
     "exports-loader": "^0.6.2",
+    "file-loader": "^0.8.3",
     "jshint": "^2.7.0",
     "jshint-loader": "^0.8.3",
     "less": "^2.5.1",
@@ -58,6 +59,7 @@
     "node-libs-browser": "^0.5.2",
     "style-loader": "^0.12.2",
     "svg-loader": "0.0.2",
+    "url-loader": "^0.5.5",
     "webpack": "^1.9.8"
   }
 }

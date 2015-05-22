@@ -6,7 +6,6 @@ var autolinker = new Autolinker();
 var styler = require('./styler');
 var Error = require('./error');
 var Velocity = require('velocity-animate');
-var request = require('request');
 var oboe = require('oboe');
 var flatten = require('lodash/array/flatten');
 var uniq = require('lodash/array/uniq');

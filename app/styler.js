@@ -32,7 +32,7 @@ module.exports.round = function (obj) {
 	})
 };
 
-module.exports.refreshIcon(o) {
+module.exports.refreshIcon = function (o) {
 	if (!obj) obj = {};
 	return merge(obj, {
 		class: "glyphicon glyphicon-refresh"
