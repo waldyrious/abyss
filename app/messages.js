@@ -65,30 +65,6 @@ module.exports.controller = function (args, extras) {
 		return !fromMe(message) && message.to.length && message.to.length > 1;
 	}
 
-	// self.replyTo = function (message) {
-	// 	if (fromMe(message)) {
-	// 		if (!Array.isArray(message.to)) {
-	// 			throw new TypeError('To field must be array');
-	// 		} else {
-	// 			// self.to = [];
-	// 			var to = [];
-	// 			for (var i = 0; i < message.to.length; i++) {
-	// 				to.push(message.to[i]);
-	// 			}
-	// 			self.selectedGroup(to);
-	// 		}
-	// 	} else {
-	// 		self.to = [];
-	// 		self.to.push(message.from);
-	// 		for (var i = 0; i < message.to.length; i++) {
-	// 			if (message.to[i] !== args.phonenumber()) {
-	// 				self.to.push(message.to[i]);
-	// 			} else {
-	// 			}
-	// 		}
-	// 	}
-	// };
-
 	self.toPlus = function () {
 		self.to.push('');
 	};
@@ -122,42 +98,6 @@ module.exports.controller = function (args, extras) {
 		.then(self.getMessages, self.error)
 	};
 
-	//self.getMessagesStreaming = function () {
-	//	// Stream in first 10 messages and try to render them ASAP as we load the rest
-	//	var count = 0;
-	//	var show = 9;
-	//
-	//	request({url: location.protocol + "//" + location.host + '/api/messages'})
-	//	.pipe(JSONStream.parse('*'))
-	//	.pipe(es.mapSync(function (data) {
-	//		if (count == 0) {
-	//			m.startComputation();
-	//		}
-	//
-	//		if (count < show) {
-	//			self.messages.push(data);
-	//			count++;
-	//		} else if (count == show) {
-	//			self.messages.push(data);
-	//			m.endComputation();
-	//			m.startComputation();
-	//			count++;
-	//		} else {
-	//			self.messages.push(data);
-	//		}
-	//	}))
-	//	.on('end', function () {
-	//		if (count == show + 1) {
-	//			m.endComputation();
-	//		} else if (count > show + 1) {
-	//			throw new Error('program error');
-	//		} else if (count < show ) {
-	//			m.endComputation();
-	//		}
-	//	})
-	//};
-
-
 	self.getMessagesStreaming = function () {
 		// Stream in first 10 messages and try to render them ASAP as we load the rest
 		var count = 0;
@@ -184,11 +124,6 @@ module.exports.controller = function (args, extras) {
 	self.delete = function (message) {
 		m.request({method: 'DELETE', background: true, url: '/api/messages/' + encodeURIComponent(message.id)})
 		.then(self.getConversations, self.error);
-
-		// this dont work anymore with grouping of msgs
-		//.then(immediate(function () {
-		//	self.messages.splice(self.messages.indexOf(message), 1);
-		//}), self.error)
 	};
 
 	immediate(self.refresh);
@@ -226,14 +161,6 @@ module.exports.view = function (ctrl, args, extras) {
 	function groupMessage(message) {
 		return !fromMe(message) && message.to.length && message.to.length > 1;
 	}
-
-	// function replyTo(message) {
-	// 	return styler.pointer({
-	// 		onclick: function (e) {
-	// 			ctrl.replyTo(message)
-	// 		}
-	// 	})
-	// }
 
 	function simplify(group) {
 		var ret = without(flatten(group), args.phonenumber());
@@ -297,11 +224,6 @@ module.exports.view = function (ctrl, args, extras) {
 		m('div', [m('div.col-sm-4#left',
 		[m('h3', 'Conversations'),
 			ctrl.conversations.map(function (grouping) {
-				//console.log('Selected group');
-				//console.log(ctrl.selectedGroup());
-				//console.log('Grouping group');
-				//console.log(grouping.group);
-
 				return m('div', styler.pointer(styler.round({
 					onclick: function () {
 						ctrl.selectGroup(grouping.group)
