@@ -1,15 +1,14 @@
-"use strict";
-
+'use strict';
 var m = require('mithril');
 var messages = require('./messages');
 var styler = require('./styler');
 
-var Error = require('./error');
+var error = require('./error');
 
 module.exports.controller = function (args, extras) {
 	var self = this;
 	
-	this.error = Error.ErrorHolder();
+	this.error = error.ErrorHolder();
 
 	this.phoneInput = m.prop('');
 	this.needCode = m.prop(false);
@@ -59,7 +58,7 @@ module.exports.view = function (ctrl) {
 	if (ctrl.noauth()) {
 		if (ctrl.needCode()) {
 			return m('div', [
-				Error.renderError(ctrl.error),
+				error.renderError(ctrl.error),
 				m('div',  'Enter verification code: '),
 				m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.codeInput), value: ctrl.codeInput()}),
 				m('button', styler.buttonify({onclick: ctrl.submitCode}), 'Submit Code'),
@@ -67,7 +66,7 @@ module.exports.view = function (ctrl) {
 			])
 		} else {
 			return m('div', [
-				Error.renderError(ctrl.error),
+				error.renderError(ctrl.error),
 				m('div', 'Log in with your phone number!' + ctrl.phonenumberapi()),
 				m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
 				m('button', styler.buttonify({onclick: ctrl.loginClick}), 'Login')

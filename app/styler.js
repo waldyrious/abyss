@@ -20,7 +20,7 @@ module.exports.pointer = function (obj) {
 		style: {
 			cursor:'pointer'
 		}
-	})
+	});
 };
 
 module.exports.round = function (obj) {
@@ -29,7 +29,7 @@ module.exports.round = function (obj) {
 		style: {
 			'border-radius':'1em'
 		}
-	})
+	});
 };
 
 module.exports.refreshIcon = function (o) {
@@ -37,4 +37,4 @@ module.exports.refreshIcon = function (o) {
 	return merge(obj, {
 		class: "glyphicon glyphicon-refresh"
 	});
-}
+};

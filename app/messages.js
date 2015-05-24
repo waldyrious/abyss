@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 var moment = require('moment');
 var m = require('mithril');
 var Autolinker = require('autolinker');
 var autolinker = new Autolinker();
 var styler = require('./styler');
-var Error = require('./error');
+var error = require('./error');
 var Velocity = require('velocity-animate');
 var oboe = require('oboe');
 var flatten = require('lodash/array/flatten');
@@ -22,7 +22,7 @@ module.exports.controller = function (args, extras) {
 	self.messages = [];
 	self.to = [''];
 	self.message = m.prop('');
-	self.error = Error.ErrorHolder();
+	self.error = error.ErrorHolder();
 
 	self.selectGroup = function (group) {
 		self.to = clone(group);
@@ -168,7 +168,7 @@ module.exports.controller = function (args, extras) {
 
 	self.delete = function (message) {
 		m.request({method: 'DELETE', url: '/api/bro/' + encodeURIComponent(message.id)})
-		.then(self.getBros, self.error)
+		.then(self.getBros, self.error);
 
 		// this dont work anymore with grouping of msgs
 		//.then(immediate(function () {
@@ -251,7 +251,7 @@ module.exports.view = function (ctrl, args, extras) {
 
 	return m('div', {config: fadesIn}, [
 		m('div', [
-			Error.renderError(ctrl.error),
+			error.renderError(ctrl.error),
 			m('label', 'To: '), m('span', ' '),
 			m('button', buttonify({onclick: ctrl.toPlus}), '+'),
 			m('button', buttonify({onclick: ctrl.toMinus}), '-'),

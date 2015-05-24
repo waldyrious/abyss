@@ -26,7 +26,7 @@ module.exports.renderError = function (error) {
 
 	var value;
 
-	if (error() != null && error().error && error().error.text) {
+	if (error() !== null && error().error && error().error.text) {
 			value = error().error.text;
 	} else {
 		value = error();
