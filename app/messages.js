@@ -274,11 +274,11 @@ module.exports.view = function (ctrl, args, extras) {
 			}),
 			m('br'),
 			m('br'),
-			m('button', bbuttonify({onclick: ctrl.send, disabled: args.noauth()}), 'Send Bro!')
+			m('button', bbuttonify({onclick: ctrl.send, disabled: args.noauth()}), 'Send!')
 		]),
 		m('br'),
 		m('button', buttonify({onclick: ctrl.refresh, disabled: args.noauth()}), 'Refresh messages!'),
-		m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
+		//m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
 		m('div', [m('div.col-sm-4#left',
 		[m('h3', 'Conversations'),
 			ctrl.messages.map(function (grouping) {
