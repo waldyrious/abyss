@@ -72,7 +72,7 @@ module.exports.view = function (ctrl) {
 				m('h4', 'Yobro is a fun, easy way to send individual and group messages you can take back at any time.'),
 				m('div', 'No signup needed! Simply login with your mobile phone number, and we\'ll send you a confirmation code.'),
 				m('i', 'Your phone number is used purely for authentication purposes only and will not be distributed to third parties.'),
-				m('div', ['Log in with', m('i', ' just '), 'your 10-digit phone number!', ctrl.phonenumberapi()]),
+				m('div', ['Carefully enter', m('i', ' just '), 'your 10-digit phone number!', ctrl.phonenumberapi()]),
 				m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
 				m('button', styler.buttonify({onclick: ctrl.loginClick}), 'Login')
 			])
