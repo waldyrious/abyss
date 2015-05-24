@@ -32,9 +32,19 @@ module.exports.round = function (obj) {
 	});
 };
 
-module.exports.refreshIcon = function (o) {
+module.exports.refreshIcon = function (obj) {
 	if (!obj) obj = {};
 	return merge(obj, {
 		class: "glyphicon glyphicon-refresh"
+	});
+};
+
+
+module.exports.hide = function (obj) {
+	if (!obj) obj = {};
+	return merge(obj, {
+		style: {
+			visibility: 'hidden'
+		}
 	});
 };
