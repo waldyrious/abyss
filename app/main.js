@@ -1,5 +1,5 @@
 'use strict';
-require('!style!css!bootstrap/dist/css/bootstrap.css');
+require('!style!css!less!bootstrap/less/bootstrap.less');
 require('!style!css!./s.css');
 require('setimmediate');
 
@@ -17,4 +17,3 @@ regsw();
 var Login = require('./login');
 
 var login = m.mount(document.getElementById('login'), Login);
-

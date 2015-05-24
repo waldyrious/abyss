@@ -2,7 +2,7 @@
 rm -rf dist
 mkdir dist
 mkdir dist/client
-npm run build
+./node_modules/.bin/webpack --optimize-minimize --optimize-minimize
 cp -R proxy.js lib package.json server.js model schema.js dist &&
 cp app/index.html client &&
 cp app/sw.js client &&
