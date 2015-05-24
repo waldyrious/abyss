@@ -234,13 +234,15 @@ module.exports.view = function (ctrl, args, extras) {
 		return m('div', {
 			key: message.id,
 			config: fadesIn
-		}, [m('span', 'From: '),
-			m('b', message.from),
-			m('i', ' ' + moment(message.date).fromNow()),
-			m('br'),
-			m('span', 'To: ' + message.to.join(', ')),
-			m('br'),
-			m('span', m.trust(autolinker.link(message.text))),
+		}, [ m('div', [m('span', 'From: '),
+			m('b', fromMe(message)? 'Me' : message.from),
+			m('i', ' ' + moment(message.date).fromNow())])
+			,
+			//fromMe(message) ?  m('div', [
+			//	m('span', 'To: '), m('b', message.to.join(', ')),
+			//	m('i', ' ' + moment(message.date).fromNow())
+			//]) : null,
+			m('div', m.trust(autolinker.link(message.text))),
 			m('br'),
 			m('button', buttonify({
 				onclick: fadesOut(ctrl.delete.bind(this, message))
