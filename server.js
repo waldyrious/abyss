@@ -80,3 +80,10 @@ if (secret.httpredirect) {
 	http.createServer(app).listen(httpSocket);
 	console.log('HTTP server listening on port ' + httpSocket.address().port);
 }
+
+const monitor = require('event-loop-monitor');
+
+monitor.on('data', function(latency) {
+	console.log(latency); // { p50: 1026, p90: 1059, p95: 1076, p99: 1110, p100: 1260 }
+});
+monitor.resume();
