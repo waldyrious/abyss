@@ -20,17 +20,19 @@ module.exports.controller = function (args, extras) {
 	var self = this;
 
 	self.messages = [];
+	self.conversations = [];
 	self.to = [''];
 	self.message = m.prop('');
 	self.error = error.ErrorHolder();
 
 	self.selectGroup = function (group) {
 		self.to = clone(group);
-	}
+		self.getMessages();
+	};
 
 	self.selectFirstGroup = function () {
 		if (isEqual(self.to, ['']) && self.messages[0]) {
-			self.to = clone(self.messages[0].group);
+			self.to = clone(self.conversations[0].group);
 		}
 	};
 
@@ -49,6 +51,12 @@ module.exports.controller = function (args, extras) {
 	function setMessages(value) {
 		immediate(function () {
 			self.messages = value;
+		});
+	}
+
+	function setConversations(value) {
+		immediate(function () {
+			self.conversations = value;
 			self.selectFirstGroup();
 		});
 	}
@@ -94,17 +102,24 @@ module.exports.controller = function (args, extras) {
 	};
 
 	self.send = function () {
-		m.request({method: 'POST', url: '/api/messages', data: {to: self.to, text: self.message()}})
+		m.request({method: 'POST', background: true, url: '/api/messages', data: {to: self.to, text: self.message()}})
 		.then(self.getMessages, self.error)
 	};
 
 	self.refresh = function () {
-		self.getMessages();
+		self.getConversations();
 	};
 
+	// todo background: true,
 	self.getMessages = function () {
-		m.request({method: 'GET', url: '/api/messages'})
+		m.request({method: 'GET', background: true, url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))})
 		.then(setMessages, self.error)
+	};
+
+	self.getConversations = function () {
+		m.request({method: 'GET', background: true, url: '/api/conversations'})
+		.then(setConversations, self.error)
+		.then(self.getMessages, self.error)
 	};
 
 	//self.getMessagesStreaming = function () {
@@ -149,7 +164,7 @@ module.exports.controller = function (args, extras) {
 		var show = 9;
 
 		m.startComputation();
-		oboe('/api/messages').node('![*]', function (item) {
+		oboe('/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))).node('![*]', function (item) {
 			self.messages.push(item);
 			count++;
 			if (count == show) {
@@ -162,13 +177,13 @@ module.exports.controller = function (args, extras) {
 	};
 
 	self.clearMessages = function () {
-		m.request({method: 'DELETE', url: '/api/messages'})
-		.then(self.getMessages, self.error)
+		m.request({method: 'DELETE', background: true, url: '/api/messages'})
+		.then(self.getConversations, self.error)
 	};
 
 	self.delete = function (message) {
-		m.request({method: 'DELETE', url: '/api/messages/' + encodeURIComponent(message.id)})
-		.then(self.getMessages, self.error);
+		m.request({method: 'DELETE', background: true, url: '/api/messages/' + encodeURIComponent(message.id)})
+		.then(self.getConversations, self.error);
 
 		// this dont work anymore with grouping of msgs
 		//.then(immediate(function () {
@@ -278,10 +293,10 @@ module.exports.view = function (ctrl, args, extras) {
 		]),
 		m('br'),
 		m('button', buttonify({onclick: ctrl.refresh, disabled: args.noauth()}), 'Refresh messages!'),
-		//m('button', buttonify({onclick: ctrl.clearMessages, disabled: args.noauth()}), 'Delete all messages!'),
+		m('button', buttonify({onclick: ctrl.clearMessages, disabled: args.noauth()}), 'Delete all messages!'),
 		m('div', [m('div.col-sm-4#left',
 		[m('h3', 'Conversations'),
-			ctrl.messages.map(function (grouping) {
+			ctrl.conversations.map(function (grouping) {
 				//console.log('Selected group');
 				//console.log(ctrl.selectedGroup());
 				//console.log('Grouping group');
@@ -300,11 +315,8 @@ module.exports.view = function (ctrl, args, extras) {
 				])
 			})]),
 			m('div.col-sm-8#right', [m('h3', 'Messages'),
-				ctrl.messages.filter(function (grouping) {
-					return isEqual(flatten(grouping.group), ctrl.to);
-				}).map(function (grouping) {
-					return grouping.reduction.map(displayMessage)
-				})])
+				ctrl.messages.map(displayMessage)
+			])
 		])
 	])
 };
