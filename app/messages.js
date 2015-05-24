@@ -26,8 +26,11 @@ module.exports.controller = function (args, extras) {
 	self.error = error.ErrorHolder();
 
 	self.selectGroup = function (group) {
+		m.startComputation();
 		self.to = clone(group);
-		self.getMessages();
+		self.messages = []
+		m.endComputation();
+		self.getMessagesStreaming();
 	};
 
 	self.selectFirstGroup = function () {
@@ -48,17 +51,13 @@ module.exports.controller = function (args, extras) {
 		});
 	}
 
-	function setMessages(value) {
-		immediate(function () {
-			self.messages = value;
-		});
+	self.setMessages = function (value) {
+		self.messages = value;
 	}
 
-	function setConversations(value) {
-		immediate(function () {
-			self.conversations = value;
-			self.selectFirstGroup();
-		});
+	self.setConversations = function (value) {
+		self.conversations = value;
+		self.selectFirstGroup();
 	}
 
 	function multiTo(message) {
@@ -79,23 +78,18 @@ module.exports.controller = function (args, extras) {
 
 	self.send = function () {
 		m.request({method: 'POST', background: true, url: '/api/messages', data: {to: self.to, text: self.message()}})
-		.then(self.getMessages, self.error)
+		.then(self.refresh, self.error)
 	};
 
-	self.refresh = function () {
-		self.getConversations();
-	};
-
-	// todo background: true,
 	self.getMessages = function () {
-		m.request({method: 'GET', background: true, url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))})
-		.then(setMessages, self.error)
+		m.request({method: 'GET', url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))})
+		.then(self.setMessages, self.error)
 	};
 
-	self.getConversations = function () {
+	self.refresh = self.getConversations = function () {
 		m.request({method: 'GET', background: true, url: '/api/conversations'})
-		.then(setConversations, self.error)
-		.then(self.getMessages, self.error)
+		.then(self.setConversations, self.error)
+		.then(self.getMessagesStreaming, self.error)
 	};
 
 	self.getMessagesStreaming = function () {
@@ -118,15 +112,15 @@ module.exports.controller = function (args, extras) {
 
 	self.clearMessages = function () {
 		m.request({method: 'DELETE', background: true, url: '/api/messages'})
-		.then(self.getConversations, self.error)
+		.then(self.refresh, self.error)
 	};
 
 	self.delete = function (message) {
 		m.request({method: 'DELETE', background: true, url: '/api/messages/' + encodeURIComponent(message.id)})
-		.then(self.getConversations, self.error);
+		.then(self.refresh, self.error);
 	};
 
-	immediate(self.refresh);
+	self.refresh();
 };
 
 module.exports.view = function (ctrl, args, extras) {
