@@ -34,8 +34,9 @@ module.exports.controller = function (args, extras) {
 	};
 
 	self.selectFirstGroup = function () {
-		if (isEqual(self.to, ['']) && self.messages[0]) {
+		if (isEqual(self.to, ['']) && self.conversations[0]) {
 			self.to = clone(self.conversations[0].group);
+			self.getMessagesStreaming();
 		}
 	};
 
@@ -57,7 +58,7 @@ module.exports.controller = function (args, extras) {
 
 	self.setConversations = function (value) {
 		self.conversations = value;
-		self.selectFirstGroup();
+		immediate(self.selectFirstGroup);
 	}
 
 	function multiTo(message) {
