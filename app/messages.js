@@ -235,7 +235,7 @@ module.exports.view = function (ctrl, args, extras) {
 			key: message.id,
 			config: fadesIn
 		}, [ m('div', [m('span', 'From: '),
-			m('b', fromMe(message)? 'Me' : message.from),
+			m('b', fromMe(message)? 'me' : message.from),
 			m('i', ' ' + moment(message.date).fromNow())])
 			,
 			//fromMe(message) ?  m('div', [
