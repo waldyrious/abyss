@@ -57,7 +57,6 @@ module.exports.view = function (ctrl) {
 
 	if (ctrl.noauth()) {
 		return m('div', [
-			error.renderError(ctrl.error),
 			m('h3', 'Own your messages!'),
 			m('h4', 'Ever sent a message by mistake, or just don\'t want to make it a permanent record?'),
 			m('h4', 'Yobro is a fun, easy way to send individual and group messages you can take back at any time.'),
@@ -73,6 +72,7 @@ module.exports.view = function (ctrl) {
 			m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
 			m('button', styler.buttonify({onclick: ctrl.loginClick}), 'Login')
 			]
+		, error.renderError(ctrl.error)
 		])
 	} else {
 		return m('div', [
