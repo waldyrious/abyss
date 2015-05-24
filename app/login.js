@@ -32,7 +32,7 @@ module.exports.controller = function (args, extras) {
 	    m.request({url:'/api/registration/phone'})
 	    .then(self.phonenumberapi, self.error)
 	  };
-	this.noauth = function () { return self.phonenumberapi() == '' };
+	this.noauth = function () { return self.phonenumberapi() === '' };
 	this.loginClick = function () {
 		return m.request({method: 'POST',
 		 url: '/api/registration/phone', data: { phonenumber: self.phoneInput().trim() } })
