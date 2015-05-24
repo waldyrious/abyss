@@ -94,25 +94,25 @@ module.exports.controller = function (args, extras) {
 	};
 
 	self.send = function () {
-		m.request({method: 'POST', url: '/api/bro', data: {to: self.to, text: self.message()}})
-		.then(self.getBros, self.error)
+		m.request({method: 'POST', url: '/api/messages', data: {to: self.to, text: self.message()}})
+		.then(self.getMessages, self.error)
 	};
 
 	self.refresh = function () {
-		self.getBros();
+		self.getMessages();
 	};
 
-	self.getBros = function () {
-		m.request({method: 'GET', url: '/api/bro'})
+	self.getMessages = function () {
+		m.request({method: 'GET', url: '/api/messages'})
 		.then(setMessages, self.error)
 	};
 
-	//self.getBrosStreaming = function () {
+	//self.getMessagesStreaming = function () {
 	//	// Stream in first 10 messages and try to render them ASAP as we load the rest
 	//	var count = 0;
 	//	var show = 9;
 	//
-	//	request({url: location.protocol + "//" + location.host + '/api/bro'})
+	//	request({url: location.protocol + "//" + location.host + '/api/messages'})
 	//	.pipe(JSONStream.parse('*'))
 	//	.pipe(es.mapSync(function (data) {
 	//		if (count == 0) {
@@ -143,13 +143,13 @@ module.exports.controller = function (args, extras) {
 	//};
 
 
-	self.getBrosStreaming = function () {
+	self.getMessagesStreaming = function () {
 		// Stream in first 10 messages and try to render them ASAP as we load the rest
 		var count = 0;
 		var show = 9;
 
 		m.startComputation();
-		oboe('/api/bro').node('![*]', function (item) {
+		oboe('/api/messages').node('![*]', function (item) {
 			self.messages.push(item);
 			count++;
 			if (count == show) {
@@ -161,14 +161,14 @@ module.exports.controller = function (args, extras) {
 		.done(m.endComputation);
 	};
 
-	self.clearBros = function () {
-		m.request({method: 'DELETE', url: '/api/bro'})
-		.then(self.getBros, self.error)
+	self.clearMessages = function () {
+		m.request({method: 'DELETE', url: '/api/messages'})
+		.then(self.getMessages, self.error)
 	};
 
 	self.delete = function (message) {
-		m.request({method: 'DELETE', url: '/api/bro/' + encodeURIComponent(message.id)})
-		.then(self.getBros, self.error);
+		m.request({method: 'DELETE', url: '/api/messages/' + encodeURIComponent(message.id)})
+		.then(self.getMessages, self.error);
 
 		// this dont work anymore with grouping of msgs
 		//.then(immediate(function () {
@@ -278,7 +278,7 @@ module.exports.view = function (ctrl, args, extras) {
 		]),
 		m('br'),
 		m('button', buttonify({onclick: ctrl.refresh, disabled: args.noauth()}), 'Refresh messages!'),
-		//m('button', buttonify({onclick: ctrl.clearBros, disabled: args.noauth()}), 'Delete all messages!'),
+		//m('button', buttonify({onclick: ctrl.clearMessages, disabled: args.noauth()}), 'Delete all messages!'),
 		m('div', [m('div.col-sm-4#left',
 		[m('h3', 'Conversations'),
 			ctrl.messages.map(function (grouping) {
