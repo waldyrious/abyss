@@ -26,10 +26,7 @@ module.exports.controller = function (args, extras) {
 	self.error = error.ErrorHolder();
 
 	self.selectGroup = function (group) {
-		m.startComputation();
 		self.to = clone(group);
-		self.messages = []
-		m.endComputation();
 		self.getMessagesStreaming();
 	};
 
@@ -99,6 +96,7 @@ module.exports.controller = function (args, extras) {
 		var show = 9;
 
 		m.startComputation();
+		self.messages = [];
 		oboe('/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))).node('![*]', function (item) {
 			self.messages.push(item);
 			count++;
@@ -118,7 +116,10 @@ module.exports.controller = function (args, extras) {
 
 	self.delete = function (message) {
 		m.request({method: 'DELETE', background: true, url: '/api/messages/' + encodeURIComponent(message.id)})
-		.then(self.refresh, self.error);
+		// .then(function () {
+		// 	self.messages.splice(self.messages.indexOf(message), 1);
+		// }, self.error);
+		.then(self.refresh, self.error)
 	};
 
 	self.refresh();
