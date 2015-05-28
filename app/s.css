@@ -10,3 +10,12 @@
 		height: 50vh
 	}
 }
+
+body {
+	text-align: center;
+	font-family: "Lucida Grande",Tahoma,Verdana,Arial,sans-serif;
+}
+
+div {
+	margin-top: 2em;
+}

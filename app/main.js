@@ -1,6 +1,6 @@
 'use strict';
-require('!style!css!less!bootstrap/less/bootstrap.less');
-require('!style!css!./s.css');
+require('bootstrap/less/bootstrap.less');
+require('./s.css');
 require('setimmediate');
 
 window.addEventListener("message", receiveMessage, false);
