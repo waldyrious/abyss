@@ -7,6 +7,7 @@ var styler = require('./styler');
 var error = require('./error');
 var Velocity = require('velocity-animate');
 var oboe = require('oboe');
+var filter = require('lodash/collection/filter');
 var flatten = require('lodash/array/flatten');
 var uniq = require('lodash/array/uniq');
 var without = require('lodash/array/without');
@@ -75,6 +76,9 @@ module.exports.controller = function (args, extras) {
 	};
 
 	self.send = function () {
+		self.to = filter(self.to, function (item) {
+			return item !== '' && item !== ' ' && item !== null;
+		});
 		m.request({method: 'POST', background: true, url: '/api/messages', data: {to: self.to, text: self.message()}})
 		.then(self.refresh, self.error)
 	};
