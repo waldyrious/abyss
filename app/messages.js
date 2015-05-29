@@ -16,9 +16,12 @@ var last = require('lodash/array/last');
 var isEqual = require('lodash/lang/isEqual');
 var clone = require('lodash/lang/clone');
 var union = require('lodash/array/union');
+var merge = require('lodash/object/merge');
+
 
 module.exports.controller = function (args, extras) {
 	var self = this;
+	self.working = m.prop(false);
 
 	self.messages = [];
 	self.conversations = [];
@@ -76,10 +79,15 @@ module.exports.controller = function (args, extras) {
 	};
 
 	self.send = function () {
+		self.working(true);
 		self.to = filter(self.to, function (item) {
 			return item !== '' && item !== ' ' && item !== null;
 		});
-		m.request({method: 'POST', background: true, url: '/api/messages', data: {to: self.to, text: self.message()}})
+		m.request({method: 'POST', background: false, url: '/api/messages', data: {to: self.to, text: self.message()}})
+		.then(function () {
+			self.message('');
+			self.working(true);
+		})
 		.then(self.refresh, self.error)
 	};
 
@@ -89,7 +97,8 @@ module.exports.controller = function (args, extras) {
 	};
 
 	self.refresh = self.getConversations = function () {
-		m.request({method: 'GET', background: true, url: '/api/conversations'})
+		self.working(true);
+		m.request({method: 'GET', background: false, url: '/api/conversations'})
 		.then(self.setConversations, self.error)
 		.then(self.getMessagesStreaming, self.error)
 	};
@@ -110,16 +119,21 @@ module.exports.controller = function (args, extras) {
 			}
 			return oboe.drop;
 		})
-		.done(m.endComputation);
+		.done(function () {
+			self.working(false);
+			m.endComputation();
+		});
 	};
 
 	self.clearMessages = function () {
-		m.request({method: 'DELETE', background: true, url: '/api/messages'})
+		self.working(true);
+		m.request({method: 'DELETE', background: false, url: '/api/messages'})
 		.then(self.refresh, self.error)
 	};
 
 	self.delete = function (message) {
-		m.request({method: 'DELETE', background: true, url: '/api/messages/' + encodeURIComponent(message.id)})
+		self.working(true);
+		m.request({method: 'DELETE', background: false, url: '/api/messages/' + encodeURIComponent(message.id)})
 		// .then(function () {
 		// 	self.messages.splice(self.messages.indexOf(message), 1);
 		// }, self.error);
@@ -169,8 +183,24 @@ module.exports.view = function (ctrl, args, extras) {
 		return ret;
 	}
 
-	var bbuttonify = styler.bbuttonify;
-	var buttonify = styler.buttonify;
+	var bbuttonify = function (obj) {
+		if (!obj) obj = {};
+		obj.disabled = ctrl.working() || args.noauth();
+
+	    return merge(obj, {
+	    	class: "btn btn-default btn-lg btn-primary"
+	    });
+	};
+
+	var buttonify = function (obj) {
+		if (!obj) obj = {};
+		obj.disabled = ctrl.working() || args.noauth();
+
+		return merge(obj, {
+	    	class: "btn btn-default"
+	    });
+
+	};
 
 	function displayMessage(message) {
 		return m('div', {
@@ -216,11 +246,11 @@ module.exports.view = function (ctrl, args, extras) {
 			}),
 			m('br'),
 			m('br'),
-			m('button', bbuttonify({onclick: ctrl.send, disabled: args.noauth()}), 'Send!')
+			m('button', bbuttonify({onclick: ctrl.send}), 'Send!')
 		]),
 		m('br'),
-		m('button', buttonify({onclick: ctrl.refresh, disabled: args.noauth()}), 'Refresh messages!'),
-		m('button', buttonify({onclick: ctrl.clearMessages, disabled: args.noauth()}), 'Delete all messages!'),
+		m('button', buttonify({onclick: ctrl.refresh}), 'Refresh messages!'),
+		m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
 		m('div', [m('div.col-sm-4#left',
 		[m('h3', 'Conversations'),
 			ctrl.conversations.map(function (grouping) {
