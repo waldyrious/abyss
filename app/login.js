@@ -7,7 +7,7 @@ var error = require('./error');
 
 module.exports.controller = function (args, extras) {
 	var self = this;
-	
+
 	this.error = error.ErrorHolder();
 
 	this.phoneInput = m.prop('');
@@ -39,7 +39,7 @@ module.exports.controller = function (args, extras) {
 		.then(function (response) {
 			self.needCode(true);
 			self.codeInput('');
-		}, self.error)		
+		}, self.error)
 	};
 	this.submitCode = function () {
 		return m.request({method: 'POST',
@@ -57,19 +57,23 @@ module.exports.view = function (ctrl) {
 
 	if (ctrl.noauth()) {
 		return m('div', [
-			m('h3', 'Own your messages!'),
+			m('h1', 'Yobro.net'),
+			m('h3', m('i', 'Own your messages!')),
 			m('h4', 'Ever sent a message by mistake, or just don\'t want to make it a permanent record?'),
 			m('h4', 'Yobro is a fun, easy way to send individual and group messages you can take back at any time.'),
-			m('div', 'No signup needed! Simply login with your mobile phone number, and we\'ll send you a confirmation code.'),
+			m('p', 'No signup needed. Simply login with your mobile phone number, and we\'ll send you a confirmation code.'),
 			m('i', 'Your phone number is used strictly for authentication purposes only and will not be distributed to third parties.'),
 			ctrl.needCode() ? [
 				m('div',  'Enter verification code: '),
 				m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.codeInput), value: ctrl.codeInput()}),
+				m('span', ' '),
 				m('button', styler.buttonify({onclick: ctrl.submitCode}), 'Submit Code'),
+				m('span', ' '),
 				m('button', styler.buttonify({onclick: ctrl.cancelCode}), 'Cancel')
 			]:[
-			m('div', ['Carefully enter', m('i', ' just '), 'your 10-digit phone number!', ctrl.phonenumberapi()]),
+			m('div', ['Carefully enter your 10-digit phone number!', ctrl.phonenumberapi()]),
 			m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
+			m('span', ' '),
 			m('button', styler.buttonify({onclick: ctrl.loginClick}), 'Login')
 			]
 		, error.renderError(ctrl.error)
