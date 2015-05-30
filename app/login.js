@@ -51,6 +51,21 @@ module.exports.controller = function (args, extras) {
 		}, self.error);
 	};
 	this.whoami()
+
+	self.nickname = m.prop('');
+	self.nicknameInput = m.prop('');
+	self.sendNickname = function () {
+		return m.request({method: 'POST',
+		 url: '/api/me/nickname', data: { nickname: self.nicknameInput().trim() } })
+		.then(function (response) {
+			self.nickname(response.nickname)
+		}, self.error)
+	}
+
+	m.request({method: 'GET', url: '/api/me/nickname'})
+	.then(function (response) {
+		self.nickname(response.nickname)
+	}, self.error)
 };
 
 module.exports.view = function (ctrl) {
@@ -80,8 +95,10 @@ module.exports.view = function (ctrl) {
 		])
 	} else {
 		return m('div', [
-			m('div', 'Logged in as: ' + ctrl.phonenumberapi()),
-			m('button', styler.buttonify({onclick: ctrl.logout}), 'Logout'),
+			m('div', ['Logged in as: ' + ctrl.phonenumberapi() + ' (' + ctrl.nickname() + ')', m('button', styler.buttonify({onclick: ctrl.logout}), 'Logout')]),
+			m('br'),
+			m('input', {oninput: m.withAttr('value', ctrl.nicknameInput), value: ctrl.nicknameInput()}),
+			m('button', styler.buttonify({onclick: ctrl.sendNickname}), 'Change Nickname'),
 
 			m.component(messages, {
 				'phonenumber': ctrl.phonenumberapi,

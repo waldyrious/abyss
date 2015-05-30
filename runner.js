@@ -16,8 +16,6 @@ nodemon({
 	]
 });
 
-var watchify = require('watchify');
-var browserify = require('browserify');
 var vm = require('vm');
 
 var fs = Promise.promisifyAll(require('fs'));
