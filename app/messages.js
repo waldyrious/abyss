@@ -30,6 +30,14 @@ module.exports.controller = function (args, extras) {
 	self.message = m.prop('');
 	self.error = error.ErrorHolder();
 
+	self.getNickname = function (ph) {
+		if (self.nicknames[ph] !== undefined) {
+			return self.nicknames[ph];
+		} else {
+			return 'somebody';
+		}
+	}
+
 	self.selectGroup = function (group) {
 		self.to = clone(group);
 		self.getMessagesStreaming();
@@ -210,21 +218,21 @@ module.exports.view = function (ctrl, args, extras) {
 		return m('div', {
 			key: message.id,
 			config: fadesIn
-		}, [ m('div', [m('span', 'From: '),
-			m('b', fromMe(message)? 'me' : message.from),
-			m('i', ' ' + moment(message.date).fromNow())])
-			,
-			//fromMe(message) ?  m('div', [
-			//	m('span', 'To: '), m('b', message.to.join(', ')),
-			//	m('i', ' ' + moment(message.date).fromNow())
-			//]) : null,
+		},
+
+		[m('div',
+			[m('span', 'From: '),
+				m('b', fromMe(message)? 'me' : message.from + ' (' + ctrl.getNickname(message.from) + ')'),
+				m('i', ' ' + moment(message.date).fromNow())
+			]),
 			m('div', m.trust(autolinker.link(message.text))),
 			m('br'),
 			m('button', buttonify({
 				onclick: fadesOut(ctrl.delete.bind(this, message))
 			}), 'X'),
 			m('hr')
-		])
+		]
+		)
 	}
 
 	return m('div', {config: fadesIn}, [
@@ -265,7 +273,7 @@ module.exports.view = function (ctrl, args, extras) {
 					class: isEqual(flatten(grouping.group), ctrl.to) ? 'bg-info' : null
 				})),
 				[simplify(grouping.group).map(function (ph) {
-					return m('div', ph)
+					return m('div', ph + ' (' + ctrl.getNickname(ph) + ')')
 				}),
 					m('hr')
 				])
