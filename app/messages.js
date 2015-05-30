@@ -25,6 +25,7 @@ module.exports.controller = function (args, extras) {
 
 	self.messages = [];
 	self.conversations = [];
+	self.nicknames = {};
 	self.to = [''];
 	self.message = m.prop('');
 	self.error = error.ErrorHolder();
@@ -58,7 +59,9 @@ module.exports.controller = function (args, extras) {
 	}
 
 	self.setConversations = function (value) {
-		self.conversations = value;
+		self.conversations = value.groupings;
+		self.nicknames = value.nicknames;
+
 		immediate(self.selectFirstGroup);
 	}
 
