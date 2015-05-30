@@ -75,6 +75,7 @@ module.exports.controller = function (args, extras) {
 
 		if (self.to.length === 0) {
 			self.to.push('');
+			self.message('');
 		}
 	};
 
