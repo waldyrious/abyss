@@ -9,9 +9,11 @@ function ignore(e) {
 	return true;
 }
 
-Promise.join(r.tableCreate('messages').catch(ignore)
-, r.tableCreate('subscriptions').catch(ignore)
-, r.tableCreate('verifications').catch(ignore)
+Promise.join(
+	r.tableCreate('users').catch(ignore)
+	, r.tableCreate('messages').catch(ignore)
+	, r.tableCreate('subscriptions').catch(ignore)
+	, r.tableCreate('verifications').catch(ignore)
 )
 .then(function () {
 	return Promise.join(r.table('messages').indexCreate('from').catch(ignore),
