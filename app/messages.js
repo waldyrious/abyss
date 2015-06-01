@@ -33,8 +33,10 @@ module.exports.controller = function (args, extras) {
 	self.getNickname = function (ph) {
 		if (self.nicknames[ph] !== undefined) {
 			return self.nicknames[ph];
+		} else if (ph === args.phonenumber()){
+			return args.nickname();
 		} else {
-			return 'somebody';
+			return null;
 		}
 	}
 
@@ -222,7 +224,7 @@ module.exports.view = function (ctrl, args, extras) {
 
 		[m('div',
 			[m('span', 'From: '),
-				m('b', fromMe(message)? 'me' : message.from + ' (' + ctrl.getNickname(message.from) + ')'),
+				m('b', fromMe(message)? (args.nickname() ? args.nickname() : 'me') : message.from + (ctrl.getNickname(message.from) ? ' (' + ctrl.getNickname(message.from) + ')' : null)),
 				m('i', ' ' + moment(message.date).fromNow())
 			]),
 			m('div', m.trust(autolinker.link(message.text))),
@@ -272,7 +274,7 @@ module.exports.view = function (ctrl, args, extras) {
 					class: isEqual(flatten(grouping.group), ctrl.to) ? 'bg-info' : null
 				})),
 				[simplify(grouping.group).map(function (ph) {
-					return m('div', ph + ' (' + ctrl.getNickname(ph) + ')')
+					return m('div', ph + (ctrl.getNickname(ph) ? ' (' + ctrl.getNickname(ph) + ')' :''))
 				}),
 					m('hr')
 				])
