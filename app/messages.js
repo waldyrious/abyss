@@ -257,11 +257,10 @@ module.exports.view = function (ctrl, args, extras) {
 				value: ctrl.message()
 			}),
 			m('br'),
-			m('br'),
+			m('button', buttonify({onclick: ctrl.refresh}), 'Refresh messages!'),
+			' ',
 			m('button', bbuttonify({onclick: ctrl.send}), 'Send!')
 		]),
-		m('br'),
-		m('button', buttonify({onclick: ctrl.refresh}), 'Refresh messages!'),
 		// m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
 		m('div', [m('div.col-sm-4#left',
 		[m('h3', 'Conversations'),

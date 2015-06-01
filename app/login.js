@@ -58,7 +58,8 @@ module.exports.controller = function (args, extras) {
 		return m.request({method: 'POST',
 		 url: '/api/me/nickname', data: { nickname: self.nicknameInput().trim() } })
 		.then(function (response) {
-			self.nickname(response.nickname)
+			self.nickname(response.nickname);
+			self.nicknameInput(response.nickname);
 		}, self.error)
 	}
 
@@ -95,10 +96,12 @@ module.exports.view = function (ctrl) {
 		])
 	} else {
 		return m('div', [
-			m('div', ['Logged in as: ' + ctrl.phonenumberapi() + ' (' + ctrl.nickname() + ')', m('button', styler.buttonify({onclick: ctrl.logout}), 'Logout')]),
-			m('br'),
+			m('div', ['Logged in as: ' + ctrl.phonenumberapi() + ' ',
 			m('input', {oninput: m.withAttr('value', ctrl.nicknameInput), value: ctrl.nicknameInput()}),
+			' ',
 			m('button', styler.buttonify({onclick: ctrl.sendNickname}), 'Change Nickname'),
+			' ',
+			m('button', styler.buttonify({onclick: ctrl.logout}), 'Logout')]),
 
 			m.component(messages, {
 				'phonenumber': ctrl.phonenumberapi,
