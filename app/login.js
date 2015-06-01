@@ -37,11 +37,18 @@ module.exports.controller = function (args, extras) {
 		.then(function (response) {
 			self.phonenumberapi('');
 			self.codeInput('');
+			self.nickname('');
+			self.nicknameInput('');
+			self.needCode(false);
+			self.phoneInput('');
 		}, self.error)
 	};
 	this.whoami = function () {
-	    m.request({url:'/api/registration/phone'})
-	    .then(self.phonenumberapi, self.error)
+	    m.request({url:'/api/me/nickname'})
+	    .then(function (response) {
+			self.phonenumberapi(response.id);
+			handleNicknameResponse(response);
+		}, self.error)
 	  };
 	this.noauth = function () { return self.phonenumberapi() === '' };
 	this.loginClick = function () {
@@ -59,6 +66,7 @@ module.exports.controller = function (args, extras) {
 			self.phonenumberapi(response);
 			self.needCode(false);
 			self.codeInput('');
+			self.whoami();
 		}, self.error);
 	};
 	this.whoami()
@@ -80,9 +88,6 @@ module.exports.controller = function (args, extras) {
 		 url: '/api/me/nickname', data: { nickname: self.nicknameInput().trim() } })
 		.then(handleNicknameResponse, self.error)
 	}
-
-	m.request({method: 'GET', url: '/api/me/nickname'})
-	.then(handleNicknameResponse, self.error)
 };
 
 module.exports.view = function (ctrl) {
