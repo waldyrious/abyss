@@ -224,7 +224,7 @@ module.exports.view = function (ctrl, args, extras) {
 
 		[m('div',
 			[m('span', 'From: '),
-				m('b', fromMe(message)? (args.nickname() ? args.nickname() : 'me') : message.from + (ctrl.getNickname(message.from) ? ' (' + ctrl.getNickname(message.from) + ')' : null)),
+				m('b', fromMe(message)? (args.nickname() ? args.nickname() : 'me') : message.from + (ctrl.getNickname(message.from) ? ' (' + ctrl.getNickname(message.from) + ')' : '')),
 				m('i', ' ' + moment(message.date).fromNow())
 			]),
 			m('div', m.trust(autolinker.link(message.text))),
