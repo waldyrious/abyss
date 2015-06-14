@@ -7,15 +7,30 @@ var error = require('./error');
 
 module.exports.controller = function (args, extras) {
 	var self = this;
-
-	this.error = error.ErrorHolder();
-
-	this.phoneInput = m.prop('');
-	this.needCode = m.prop(false);
-	this.codeInput = m.prop('');
-	this.phonenumberapi = m.prop('');
-	self.nickname = m.prop('');
+	self.error = error.ErrorHolder();
+	self.phoneInput = m.prop('');
+	self.needCode = m.prop(false);
+	self.codeInput = m.prop('');
 	self.nicknameInput = m.prop('');
+	self.me = (function () {
+		var me = m.prop({});
+		return function (value) {
+			if (value) {
+				me(value);
+				self.codeInput('');
+				self.needCode(false);
+				self.phoneInput('');
+				if (me().nickname === null) {
+					self.nicknameInput('');
+				} else {
+					self.nicknameInput(me().nickname);
+				}
+				self.isChangingNickname = false;
+			} else {
+				return me();
+			}
+		};
+	})();
 
 	self.isChangingNickname = false;
 	self.changeNickname = function (ev) {
@@ -32,25 +47,14 @@ module.exports.controller = function (args, extras) {
 	};
 
 	this.logout = function () {
-		return m.request({method: 'POST',
-		 url: '/api/registration/logout', data: { phonenumber: self.phonenumberapi() } })
-		.then(function (response) {
-			self.phonenumberapi('');
-			self.codeInput('');
-			self.nickname('');
-			self.nicknameInput('');
-			self.needCode(false);
-			self.phoneInput('');
-		}, self.error)
+		return m.request({method: 'DELETE', url: '/api/me'})
+		.then(self.me, self.error)
 	};
 	this.whoami = function () {
-	    m.request({url:'/api/me/nickname'})
-	    .then(function (response) {
-			self.phonenumberapi(response.id);
-			handleNicknameResponse(response);
-		}, self.error)
+	    m.request({url:'/api/me'})
+		.then(self.me, self.error)
 	  };
-	this.noauth = function () { return self.phonenumberapi() === '' };
+	this.noauth = function () { return !self.me().id };
 	this.loginClick = function () {
 		return m.request({method: 'POST',
 		 url: '/api/registration/phone', data: { phonenumber: self.phoneInput().trim() } })
@@ -63,31 +67,20 @@ module.exports.controller = function (args, extras) {
 		return m.request({method: 'POST',
 		 url: '/api/registration/code', data: { code: self.codeInput().trim() } })
 		.then(function (response) {
-			self.phonenumberapi(response);
+			self.me().id = response;
 			self.needCode(false);
 			self.codeInput('');
 			self.whoami();
 		}, self.error);
 	};
-	this.whoami()
-
-
-	function handleNicknameResponse(response) {
-		if (response.nickname === null) {
-			self.nickname('');
-			self.nicknameInput('');
-		} else {
-			self.nickname(response.nickname);
-			self.nicknameInput(response.nickname);
-		}
-		self.isChangingNickname = false;
-	}
 
 	self.sendNickname = function () {
 		return m.request({method: 'POST',
 		 url: '/api/me/nickname', data: { nickname: self.nicknameInput().trim() } })
-		.then(handleNicknameResponse, self.error)
-	}
+		.then(self.me, self.error)
+	};
+
+	this.whoami();
 };
 
 module.exports.view = function (ctrl) {
@@ -108,7 +101,7 @@ module.exports.view = function (ctrl) {
 				m('span', ' '),
 				m('button', styler.buttonify({onclick: ctrl.cancelCode}), 'Cancel')
 			]:[
-			m('div', ['Carefully enter your 10-digit phone number!', ctrl.phonenumberapi()]),
+			m('div', ['Carefully enter your 10-digit phone number!', ctrl.me().id]),
 			m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
 			m('span', ' '),
 			m('button', styler.buttonify({onclick: ctrl.loginClick}), 'Login')
@@ -117,18 +110,16 @@ module.exports.view = function (ctrl) {
 		])
 	} else {
 		return m('div', [
-			m('div', ['Logged in as: ' + ctrl.phonenumberapi() + ' ',
+			m('div', ['Logged in as: ' + ctrl.me().id + ' ',
 			ctrl.isChangingNickname ? m('input', {oninput: m.withAttr('value', ctrl.nicknameInput), value: ctrl.nicknameInput()})
-			: (ctrl.nickname() !== '' ? '(' + ctrl.nickname() + ')' : null),
+			: (ctrl.me().nickname !== '' ? '(' + ctrl.me().nickname + ')' : null),
 			' ',
 			m('button', styler.buttonify({onclick: ctrl.changeNickname}), 'Change Nickname'),
 			' ',
 			m('button', styler.buttonify({onclick: ctrl.logout}), 'Logout')]),
 
 			m.component(messages, {
-				'phonenumber': ctrl.phonenumberapi,
-				'noauth': ctrl.noauth,
-				'nickname': ctrl.nickname
+				'me': ctrl.me
 			})
 		])
 	}

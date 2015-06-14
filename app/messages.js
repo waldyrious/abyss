@@ -33,8 +33,8 @@ module.exports.controller = function (args, extras) {
 	self.getNickname = function (ph) {
 		if (self.nicknames[ph] !== undefined) {
 			return self.nicknames[ph];
-		} else if (ph === args.phonenumber()){
-			return args.nickname();
+		} else if (ph === args.me().id){
+			return args.me().nickname;
 		} else {
 			return null;
 		}
@@ -53,7 +53,7 @@ module.exports.controller = function (args, extras) {
 	};
 
 	function fromMe(message) {
-		return message.from === args.phonenumber();
+		return message.from === args.me().id;
 	}
 
 	function immediate(fn) {
@@ -183,7 +183,7 @@ module.exports.view = function (ctrl, args, extras) {
 	};
 
 	function fromMe(message) {
-		return message.from === args.phonenumber();
+		return message.from === args.me().id;
 	}
 
 	function groupMessage(message) {
@@ -191,15 +191,15 @@ module.exports.view = function (ctrl, args, extras) {
 	}
 
 	function simplify(group) {
-		var ret = without(flatten(group), args.phonenumber());
+		var ret = without(flatten(group), args.me().id);
 		if (ret.length === 0)
-			ret = [args.phonenumber()];
+			ret = [args.me().id];
 		return ret;
 	}
 
 	var bbuttonify = function (obj) {
 		if (!obj) obj = {};
-		obj.disabled = ctrl.working() || args.noauth();
+		obj.disabled = ctrl.working() || !args.me().id;
 
 	    return merge(obj, {
 	    	class: "btn btn-default btn-lg btn-primary"
@@ -208,7 +208,7 @@ module.exports.view = function (ctrl, args, extras) {
 
 	var buttonify = function (obj) {
 		if (!obj) obj = {};
-		obj.disabled = ctrl.working() || args.noauth();
+		obj.disabled = ctrl.working() || !args.me().id;
 
 		return merge(obj, {
 	    	class: "btn btn-default"
@@ -224,7 +224,7 @@ module.exports.view = function (ctrl, args, extras) {
 
 		[m('div',
 			[m('span', 'From: '),
-				m('b', fromMe(message)? (args.nickname() ? args.nickname() : 'me') : message.from + (ctrl.getNickname(message.from) ? ' (' + ctrl.getNickname(message.from) + ')' : '')),
+				m('b', fromMe(message)? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' (' + ctrl.getNickname(message.from) + ')' : '')),
 				m('i', ' ' + moment(message.date).fromNow())
 			]),
 			m('div', m.trust(autolinker.link(message.text))),
