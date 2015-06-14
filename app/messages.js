@@ -30,6 +30,13 @@ module.exports.controller = function (args, extras) {
 	self.message = m.prop('');
 	self.error = error.ErrorHolder();
 
+	var withAuth = function(xhr) {
+		if (args.jwt()) {
+			console.log('args jwt' + args.jwt())
+    		xhr.setRequestHeader('Authorization', 'Bearer ' + args.jwt());
+		}
+	}
+
 	self.getNickname = function (ph) {
 		if (self.nicknames[ph] !== undefined) {
 			return self.nicknames[ph];
@@ -97,7 +104,7 @@ module.exports.controller = function (args, extras) {
 		self.to = filter(self.to, function (item) {
 			return item !== '' && item !== ' ' && item !== null;
 		});
-		m.request({method: 'POST', background: false, url: '/api/messages', data: {to: self.to, text: self.message()}})
+		m.request({method: 'POST', config: withAuth, background: false, url: '/api/messages', data: {to: self.to, text: self.message()}})
 		.then(function () {
 			self.message('');
 			self.working(true);
@@ -106,13 +113,13 @@ module.exports.controller = function (args, extras) {
 	};
 
 	self.getMessages = function () {
-		m.request({method: 'GET', url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))})
+		m.request({method: 'GET', config: withAuth, url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))})
 		.then(self.setMessages, self.error)
 	};
 
 	self.refresh = self.getConversations = function () {
 		self.working(true);
-		m.request({method: 'GET', background: false, url: '/api/conversations'})
+		m.request({method: 'GET', config: withAuth, background: false, url: '/api/conversations'})
 		.then(self.setConversations, self.error)
 		.then(self.getMessagesStreaming, self.error)
 	};
@@ -141,13 +148,13 @@ module.exports.controller = function (args, extras) {
 
 	self.clearMessages = function () {
 		self.working(true);
-		m.request({method: 'DELETE', background: false, url: '/api/messages'})
+		m.request({method: 'DELETE', config: withAuth, background: false, url: '/api/messages'})
 		.then(self.refresh, self.error)
 	};
 
 	self.delete = function (message) {
 		self.working(true);
-		m.request({method: 'DELETE', background: false, url: '/api/messages/' + encodeURIComponent(message.id)})
+		m.request({method: 'DELETE', config: withAuth, background: false, url: '/api/messages/' + encodeURIComponent(message.id)})
 		// .then(function () {
 		// 	self.messages.splice(self.messages.indexOf(message), 1);
 		// }, self.error);

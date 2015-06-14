@@ -13,10 +13,22 @@ module.exports.controller = function (args, extras) {
 	self.needCode = m.prop(false);
 	self.codeInput = m.prop('');
 	self.nicknameInput = m.prop('');
+	self.jwt = m.prop('');
+
+	var withAuth = function(xhr) {
+		if (self.jwt()) {
+    		xhr.setRequestHeader('Authorization', 'Bearer ' + self.jwt());
+		}
+	}
+
 	self.me = (function () {
 		var me = m.prop({});
 		return function (value) {
 			if (value) {
+				if (value.jwt) {
+					self.jwt(value.jwt);
+					console.log('New jwt ' + value.jwt);
+				}
 				me(value);
 				self.codeInput('');
 				self.needCode(false);
@@ -49,17 +61,17 @@ module.exports.controller = function (args, extras) {
 	};
 
 	this.logout = function () {
-		return m.request({method: 'DELETE', url: '/api/me'})
+		return m.request({method: 'DELETE', config: withAuth, url: '/api/me'})
 		.then(self.me, self.error)
 	};
 	this.whoami = function () {
-	    m.request({url:'/api/me'})
+	    m.request({url:'/api/me', config: withAuth})
 		.then(self.me, self.error)
 	  };
 	this.noauth = function () { return !self.me().id };
 	this.loginClick = function () {
 		return m.request({method: 'POST',
-		 url: '/api/me', data: { phonenumber: self.phoneInput().trim() } })
+		 url: '/api/me', config: withAuth, data: { phonenumber: self.phoneInput().trim() } })
 		.then(function (response) {
 			self.needCode(true);
 			self.codeInput('');
@@ -67,18 +79,21 @@ module.exports.controller = function (args, extras) {
 	};
 	this.submitCode = function () {
 		return m.request({method: 'POST',
-		 url: '/api/me', data: { code: self.codeInput().trim() } })
+		 url: '/api/me', config: withAuth, data: { code: self.codeInput().trim() } })
 		.then(function (response) {
 			self.me().id = response;
 			self.needCode(false);
 			self.codeInput('');
 			self.whoami();
-		}, self.error);
+			self.jwt(response.jwt);
+		}, self.error)
+		.then(self.whoami.bind(self));
 	};
 
 	self.sendNickname = function () {
 		return m.request({method: 'POST',
-		 url: '/api/me', data: { nickname: self.nicknameInput().trim() } })
+			url: '/api/me', config: withAuth, data: { nickname: self.nicknameInput().trim()}
+		})
 		.then(self.me, self.error)
 	};
 
@@ -121,7 +136,8 @@ module.exports.view = function (ctrl) {
 			m('button', styler.buttonify({onclick: ctrl.logout}), 'Logout')]),
 
 			m.component(messages, {
-				'me': ctrl.me
+				'me': ctrl.me,
+				'jwt': ctrl.jwt
 			})
 		])
 	}
