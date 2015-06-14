@@ -1,7 +1,7 @@
 self.addEventListener('push', function (event) {
 	console.log('Received a push message', event);
 
-	var title = 'Bro!';
+	var title = 'Yobro.net';
 	var body = 'New message!';
 	//  var icon = '/images/icon-192x192.png';
 	var tag = 'simple-push-demo-notification-tag';

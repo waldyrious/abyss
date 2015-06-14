@@ -2,6 +2,7 @@
 var m = require('mithril');
 var messages = require('./messages');
 var styler = require('./styler');
+var regsw = require('./regsw');
 
 var error = require('./error');
 
@@ -26,6 +27,7 @@ module.exports.controller = function (args, extras) {
 					self.nicknameInput(me().nickname);
 				}
 				self.isChangingNickname = false;
+				regsw();
 			} else {
 				return me();
 			}

@@ -11,9 +11,6 @@ function receiveMessage(message) {
 
 var m = require('mithril');
 
-var regsw = require('./regsw');
-regsw();
-
 var Login = require('./login');
 
 var login = m.mount(document.getElementById('login'), Login);

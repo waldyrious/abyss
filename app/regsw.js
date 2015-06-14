@@ -6,8 +6,8 @@ module.exports = function () {
 			console.log('ServiceWorker registration successful with scope: ', registration.scope);
 
 			if (!registration.pushManager) {
-				showError('Ooops Push Isn\'t Supported', 'This is most likely ' +
-				'down to the current browser doesn\'t have support for push. ' +
+				showError('Push Isn\'t Supported', 'This is most likely ' +
+				'because the current browser doesn\'t have support for push. ' +
 				'Try Chrome.');
 				return;
 			}
