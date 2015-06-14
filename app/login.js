@@ -57,7 +57,7 @@ module.exports.controller = function (args, extras) {
 	this.noauth = function () { return !self.me().id };
 	this.loginClick = function () {
 		return m.request({method: 'POST',
-		 url: '/api/registration/phone', data: { phonenumber: self.phoneInput().trim() } })
+		 url: '/api/me', data: { phonenumber: self.phoneInput().trim() } })
 		.then(function (response) {
 			self.needCode(true);
 			self.codeInput('');
@@ -65,7 +65,7 @@ module.exports.controller = function (args, extras) {
 	};
 	this.submitCode = function () {
 		return m.request({method: 'POST',
-		 url: '/api/registration/code', data: { code: self.codeInput().trim() } })
+		 url: '/api/me', data: { code: self.codeInput().trim() } })
 		.then(function (response) {
 			self.me().id = response;
 			self.needCode(false);
@@ -76,7 +76,7 @@ module.exports.controller = function (args, extras) {
 
 	self.sendNickname = function () {
 		return m.request({method: 'POST',
-		 url: '/api/me/nickname', data: { nickname: self.nicknameInput().trim() } })
+		 url: '/api/me', data: { nickname: self.nicknameInput().trim() } })
 		.then(self.me, self.error)
 	};
 
