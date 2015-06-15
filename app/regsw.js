@@ -1,4 +1,4 @@
-module.exports = function () {
+module.exports = function (jwt) {
 	if ('serviceWorker' in navigator) {
 		return navigator.serviceWorker.register('/sw.js')
 		.then(function (registration) {
@@ -19,7 +19,8 @@ module.exports = function () {
 					credentials: 'include',
 					method: 'post',
 					headers: {
-						"Content-type": "application/json"
+						'Authorization': 'Bearer ' + jwt,
+						'Content-type': 'application/json'
 					},
 					body: JSON.stringify(subscription)
 				})

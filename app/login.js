@@ -39,7 +39,7 @@ module.exports.controller = function (args, extras) {
 					self.nicknameInput(me().nickname);
 				}
 				self.isChangingNickname = false;
-				regsw();
+				regsw(self.jwt());
 			} else {
 				return me();
 			}

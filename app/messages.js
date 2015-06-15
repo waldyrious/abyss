@@ -32,8 +32,13 @@ module.exports.controller = function (args, extras) {
 
 	var withAuth = function(xhr) {
 		if (args.jwt()) {
-			console.log('args jwt' + args.jwt())
     		xhr.setRequestHeader('Authorization', 'Bearer ' + args.jwt());
+		}
+	}
+
+	var oboeAuth = function () {
+		return {
+			'Authorization':  'Bearer ' + args.jwt()
 		}
 	}
 
@@ -131,7 +136,10 @@ module.exports.controller = function (args, extras) {
 
 		m.startComputation();
 		self.messages = [];
-		oboe('/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))).node('![*]', function (item) {
+		oboe({
+			url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to)),
+			headers: oboeAuth()
+		}).node('![*]', function (item) {
 			self.messages.push(item);
 			count++;
 			if (count == show) {
