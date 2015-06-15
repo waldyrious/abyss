@@ -6,12 +6,13 @@ process.on('exit', function () {
 	console.log('Process exit at ' + (new Date).toISOString());
 });
 
-const Promise = require('bluebird');
 const fs = require('fs');
-
 const net = require('net');
 const httpSocket = new net.Server();
 const httpsSocket = new net.Server();
+const app = require('./lib/app');
+const secret = require('./secret/secret.json');
+const http = require('http');
 
 if (process.getuid() === 0) { // if we are root
 
@@ -32,9 +33,6 @@ if (process.getuid() === 0) { // if we are root
 	httpsSocket.listen(8443);
 }
 
-const express = require('express');
-const app = require('./lib/app');
-const secret = require('./secret/secret.json');
 
 var credentials;
 
@@ -68,18 +66,8 @@ if (server) {
 }
 
 
-const http = require('http');
-if (secret.httpredirect) {
-	console.log('redirect-to-HTTPS enabled');
-	http.createServer(function (req, res) {
-		res.writeHead(301, {"Location": "https://" + req.headers['host'] + req.url});
-		res.end();
-	}).listen(httpSocket);
-} else {
-	console.log('redirect-to-HTTPS disabled');
-	http.createServer(app.callback()).listen(httpSocket);
-	console.log('HTTP server listening on port ' + httpSocket.address().port);
-}
+http.createServer(app.callback()).listen(httpSocket);
+console.log('HTTP server listening on port ' + httpSocket.address().port);
 
 /*
 const monitor = require('event-loop-monitor');

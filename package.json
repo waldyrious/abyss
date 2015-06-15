@@ -34,6 +34,7 @@
     "koa-bodyparser": "^2.0.0",
     "koa-compress": "^1.0.8",
     "koa-compressor": "^1.0.3",
+    "koa-force-ssl": "0.0.5",
     "koa-generic-session": "^1.9.0",
     "koa-jwt": "^1.1.0",
     "koa-morgan": "^0.2.1",
