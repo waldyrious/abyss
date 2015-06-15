@@ -3,6 +3,7 @@ var m = require('mithril');
 var messages = require('./messages');
 var styler = require('./styler');
 var regsw = require('./regsw');
+var Cookies = require('cookies-js');
 
 var error = require('./error');
 
@@ -13,7 +14,7 @@ module.exports.controller = function (args, extras) {
 	self.needCode = m.prop(false);
 	self.codeInput = m.prop('');
 	self.nicknameInput = m.prop('');
-	self.jwt = m.prop('');
+	self.jwt = m.prop(Cookies.get('jwt'));
 
 	var withAuth = function(xhr) {
 		if (self.jwt()) {
@@ -27,6 +28,7 @@ module.exports.controller = function (args, extras) {
 			if (value) {
 				if (value.jwt) {
 					self.jwt(value.jwt);
+					Cookies.set('jwt', value.jwt, {expires: Infinity });
 					console.log('New jwt ' + value.jwt);
 				}
 				me(value);
@@ -62,7 +64,10 @@ module.exports.controller = function (args, extras) {
 
 	this.logout = function () {
 		return m.request({method: 'DELETE', config: withAuth, url: '/api/me'})
-		.then(self.me, self.error)
+		.then(function (me) {
+			self.me(me);
+			Cookies.expire('jwt');
+		}, self.error)
 	};
 	this.whoami = function () {
 	    m.request({url:'/api/me', config: withAuth})
