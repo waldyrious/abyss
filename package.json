@@ -39,6 +39,7 @@
     "koa-helmet": "^0.1.0",
     "koa-jwt": "^1.1.0",
     "koa-morgan": "^0.2.1",
+    "koa-serve-static": "0.0.1",
     "koa-session": "^3.2.0",
     "koa-static": "^1.4.9",
     "lodash": "^3.9.3",
