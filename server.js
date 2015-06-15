@@ -54,13 +54,13 @@ if (!credentials && (secret.spdy || secret.http2 || secret.https)) {
 var server;
 if (secret.spdy) {
 	console.log('SPDY enabled');
-	server = require('spdy').createServer(credentials, app);
+	server = require('spdy').createServer(credentials, app.callback());
 } else if (secret.http2) {
 	console.log('HTTP2 enabled');
-	server = require('http2').createServer(credentials, app);
+	server = require('http2').createServer(credentials, app.callback());
 } else if (secret.https) {
 	console.log('HTTPS enabled');
-	server = require('https').createServer(credentials, app);
+	server = require('https').createServer(credentials, app.callback());
 }
 if (server) {
 	server.listen(httpsSocket);
@@ -77,7 +77,7 @@ if (secret.httpredirect) {
 	}).listen(httpSocket);
 } else {
 	console.log('redirect-to-HTTPS disabled');
-	http.createServer(app).listen(httpSocket);
+	http.createServer(app.callback()).listen(httpSocket);
 	console.log('HTTP server listening on port ' + httpSocket.address().port);
 }
 
