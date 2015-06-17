@@ -91,8 +91,8 @@ module.exports.controller = function (args, extras) {
 			self.codeInput('');
 			self.whoami();
 			self.jwt(response.jwt);
+			self.whoami.bind(self);
 		}, self.error)
-		.then(self.whoami.bind(self));
 	};
 
 	self.sendNickname = function () {

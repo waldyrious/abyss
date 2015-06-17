@@ -23,7 +23,6 @@ module.exports.ErrorHolder = function() {
 
 module.exports.renderError = function (error) {
 	if (!error) return null;
-
 	var value;
 	if (error() !== null && error().message) {
 			value = error().message;
