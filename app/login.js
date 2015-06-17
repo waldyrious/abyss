@@ -70,7 +70,7 @@ module.exports.controller = function (args, extras) {
 		}, self.error)
 	};
 	this.whoami = function () {
-	    m.request({url:'/api/me', config: withAuth})
+	    return m.request({url:'/api/me', config: withAuth})
 		.then(self.me, self.error)
 	  };
 	this.noauth = function () { return !self.me().id };
@@ -89,9 +89,8 @@ module.exports.controller = function (args, extras) {
 			self.me().id = response;
 			self.needCode(false);
 			self.codeInput('');
-			self.whoami();
 			self.jwt(response.jwt);
-			self.whoami.bind(self);
+			return self.whoami();
 		}, self.error)
 	};
 
