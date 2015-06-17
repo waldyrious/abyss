@@ -57,6 +57,10 @@ module.exports.controller = function (args, extras) {
 		self.getMessagesStreaming();
 	};
 
+	self.reselectGroup = function () {
+		self.getMessagesStreaming();
+	};
+
 	self.selectFirstGroup = function () {
 		if (isEqual(self.to, ['']) && self.conversations[0]) {
 			self.to = clone(self.conversations[0].group);
@@ -93,6 +97,7 @@ module.exports.controller = function (args, extras) {
 
 	self.toPlus = function () {
 		self.to.push('');
+		self.reselectGroup();
 	};
 
 	self.toMinus = function () {
@@ -102,6 +107,7 @@ module.exports.controller = function (args, extras) {
 			self.to.push('');
 			self.message('');
 		}
+		self.reselectGroup();
 	};
 
 	self.send = function () {
