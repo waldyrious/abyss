@@ -23,11 +23,12 @@ module.exports.ErrorHolder = function() {
 
 module.exports.renderError = function (error) {
 	if (!error) return null;
-
 	var value;
-
-	if (error() !== null && error().error && error().error.text) {
-			value = error().error.text;
+	if (error() !== null && error().message) {
+			value = error().message;
+			if (error().retryAfter) {
+				value = 'Too many login attempts. Try again in ' + error().retryAfter + ' seconds.';
+			}
 	} else {
 		value = error();
 	}
