@@ -104,6 +104,7 @@ module.exports.controller = function (args, extras) {
 
 	this.whoami();
 };
+var showFaq = false;
 
 module.exports.view = function (ctrl) {
 	var phoneInputValid = function () {
@@ -114,14 +115,16 @@ module.exports.view = function (ctrl) {
 		return validator.isLength(ctrl.codeInput(), 6, 6);
 	}
 
+	var showFaqButton = function () {
+		showFaq = !showFaq;
+	}
+
 	if (ctrl.noauth()) {
 		return m('div', [
-			m('h1', 'Yobro.net'),
-			m('h3', m('i', 'Own your messages!')),
-			m('h4', 'Ever sent a message by mistake, or just don\'t want to make it a permanent record?'),
-			m('h4', 'Yobro is a fun, easy way to send individual and group messages you can take back at any time.'),
-			m('p', 'No signup needed. Simply login with your mobile phone number, and we\'ll send you a confirmation code.'),
-			m('i', 'Your phone number is used strictly for authentication purposes only and will not be distributed to third parties.'),
+			m('h1', 'YoBro.net'),
+			// m('h3', m('i', 'Own your messages!')),
+			// m('h4', 'Ever sent a message by mistake, or just don\'t want to make it a permanent record?'),
+			m('h4', 'Fast, casual individual and group messages that you can erase at any time.'),
 			ctrl.needCode() ? [
 				m('div',  'Enter verification code: '),
 				m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.codeInput), value: ctrl.codeInput()}),
@@ -130,12 +133,45 @@ module.exports.view = function (ctrl) {
 				m('span', ' '),
 				m('button', styler.buttonify({onclick: ctrl.cancelCode}), 'Cancel')
 			]:[
-			m('div', ['Carefully enter your 10-digit phone number!', ctrl.me().id]),
+			m('div', ['Simply sign in with your existing, 10-digit mobile phone number.', ctrl.me().id]),
 			m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
 			m('span', ' '),
 			m('button', styler.buttonify({disabled: !phoneInputValid(), onclick: ctrl.loginClick}), 'Login')
 			]
-		, error.renderError(ctrl.error)
+		, error.renderError(ctrl.error),
+		m('br'),
+		m('br'),
+		m('div.faq', m('button', {onclick: showFaqButton }, 'Frequently Asked Questions')),
+		showFaq ?
+		m('ul.list-unstyled faq', [
+			m('li', 'Q. What is the point of this site?'),
+			m('li', 'A. Twitter is fantastic for short messages, and e-mail for long messages. But what about ', m('i', 'medium'), ' length, erasable messaging? You probably didn\'t even know you needed that.'),
+			m('br'),
+			m('li', 'Q. Why do I sign in with my phone number?'),
+			m('li', 'A. Usernames are hard to remember. Passwords are a little easier; you cleverly use the same one on every site. However, according to scientific guesswork, more than 55% of mobile phone users can recall their own phone number on command. We like those odds.'),
+			m('br'),
+			m('li', 'Q. How does message erasing work?'),
+			m('li', 'A. Pressing the X button next to a message will instantly erase it. Now, the way this site works is, senders and recipients always see the same copy of the message. So if the sender or recipient erases the message, it\'s gone for good!'),
+			m('br'),
+			m('li', 'Q. How does erasing work with group messages?'),
+			m('li', 'A. If you sent the message, it\'s gone for everybody. If you received the message, you are removed from the recipients list and no longer see the message. The other recipients will still see the message until the sender or all of the recipients erases it.'),
+			m('br'),
+			m('li', 'Q. Can I get notified of new messages?'),
+			m('li', 'A. Yes, absolutely! More precisely: maybe. Notifications work in Chrome on the desktop and Chrome for Android. Unfortunately, notifications are not yet available for Chrome or Safari in iOS. Perhaps someday. Oh, and you can turn them on and off with the padlock icon in the browser\'s location bar.'),
+			m('br'),
+			m('li', 'Q. Can I send files, photos, or sound?'),
+			m('li', 'A. No. You can send text! Look, this is a free service. Oh—you can send links too! Which I suppose are just text.'),
+			m('br'),
+			m('li', 'Q. But I can\'t remember my friends phone numbers!'),
+			m('li', 'A. Listen bucko, unlike other services, this site doesn\'t coddle you. What happens if you get stranded somewhere and lose your cell phone? If you used this site enough, you might just might remember a friend\'s number and be able to call from a pay phone. If you can find one. Which they won\'t recognize the number of or probably answer. Regardless, you\'re welcome.'),
+			m('br'),
+			m('li', 'Q. What do I do if YoBro goes down?'),
+			m('li', 'A. YoBro is probably all you need to commnicate most of the time, but in the unfortunate circumstance that it is not working, you will not be able to read this message.'),
+			m('br'),
+			m('li', 'Q. Why the dumb name?'),
+			m('li', 'A. All the good domains are taken.'),
+		]) : null
+
 		])
 	} else {
 		return m('div', [
