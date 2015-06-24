@@ -60,6 +60,7 @@
     "spdy": "^1.32.0",
     "superb": "^1.1.4",
     "uuid": "^2.0.1",
+    "validator": "^3.40.1",
     "velocity-animate": "^1.2.2",
     "xtend": "^4.0.0"
   },

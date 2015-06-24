@@ -4,6 +4,7 @@ var messages = require('./messages');
 var styler = require('./styler');
 var regsw = require('./regsw');
 var Cookies = require('cookies-js');
+var validator = require('validator');
 
 var error = require('./error');
 
@@ -105,6 +106,13 @@ module.exports.controller = function (args, extras) {
 };
 
 module.exports.view = function (ctrl) {
+	var phoneInputValid = function () {
+		return validator.isMobilePhone(ctrl.phoneInput(), 'en-US');
+	}
+
+	var codeInputValid = function () {
+		return validator.isLength(ctrl.codeInput(), 6, 6);
+	}
 
 	if (ctrl.noauth()) {
 		return m('div', [
@@ -118,14 +126,14 @@ module.exports.view = function (ctrl) {
 				m('div',  'Enter verification code: '),
 				m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.codeInput), value: ctrl.codeInput()}),
 				m('span', ' '),
-				m('button', styler.buttonify({onclick: ctrl.submitCode}), 'Submit Code'),
+				m('button', styler.buttonify({disabled: !codeInputValid(), onclick: ctrl.submitCode}), 'Submit Code'),
 				m('span', ' '),
 				m('button', styler.buttonify({onclick: ctrl.cancelCode}), 'Cancel')
 			]:[
 			m('div', ['Carefully enter your 10-digit phone number!', ctrl.me().id]),
 			m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
 			m('span', ' '),
-			m('button', styler.buttonify({onclick: ctrl.loginClick}), 'Login')
+			m('button', styler.buttonify({disabled: !phoneInputValid(), onclick: ctrl.loginClick}), 'Login')
 			]
 		, error.renderError(ctrl.error)
 		])
