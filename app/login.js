@@ -124,7 +124,7 @@ module.exports.view = function (ctrl) {
 			m('h1', 'YoBro.net'),
 			// m('h3', m('i', 'Own your messages!')),
 			// m('h4', 'Ever sent a message by mistake, or just don\'t want to make it a permanent record?'),
-			m('h4', 'Fast, casual individual and group messages that you can erase at any time.'),
+			m('h4', 'Simple group and individual messaging, with messages that you can erase at any time.'),
 			ctrl.needCode() ? [
 				m('div',  'Enter verification code: '),
 				m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.codeInput), value: ctrl.codeInput()}),
@@ -133,7 +133,7 @@ module.exports.view = function (ctrl) {
 				m('span', ' '),
 				m('button', styler.buttonify({onclick: ctrl.cancelCode}), 'Cancel')
 			]:[
-			m('div', ['Simply sign in with your existing, 10-digit mobile phone number.', ctrl.me().id]),
+			m('div', ['Just sign in with your existing 10-digit mobile phone number.', ctrl.me().id]),
 			m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
 			m('span', ' '),
 			m('button', styler.buttonify({disabled: !phoneInputValid(), onclick: ctrl.loginClick}), 'Login')
@@ -164,6 +164,9 @@ module.exports.view = function (ctrl) {
 			m('br'),
 			m('li', 'Q. But I can\'t remember my friends phone numbers!'),
 			m('li', 'A. Listen bucko, unlike other services, this site doesn\'t coddle you. What happens if you get stranded somewhere and lose your cell phone? If you used this site enough, you might just might remember a friend\'s number and be able to call from a pay phone. If you can find one. Which they won\'t recognize the number of or probably answer. Regardless, you\'re welcome.'),
+			m('br'),
+			m('li', 'Q. What do I do if YoBro goes down?'),
+			m('li', 'A. YoBro is probably all you need to communicate most of the time, but in the unfortunate circumstance that it is not working, you will not be able to read this message.'),
 			m('br'),
 			m('li', 'Q. What do I do if YoBro goes down?'),
 			m('li', 'A. YoBro is probably all you need to communicate most of the time, but in the unfortunate circumstance that it is not working, you will not be able to read this message.'),
