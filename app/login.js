@@ -157,19 +157,19 @@ module.exports.view = function (ctrl) {
 			m('li', 'A. If you sent the message, it\'s gone for everybody. If you received the message, you are removed from the recipients list and no longer see the message. The other recipients will still see the message until the sender or all of the recipients erases it.'),
 			m('br'),
 			m('li', 'Q. Can I get notified of new messages?'),
-			m('li', 'A. Yes, absolutely! More precisely: maybe. Notifications work in Chrome on the desktop and Chrome for Android. Unfortunately, notifications are not yet available for Chrome or Safari in iOS. Perhaps someday. Oh, and you can turn them on and off with the padlock icon in the browser\'s location bar.'),
+			m('li', 'A. Notifications work in Chrome on the desktop and Chrome for Android. Unfortunately, notifications are not yet available for Chrome or Safari in iOS. Perhaps someday. Oh, and you can turn them on and off with the padlock icon in the browser\'s location bar.'),
 			m('br'),
 			m('li', 'Q. Can I send files, photos, or sound?'),
-			m('li', 'A. No. You can send text! Look, this is a free service. Oh—you can send links too! Which I suppose are just text.'),
+			m('li', 'A. No. You can send text! Look, this is a free service. You can send links, too! Which I suppose are just text.'),
 			m('br'),
 			m('li', 'Q. But I can\'t remember my friends phone numbers!'),
 			m('li', 'A. Listen bucko, unlike other services, this site doesn\'t coddle you. What happens if you get stranded somewhere and lose your cell phone? If you used this site enough, you might just might remember a friend\'s number and be able to call from a pay phone. If you can find one. Which they won\'t recognize the number of or probably answer. Regardless, you\'re welcome.'),
 			m('br'),
 			m('li', 'Q. What do I do if YoBro goes down?'),
-			m('li', 'A. YoBro is probably all you need to commnicate most of the time, but in the unfortunate circumstance that it is not working, you will not be able to read this message.'),
+			m('li', 'A. YoBro is probably all you need to communicate most of the time, but in the unfortunate circumstance that it is not working, you will not be able to read this message.'),
 			m('br'),
 			m('li', 'Q. Why the dumb name?'),
-			m('li', 'A. All the good domains are taken.'),
+			m('li', 'A. All the good domains were taken.'),
 		]) : null
 
 		])
