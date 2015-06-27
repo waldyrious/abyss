@@ -8,7 +8,7 @@ var validator = require('validator');
 
 var error = require('./error');
 
-module.exports.controller = function (args, extras) {
+module.exports.controller = function(args, extras) {
 	var self = this;
 	self.error = error.ErrorHolder();
 	self.phoneInput = m.prop('');
@@ -19,17 +19,19 @@ module.exports.controller = function (args, extras) {
 
 	var withAuth = function(xhr) {
 		if (self.jwt()) {
-    		xhr.setRequestHeader('Authorization', 'Bearer ' + self.jwt());
+			xhr.setRequestHeader('Authorization', 'Bearer ' + self.jwt());
 		}
 	}
 
-	self.me = (function () {
+	self.me = (function() {
 		var me = m.prop({});
-		return function (value) {
+		return function(value) {
 			if (value) {
 				if (value.jwt) {
 					self.jwt(value.jwt);
-					Cookies.set('jwt', value.jwt, {expires: Infinity });
+					Cookies.set('jwt', value.jwt, {
+						expires: Infinity
+					});
 					console.log('New jwt ' + value.jwt);
 				}
 				me(value);
@@ -50,7 +52,7 @@ module.exports.controller = function (args, extras) {
 	})();
 
 	self.isChangingNickname = false;
-	self.changeNickname = function (ev) {
+	self.changeNickname = function(ev) {
 		if (self.isChangingNickname === false) {
 			self.isChangingNickname = true;
 		} else {
@@ -58,64 +60,90 @@ module.exports.controller = function (args, extras) {
 		}
 	}
 
-	this.cancelCode = function () {
+	this.cancelCode = function() {
 		self.codeInput('');
 		self.needCode(false);
 	};
 
-	this.logout = function () {
-		return m.request({method: 'DELETE', config: withAuth, url: '/api/me'})
-		.then(function (me) {
-			self.me(me);
-			Cookies.expire('jwt');
-		}, self.error)
+	this.logout = function() {
+		return m.request({
+				method: 'DELETE',
+				config: withAuth,
+				url: '/api/me'
+			})
+			.then(function(me) {
+				self.me(me);
+				Cookies.expire('jwt');
+			}, self.error)
 	};
-	this.whoami = function () {
-	    return m.request({url:'/api/me', config: withAuth})
-		.then(self.me, self.error)
-	  };
-	this.noauth = function () { return !self.me().id };
-	this.loginClick = function () {
-		return m.request({method: 'POST',
-		 url: '/api/me', config: withAuth, data: { phonenumber: self.phoneInput().trim() } })
-		.then(function (response) {
-			self.needCode(true);
-			self.codeInput('');
-		}, self.error)
+	this.whoami = function() {
+		return m.request({
+				url: '/api/me',
+				config: withAuth
+			})
+			.then(self.me, self.error)
 	};
-	this.submitCode = function () {
-		return m.request({method: 'POST',
-		 url: '/api/me', config: withAuth, data: { code: self.codeInput().trim() } })
-		.then(function (response) {
-			self.me().id = response;
-			self.needCode(false);
-			self.codeInput('');
-			self.jwt(response.jwt);
-			return self.whoami();
-		}, self.error)
+	this.noauth = function() {
+		return !self.me().id
+	};
+	this.loginClick = function() {
+		return m.request({
+				method: 'POST',
+				url: '/api/me',
+				config: withAuth,
+				data: {
+					phonenumber: self.phoneInput().trim()
+				}
+			})
+			.then(function(response) {
+				self.needCode(true);
+				self.codeInput('');
+			}, self.error)
+	};
+	this.submitCode = function() {
+		return m.request({
+				method: 'POST',
+				url: '/api/me',
+				config: withAuth,
+				data: {
+					code: self.codeInput().trim()
+				}
+			})
+			.then(function(response) {
+				self.me().id = response;
+				self.needCode(false);
+				self.codeInput('');
+				self.jwt(response.jwt);
+				return self.whoami();
+			}, self.error)
 	};
 
-	self.sendNickname = function () {
-		return m.request({method: 'POST',
-			url: '/api/me', config: withAuth, data: { nickname: self.nicknameInput().trim()}
-		})
-		.then(self.me, self.error)
+	self.sendNickname = function() {
+		return m.request({
+				method: 'POST',
+				url: '/api/me',
+				config: withAuth,
+				data: {
+					nickname: self.nicknameInput().trim()
+				}
+			})
+			.then(self.me, self.error)
 	};
 
 	this.whoami();
 };
 var showFaq = false;
 
-module.exports.view = function (ctrl) {
-	var phoneInputValid = function () {
+module.exports.view = function(ctrl) {
+	var phoneInputValid = function() {
 		return validator.isMobilePhone(ctrl.phoneInput(), 'en-US');
 	}
 
-	var codeInputValid = function () {
+	var codeInputValid = function() {
 		return validator.isLength(ctrl.codeInput(), 6, 6);
 	}
 
-	var showFaqButton = function () {
+	var showFaqButton = function() {
 		showFaq = !showFaq;
 	}
 
@@ -126,63 +154,97 @@ module.exports.view = function (ctrl) {
 			// m('h4', 'Ever sent a message by mistake, or just don\'t want to make it a permanent record?'),
 			m('h4', 'Simple group and individual messaging, with messages that you can erase at any time.'),
 			ctrl.needCode() ? [
-				m('div.input-group', {style: {width: '30em'}},
-					m('input.form-control', {placeholder: 'Enter 6-digit verification code...', type: 'tel', oninput: m.withAttr('value', ctrl.codeInput), value: ctrl.codeInput()}),
-					m('span.input-group-btn', m('button', styler.buttonify({disabled: !codeInputValid(), onclick: ctrl.submitCode}), 'Submit Code')),
-					m('span.input-group-btn', m('button', styler.buttonify({onclick: ctrl.cancelCode}), 'Cancel')))
-			]:[
-			m('div', ['Just sign in with your existing mobile phone number.', ctrl.me().id]),
-			m('div.input-group', {style: {width: '18em'}},
-				m('input.form-control', {placeholder: '10-digit phone number', type: 'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
-				m('span.input-group-btn', m('button', styler.buttonify({disabled: !phoneInputValid(), onclick: ctrl.loginClick}), 'Login')))
-			]
-		, error.renderError(ctrl.error),
-		m('br'),
-		m('br'),
-		m('div.faq', m('button.btn btn-default btn-large', {onclick: showFaqButton }, 'Frequently Asked Questions')),
-		showFaq ?
-		m('ul.list-unstyled faq', [
-			m('li', 'Q. What is the point of this site?'),
-			m('li', 'A. Twitter is fantastic for short messages, and e-mail for long messages. But what about ', m('i', 'medium'), ' length, erasable messaging? You probably didn\'t even know you needed that.'),
+				m('div.input-group', {
+						style: {
+							width: '30em'
+						}
+					},
+					m('input.form-control', {
+						placeholder: 'Enter 6-digit verification code...',
+						type: 'tel',
+						oninput: m.withAttr('value', ctrl.codeInput),
+						value: ctrl.codeInput()
+					}),
+					m('span.input-group-btn', m('button', styler.buttonify({
+						disabled: !codeInputValid(),
+						onclick: ctrl.submitCode
+					}), 'Submit Code')),
+					m('span.input-group-btn', m('button', styler.buttonify({
+						onclick: ctrl.cancelCode
+					}), 'Cancel')))
+			] : [
+				m('div', ['Just sign in with your existing mobile phone number.', ctrl.me().id]),
+				m('div.input-group', {
+						style: {
+							width: '18em'
+						}
+					},
+					m('input.form-control', {
+						placeholder: '10-digit phone number',
+						type: 'tel',
+						oninput: m.withAttr('value', ctrl.phoneInput),
+						value: ctrl.phoneInput()
+					}),
+					m('span.input-group-btn', m('button', styler.buttonify({
+						disabled: !phoneInputValid(),
+						onclick: ctrl.loginClick
+					}), 'Login')))
+			], error.renderError(ctrl.error),
 			m('br'),
-			m('li', 'Q. Why do I sign in with my phone number?'),
-			m('li', 'A. Usernames are hard to remember. Passwords are a little easier; you cleverly use the same one on every site. However, according to scientific guesswork, more than 55% of mobile phone users can recall their own phone number on command. We like those odds.'),
 			m('br'),
-			m('li', 'Q. How does message erasing work?'),
-			m('li', 'A. Pressing the X button next to a message will instantly erase it. Now, the way this site works is, senders and recipients always see the same copy of the message. So if the sender or recipient erases the message, it\'s gone for good!'),
-			m('br'),
-			m('li', 'Q. How does erasing work with group messages?'),
-			m('li', 'A. If you sent the message, it\'s gone for everybody. If you received the message, you are removed from the recipients list and no longer see the message. The other recipients will still see the message until the sender or all of the recipients erases it.'),
-			m('br'),
-			m('li', 'Q. Can I get notified of new messages?'),
-			m('li', 'A. Notifications work in Chrome on the desktop and Chrome for Android. Unfortunately, notifications are not yet available for Chrome or Safari in iOS. Perhaps someday. Oh, and you can turn them on and off with the padlock icon in the browser\'s location bar.'),
-			m('br'),
-			m('li', 'Q. Can I send files, photos, or sound?'),
-			m('li', 'A. No. You can send text! Look, this is a free service. You can send links, too! Which I suppose are just text.'),
-			m('br'),
-			m('li', 'Q. But I can\'t remember my friends phone numbers!'),
-			m('li', 'A. Listen bucko, unlike other services, this site doesn\'t coddle you. What happens if you get stranded somewhere and lose your cell phone? If you used this site enough, you might just might remember a friend\'s number and be able to call from a pay phone. If you can find one. Which they won\'t recognize the number of or probably answer. Regardless, you\'re welcome.'),
-			m('br'),
-			m('li', 'Q. What do I do if YoBro goes down?'),
-			m('li', 'A. YoBro is probably all you need to communicate most of the time, but in the unfortunate circumstance that it is not working, you will not be able to read this message.'),
-			m('br'),
-			m('li', 'Q. What do I do if YoBro goes down?'),
-			m('li', 'A. YoBro is probably all you need to communicate most of the time, but in the unfortunate circumstance that it is not working, you will not be able to read this message.'),
-			m('br'),
-			m('li', 'Q. Why the dumb name?'),
-			m('li', 'A. All the good domains were taken.'),
-		]) : null
+			m('div.faq', m('button.btn btn-default btn-large', {
+				onclick: showFaqButton
+			}, 'Frequently Asked Questions')),
+			showFaq ?
+			m('ul.list-unstyled faq', [
+				m('li', 'Q. What is the point of this site?'),
+				m('li', 'A. Twitter is fantastic for short messages, and e-mail for long messages. But what about ', m('i', 'medium'), ' length, erasable messaging? You probably didn\'t even know you needed that.'),
+				m('br'),
+				m('li', 'Q. Why do I sign in with my phone number?'),
+				m('li', 'A. Usernames are hard to remember. Passwords are a little easier; you cleverly use the same one on every site. However, according to scientific guesswork, more than 55% of mobile phone users can recall their own phone number on command. We like those odds.'),
+				m('br'),
+				m('li', 'Q. How does message erasing work?'),
+				m('li', 'A. Pressing the X button next to a message will instantly erase it. Now, the way this site works is, senders and recipients always see the same copy of the message. So if the sender or recipient erases the message, it\'s gone for good!'),
+				m('br'),
+				m('li', 'Q. How does erasing work with group messages?'),
+				m('li', 'A. If you sent the message, it\'s gone for everybody. If you received the message, you are removed from the recipients list and no longer see the message. The other recipients will still see the message until the sender or all of the recipients erases it.'),
+				m('br'),
+				m('li', 'Q. Can I get notified of new messages?'),
+				m('li', 'A. Notifications work in Chrome on the desktop and Chrome for Android. Unfortunately, notifications are not yet available for Chrome or Safari in iOS. Perhaps someday. Oh, and you can turn them on and off with the padlock icon in the browser\'s location bar.'),
+				m('br'),
+				m('li', 'Q. Can I send files, photos, or sound?'),
+				m('li', 'A. No. You can send text! Look, this is a free service. You can send links, too! Which I suppose are just text.'),
+				m('br'),
+				m('li', 'Q. But I can\'t remember my friends phone numbers!'),
+				m('li', 'A. Listen bucko, unlike other services, this site doesn\'t coddle you. What happens if you get stranded somewhere and lose your cell phone? If you used this site enough, you might just might remember a friend\'s number and be able to call from a pay phone. If you can find one. Which they won\'t recognize the number of or probably answer. Regardless, you\'re welcome.'),
+				m('br'),
+				m('li', 'Q. What do I do if YoBro goes down?'),
+				m('li', 'A. YoBro is probably all you need to communicate most of the time, but in the unfortunate circumstance that it is not working, you will not be able to read this message.'),
+				m('br'),
+				m('li', 'Q. What do I do if YoBro goes down?'),
+				m('li', 'A. YoBro is probably all you need to communicate most of the time, but in the unfortunate circumstance that it is not working, you will not be able to read this message.'),
+				m('br'),
+				m('li', 'Q. Why the dumb name?'),
+				m('li', 'A. All the good domains were taken.'),
+			]) : null
 
 		])
 	} else {
 		return m('div', [
 			m('div', ['Logged in as: ' + ctrl.me().id + ' ',
-			ctrl.isChangingNickname ? m('input', {oninput: m.withAttr('value', ctrl.nicknameInput), value: ctrl.nicknameInput()})
-			: (ctrl.me().nickname !== '' ? '(' + ctrl.me().nickname + ')' : null),
-			' ',
-			m('button', styler.buttonify({onclick: ctrl.changeNickname}), 'Change Nickname'),
-			' ',
-			m('button', styler.buttonify({onclick: ctrl.logout}), 'Logout')]),
+				ctrl.isChangingNickname ? m('input', {
+					oninput: m.withAttr('value', ctrl.nicknameInput),
+					value: ctrl.nicknameInput()
+				}) : (ctrl.me().nickname !== '' ? '(' + ctrl.me().nickname + ')' : null),
+				' ',
+				m('button', styler.buttonify({
+					onclick: ctrl.changeNickname
+				}), 'Change Nickname'),
+				' ',
+				m('button', styler.buttonify({
+					onclick: ctrl.logout
+				}), 'Logout')
+			]),
 
 			m.component(messages, {
 				'me': ctrl.me,
