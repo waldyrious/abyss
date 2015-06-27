@@ -218,41 +218,24 @@ module.exports.view = function (ctrl, args, extras) {
 		return ret;
 	}
 
-	var bbuttonify = function (obj) {
-		if (!obj) obj = {};
-		obj.disabled = ctrl.working() || !args.me().id;
-
-	    return merge(obj, {
-	    	class: "btn btn-default btn-lg btn-primary"
-	    });
-	};
-
-	var buttonify = function (obj) {
-		if (!obj) obj = {};
-		obj.disabled = ctrl.working() || !args.me().id;
-
-		return merge(obj, {
-	    	class: "btn btn-default"
-	    });
-
-	};
-
 	function displayMessage(message) {
-		return m('div', {
+		return m('.media', {
 			key: message.id,
 			config: fadesIn
 		},
 
-		[m('div',
-			[m('span', 'From: '),
+		[m('.media-body',
+			[m('.media-heading', 'From: ',
 				m('b', fromMe(message)? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' (' + ctrl.getNickname(message.from) + ')' : '')),
-				m('i', ' ' + moment(message.date).fromNow())
+				m('span', ' ' + moment(message.date).fromNow()),
+				' ', m('button.btn btn-default glyphicon glyphicon-trash', {
+					onclick: fadesOut(ctrl.delete.bind(this, message))
+				})
+				)
 			]),
-			m('div', m.trust(autolinker.link(message.text))),
+			m.trust(autolinker.link(message.text)),
 			m('br'),
-			m('button', buttonify({
-				onclick: fadesOut(ctrl.delete.bind(this, message))
-			}), 'X'),
+
 			m('hr')
 		]
 		)
@@ -262,27 +245,28 @@ module.exports.view = function (ctrl, args, extras) {
 		m('div', [
 			error.renderError(ctrl.error),
 			m('label', 'To: '), m('span', ' '),
-			m('button', buttonify({onclick: ctrl.toPlus}), '+'),
-			m('button', buttonify({onclick: ctrl.toMinus}), '-'),
+			m('button.btn btn-default', {onclick: ctrl.toPlus}, '+'),
+			m('button.btn btn-default', {onclick: ctrl.toMinus}, '-'),
 			m('br'),
 			ctrl.to.map(function (item, index) {
 				return m('input', {
+					placeholder: 'Phone number...',
 					type: 'tel', onchange: m.withAttr('value', function (value) {
 						ctrl.to[index] = value
 					}), value: ctrl.to[index]
 				})
 			}),
-			m('br'),
-			m('label', 'Message: '), m('br'),
-			m('input', {
-				'style': {'width': '100%'},
+			m('div.form-inline',
+			m('div.form-group', m('label', 'Message: '), m('br'),
+			m('input.form-control', {
+				placeholder: 'Message Text...',
 				onchange: m.withAttr('value', ctrl.message),
 				value: ctrl.message()
 			}),
-			m('br'),
-			m('button', buttonify({onclick: ctrl.refresh}), 'Refresh messages!'),
+
+			m('button.btn btn-default glyphicon glyphicon-refresh', {onclick: ctrl.refresh}),
 			' ',
-			m('button', bbuttonify({onclick: ctrl.send}), 'Send!')
+			m('button.btn btn-default btn-primary glyphicon glyphicon-send', {onclick: ctrl.send})))
 		]),
 		// m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
 		m('div', [m('div.col-sm-4#left',

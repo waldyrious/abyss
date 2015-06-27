@@ -22,7 +22,10 @@ module.exports.ErrorHolder = function() {
 };
 
 module.exports.renderError = function (error) {
-	if (!error) return null;
+	if (!error || error() == null || error() == {} ) {
+		return null;
+	}
+
 	var value;
 	if (error() !== null && error().message) {
 			value = error().message;
@@ -33,5 +36,7 @@ module.exports.renderError = function (error) {
 		value = error();
 	}
 
-	return m('div', {class:'bg-danger'}, value);
+	return m('div.alert alert-danger', {role:'alert'},
+		m('span.glyphicon glyphicon-exclamation-sign'),
+		m('span.sr-only', 'Error:'), ' '+value);
 };

@@ -126,22 +126,20 @@ module.exports.view = function (ctrl) {
 			// m('h4', 'Ever sent a message by mistake, or just don\'t want to make it a permanent record?'),
 			m('h4', 'Simple group and individual messaging, with messages that you can erase at any time.'),
 			ctrl.needCode() ? [
-				m('div',  'Enter verification code: '),
-				m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.codeInput), value: ctrl.codeInput()}),
-				m('span', ' '),
-				m('button', styler.buttonify({disabled: !codeInputValid(), onclick: ctrl.submitCode}), 'Submit Code'),
-				m('span', ' '),
-				m('button', styler.buttonify({onclick: ctrl.cancelCode}), 'Cancel')
+				m('div.input-group', {style: {width: '30em'}},
+					m('input.form-control', {placeholder: 'Enter 6-digit verification code...', type: 'tel', oninput: m.withAttr('value', ctrl.codeInput), value: ctrl.codeInput()}),
+					m('span.input-group-btn', m('button', styler.buttonify({disabled: !codeInputValid(), onclick: ctrl.submitCode}), 'Submit Code')),
+					m('span.input-group-btn', m('button', styler.buttonify({onclick: ctrl.cancelCode}), 'Cancel')))
 			]:[
-			m('div', ['Just sign in with your existing 10-digit mobile phone number.', ctrl.me().id]),
-			m('input', {type: 'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
-			m('span', ' '),
-			m('button', styler.buttonify({disabled: !phoneInputValid(), onclick: ctrl.loginClick}), 'Login')
+			m('div', ['Just sign in with your existing mobile phone number.', ctrl.me().id]),
+			m('div.input-group', {style: {width: '18em'}},
+				m('input.form-control', {placeholder: '10-digit phone number', type: 'tel', oninput: m.withAttr('value', ctrl.phoneInput), value: ctrl.phoneInput()}),
+				m('span.input-group-btn', m('button', styler.buttonify({disabled: !phoneInputValid(), onclick: ctrl.loginClick}), 'Login')))
 			]
 		, error.renderError(ctrl.error),
 		m('br'),
 		m('br'),
-		m('div.faq', m('button', {onclick: showFaqButton }, 'Frequently Asked Questions')),
+		m('div.faq', m('button.btn btn-default btn-large', {onclick: showFaqButton }, 'Frequently Asked Questions')),
 		showFaq ?
 		m('ul.list-unstyled faq', [
 			m('li', 'Q. What is the point of this site?'),
