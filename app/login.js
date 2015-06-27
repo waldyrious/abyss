@@ -83,6 +83,14 @@ module.exports.controller = function(args, extras) {
 			})
 			.then(self.me, self.error)
 	};
+	this.whoamiSansErrorHandling = function() {
+		return m.request({
+				url: '/api/me',
+				config: withAuth
+			})
+			.then(self.me)
+	};
+
 	this.noauth = function() {
 		return !self.me().id
 	};
@@ -130,7 +138,7 @@ module.exports.controller = function(args, extras) {
 			.then(self.me, self.error)
 	};
 
-	this.whoami();
+	this.whoamiSansErrorHandling(); // don't want errors to show up on login page when user isn't logged in yet
 };
 var showFaq = false;
 
