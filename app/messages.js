@@ -263,10 +263,7 @@ module.exports.view = function(ctrl, args, extras) {
 						onclick: fadesOut(ctrl.delete.bind(this, message))
 					})
 				)]),
-				m.trust(autolinker.link(message.text)),
-				m('br'),
-
-				m('hr')
+				m.trust(autolinker.link(message.text))
 			]
 		)
 	}
