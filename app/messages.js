@@ -274,7 +274,7 @@ module.exports.view = function(ctrl, args, extras) {
 	return m('div', {
 		config: fadesIn
 	}, [
-		m('div', [
+		m('div.row', [
 			error.renderError(ctrl.error),
 			m('label', 'To: '), m('span', ' '),
 			m('button.btn btn-default', {
@@ -293,25 +293,10 @@ module.exports.view = function(ctrl, args, extras) {
 					}),
 					value: ctrl.to[index]
 				})
-			}),
-			m('div.form-inline',
-				m('div.form-group', m('label', 'Message: '), m('br'),
-					m('input.form-control', {
-						placeholder: 'Message Text...',
-						onchange: m.withAttr('value', ctrl.message),
-						value: ctrl.message()
-					}),
-
-					m('button.btn btn-default glyphicon glyphicon-refresh', {
-						onclick: ctrl.refresh
-					}),
-					' ',
-					m('button.btn btn-default btn-primary glyphicon glyphicon-send', {
-						onclick: ctrl.send
-					})))
+			})
 		]),
 		// m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
-		m('div', [m('div.col-sm-4#left', [m('h3', 'Conversations'),
+		[m('div.col-sm-3#left', [m('h3', 'Conversations'),
 				ctrl.conversations.map(function(grouping) {
 					return m('div', styler.pointer(styler.round({
 						onclick: function() {
@@ -325,9 +310,24 @@ module.exports.view = function(ctrl, args, extras) {
 					])
 				})
 			]),
-			m('div.col-sm-8#right', [m('h3', 'Messages'),
+			m('div.col-sm-9#right', [m('h3', 'Messages'),
+				m('div.form-inline',
+					m('div.form-group', m('label', 'New Message: '), m('br'),
+						m('textarea.form-control', {
+							placeholder: 'Message Text...',
+							onchange: m.withAttr('value', ctrl.message),
+							value: ctrl.message()
+						}),
+
+						m('button.btn btn-default glyphicon glyphicon-refresh', {
+							onclick: ctrl.refresh
+						}),
+						' ',
+						m('button.btn btn-default btn-primary glyphicon glyphicon-send', {
+							onclick: ctrl.send
+						}))),
 				ctrl.messages.map(displayMessage)
 			])
-		])
+		]
 	])
 };
