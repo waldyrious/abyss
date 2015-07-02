@@ -156,13 +156,14 @@ module.exports.view = function(ctrl) {
 	}
 
 	if (ctrl.noauth()) {
-		return m('div', [
+		return [
 			m('h1', 'YoBro.net'),
 			// m('h3', m('i', 'Own your messages!')),
 			// m('h4', 'Ever sent a message by mistake, or just don\'t want to make it a permanent record?'),
 			m('h4', 'Simple group and individual messaging, with messages that you can erase at any time.'),
 			ctrl.needCode() ? [
-				m('div.input-group', {
+				m('.col-md1',
+				m('.input-group', {
 						style: {
 							width: '30em'
 						}
@@ -179,7 +180,7 @@ module.exports.view = function(ctrl) {
 					}), 'Submit Code')),
 					m('span.input-group-btn', m('button', styler.buttonify({
 						onclick: ctrl.cancelCode
-					}), 'Cancel')))
+					}), 'Cancel'))))
 			] : [
 				m('div', ['Just sign in with your existing mobile phone number.', ctrl.me().id]),
 				m('div.input-group', {
@@ -236,7 +237,7 @@ module.exports.view = function(ctrl) {
 				m('li', 'A. All the good domains were taken.'),
 			]) : null
 
-		])
+		]
 	} else {
 		return m('div', [
 			m('div', ['Logged in as: ' + ctrl.me().id + ' ',

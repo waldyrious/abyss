@@ -9,19 +9,19 @@
 		overflow-y: scroll;
 		height: 100vh;
 	}
-
+/*
 	.faq {
 		margin-left: 20rem;
 		margin-right: 20rem;
-	}
+	}*/
 }
 
 body {
-	text-align: center;
+	/*text-align: center;*/
 	font-family: "Lucida Grande",Tahoma,Verdana,Arial,sans-serif;
 }
-
+/*
 .faq {
 	margin-left: 1em;
 	margin-right: 1em;
-}
+}*/
