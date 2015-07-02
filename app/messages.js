@@ -271,29 +271,30 @@ module.exports.view = function(ctrl, args, extras) {
 	return m('div', {
 		config: fadesIn
 	}, [
-		m('div.row', [
-			error.renderError(ctrl.error),
-			m('label', 'To: '), m('span', ' '),
-			m('button.btn btn-default', {
-				onclick: ctrl.toPlus
-			}, '+'),
-			m('button.btn btn-default', {
-				onclick: ctrl.toMinus
-			}, '-'),
-			m('br'),
-			ctrl.to.map(function(item, index) {
-				return m('input', {
-					placeholder: 'Phone number...',
-					type: 'tel',
-					onchange: m.withAttr('value', function(value) {
-						ctrl.to[index] = value
-					}),
-					value: ctrl.to[index]
-				})
-			})
-		]),
+		error.renderError(ctrl.error),
 		// m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
 		[m('div.col-sm-3#left', [m('h3', 'Conversations'),
+				m('div', [
+					m('label', 'To: '), m('span', ' '),
+					m('button.btn btn-default', {
+						onclick: ctrl.toPlus
+					}, '+'),
+					m('button.btn btn-default', {
+						onclick: ctrl.toMinus
+					}, '-'),
+					m('br'),
+					ctrl.to.map(function(item, index) {
+						return m('input', {
+							placeholder: 'Phone number...',
+							type: 'tel',
+							onchange: m.withAttr('value', function(value) {
+								ctrl.to[index] = value
+							}),
+							value: ctrl.to[index]
+						})
+					})
+				]),
+
 				ctrl.conversations.map(function(grouping) {
 					return m('div', styler.pointer(styler.round({
 						onclick: function() {

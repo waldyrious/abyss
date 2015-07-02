@@ -246,13 +246,16 @@ module.exports.view = function(ctrl) {
 					value: ctrl.nicknameInput()
 				}) : (ctrl.me().nickname !== '' ? '(' + ctrl.me().nickname + ')' : null),
 				' ',
-				m('button', styler.buttonify({
+				m('button.btn btn-default', {
 					onclick: ctrl.changeNickname
-				}), 'Change Nickname'),
+				}, 'Change Nickname'),
 				' ',
-				m('button', styler.buttonify({
-					onclick: ctrl.logout
-				}), 'Logout')
+				m('button.btn btn-default', {
+					onclick: ctrl.logout,
+					style: {
+						float: 'right'
+					}
+				}, 'Logout')
 			]),
 
 			m.component(messages, {
