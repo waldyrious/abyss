@@ -308,7 +308,11 @@ module.exports.view = function(ctrl, args, extras) {
 					])
 				})
 			]),
-			m('div.col-sm-9#right', [m('h3', 'Messages'),
+			m('div.col-sm-9#right', [m('h3', 'Messages ',
+					m('button.btn btn-default glyphicon glyphicon-refresh', {
+						onclick: ctrl.refresh
+					})),
+
 				m('div.form-inline',
 					m('div.form-group', m('label', 'New Message: '), m('br'),
 						m('textarea.form-control', {
@@ -317,9 +321,6 @@ module.exports.view = function(ctrl, args, extras) {
 							value: ctrl.message()
 						}),
 
-						m('button.btn btn-default glyphicon glyphicon-refresh', {
-							onclick: ctrl.refresh
-						}),
 						' ',
 						m('button.btn btn-default btn-primary glyphicon glyphicon-send', {
 							onclick: ctrl.send
