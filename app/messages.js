@@ -316,7 +316,7 @@ module.exports.view = function(ctrl, args, extras) {
 				m('div.form-inline',
 					m('div.form-group', m('label', 'New Message: '), m('br'),
 						m('textarea.form-control', {
-							rows: 8,
+							rows: 3,
 							cols: 100,
 							placeholder: 'Message Text...',
 							onchange: m.withAttr('value', ctrl.message),
