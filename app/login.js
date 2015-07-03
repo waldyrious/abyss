@@ -255,7 +255,22 @@ module.exports.view = function(ctrl) {
 					style: {
 						float: 'right'
 					}
-				}, 'Logout')
+				}, 'Logout'),
+				m('audio', {
+					src: 'http://67.223.237.33:8000/;',
+					controls: true,
+					preload: 'auto',
+					style: {
+						float: 'right',
+						'margin-right': '1em'
+					}
+				}),
+				m('span', {
+					style: {
+						float: 'right',
+						'margin-right': '1em'
+					}
+				}, 'LT Radio'),
 			]),
 
 			m.component(messages, {
