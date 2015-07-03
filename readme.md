@@ -5,7 +5,7 @@
 You need to install:
 
 1. [RethinkDB](http://rethinkdb.com/)
-2. [Node.js](https://nodejs.org/) 0.12 or later
+2. [iojs.js](https://iojs.org/) 2.3.2 or later
 
 On Mac...
     
