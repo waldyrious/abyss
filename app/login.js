@@ -270,7 +270,7 @@ module.exports.view = function(ctrl) {
 						float: 'right',
 						'margin-right': '1em'
 					}
-				}, 'LT Radio'),
+				}, 'LoungeTek Radio'),
 			]),
 
 			m.component(messages, {
