@@ -239,8 +239,15 @@ module.exports.view = function(ctrl) {
 
 		]
 	} else {
-		return m('div', [
-			m('div', ['Logged in as: ' + ctrl.me().id + ' ',
+		return [
+			m('nav.navbar navbar-default', {
+				style: {
+					'margin-top': '1rem',
+					'padding-top': '7px'
+				}
+			},
+
+			m('div.container-fluid', ['Logged in as: ' + ctrl.me().id + ' ',
 				ctrl.isChangingNickname ? m('input', {
 					oninput: m.withAttr('value', ctrl.nicknameInput),
 					value: ctrl.nicknameInput()
@@ -271,12 +278,12 @@ module.exports.view = function(ctrl) {
 						'margin-right': '1em'
 					}
 				}, 'LoungeTek Radio'),
-			]),
+			])),
 
 			m.component(messages, {
 				'me': ctrl.me,
 				'jwt': ctrl.jwt
 			})
-		])
+		]
 	}
 };
