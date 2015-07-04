@@ -256,9 +256,10 @@ module.exports.view = function(ctrl, args, extras) {
 				config: fadesIn
 			},
 
-			[m('.media-body', [m('.media-heading', 'From: ',
+			[m('.media-body', [m('.media-heading',
 					m('b', fromMe(message) ? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' (' + ctrl.getNickname(message.from) + ')' : '')),
-					m('span', ' ' + moment(message.date).fromNow()),
+					m('br'),
+					m('i', ' ' + moment(message.date).fromNow()),
 					' ', m('button.btn btn-default glyphicon glyphicon-trash', {
 						onclick: fadesOut(ctrl.delete.bind(this, message))
 					})
