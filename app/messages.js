@@ -296,15 +296,14 @@ module.exports.view = function(ctrl, args, extras) {
 				]),
 
 				ctrl.conversations.map(function(grouping) {
-					return m('div', styler.pointer(styler.round({
+					return m('button.btn ', styler.pointer(styler.round({
 						onclick: function() {
 							ctrl.selectGroup(grouping.group)
 						},
-						class: isEqual(flatten(grouping.group), ctrl.to) ? 'bg-info' : null
+						class: isEqual(flatten(grouping.group), ctrl.to) ? 'btn-success' : 'btn-default'
 					})), [simplify(grouping.group).map(function(ph) {
 							return m('div', ph + (ctrl.getNickname(ph) ? ' (' + ctrl.getNickname(ph) + ')' : ''))
 						}),
-						m('hr')
 					])
 				})
 			]),
