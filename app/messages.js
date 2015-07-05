@@ -200,13 +200,41 @@ module.exports.controller = function(args, extras) {
 			// .then(function () {
 			// 	self.messages.splice(self.messages.indexOf(message), 1);
 			// }, self.error);
-			.then(self.refresh, self.error)
+			// .then(self.refresh, self.error)
 	};
 
 	self.refresh();
 };
 
 module.exports.view = function(ctrl, args, extras) {
+
+	var sendButton;
+	var textInputArea;
+
+	function withKey(key, callback) {
+		return function(e) {
+			if (key == e.keyCode && e.ctrlKey) callback(key);
+			else m.redraw.strategy("none");
+		}
+	}
+
+	function clickSend(key) {
+			sendButton.focus();
+			sendButton.click();
+			setImmediate(function () {
+				sendButton.blur();
+				textInputArea.focus();
+				m.redraw();
+			});
+	}
+
+	function sendButtonConfig(element, isInitialized) {
+		sendButton = element;
+	}
+
+	function textInputAreaConfig(element, isInitialized) {
+		textInputArea = element;
+	}
 
 	var fadesIn = function(element, isInitialized, context) {
 		if (!isInitialized) {
@@ -303,9 +331,8 @@ module.exports.view = function(ctrl, args, extras) {
 						},
 						class: isEqual(flatten(grouping.group), ctrl.to) ? 'btn-success' : 'btn-default'
 					})), [simplify(grouping.group).map(function(ph) {
-							return m('div', ph + (ctrl.getNickname(ph) ? ' (' + ctrl.getNickname(ph) + ')' : ''))
-						}),
-					])
+						return m('div', ph + (ctrl.getNickname(ph) ? ' (' + ctrl.getNickname(ph) + ')' : ''))
+					}), ])
 				})
 			]),
 			m('div.col-sm-9#right', [m('h3', 'Messages ',
@@ -313,20 +340,22 @@ module.exports.view = function(ctrl, args, extras) {
 						onclick: ctrl.refresh
 					})),
 
-				m('div.form-inline',
-					m('div.form-group', m('label', 'New Message: '), m('br'),
-						m('textarea.form-control', {
-							rows: 3,
-							cols: 100,
-							placeholder: 'Message Text...',
-							onchange: m.withAttr('value', ctrl.message),
-							value: ctrl.message()
+				m('div.form-group', m('label', 'New Message: '), m('br'),
+					m('textarea.form-control', {
+						rows: 2,
+						placeholder: 'Message Text...\nControl + Enter to send',
+						onchange: m.withAttr('value', function(value) {
+							// debugger
+							ctrl.message(value);
 						}),
-
-						' ',
-						m('button.btn btn-default btn-primary glyphicon glyphicon-send', {
-							onclick: ctrl.send
-						}))),
+						onkeyup: withKey(13, clickSend),
+						config: textInputAreaConfig,
+						value: ctrl.message()
+					}),
+					m('button.btn btn-default btn-primary glyphicon glyphicon-send', {
+						onclick: ctrl.send,
+						config: sendButtonConfig
+					})),
 				ctrl.messages.map(displayMessage)
 			])
 		]
