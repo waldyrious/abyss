@@ -343,7 +343,7 @@ module.exports.view = function(ctrl, args, extras) {
 				m('div.form-group', m('label', 'New Message: '), m('br'),
 					m('textarea.form-control', {
 						rows: 2,
-						placeholder: 'Message Text...\nControl + Enter to send',
+						placeholder: 'Message Text...\nControl + Enter sends.',
 						onchange: m.withAttr('value', function(value) {
 							// debugger
 							ctrl.message(value);
