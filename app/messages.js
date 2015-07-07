@@ -30,6 +30,16 @@ module.exports.controller = function(args, extras) {
 	self.message = m.prop('');
 	self.error = error.ErrorHolder();
 
+	self.editMode = m.prop(false);
+
+	self.toggleEditMode = function () {
+
+		if (self.editMode()) {
+			self.refresh();
+		}
+		self.editMode(!self.editMode());
+	}
+
 	var withAuth = function(xhr) {
 		if (args.jwt()) {
 			xhr.setRequestHeader('Authorization', 'Bearer ' + args.jwt());
@@ -288,9 +298,10 @@ module.exports.view = function(ctrl, args, extras) {
 					m('b', fromMe(message) ? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' (' + ctrl.getNickname(message.from) + ')' : '')),
 					m('br'),
 					m('i', ' ' + moment(message.date).fromNow()),
-					' ', m('button.btn btn-default glyphicon glyphicon-trash', {
+					' ',
+					ctrl.editMode() ? m('button.btn btn-default glyphicon glyphicon-erase', {
 						onclick: fadesOut(ctrl.delete.bind(this, message))
-					})
+					}) : null
 				)]),
 				m.trust(autolinker.link(message.text))
 			]
@@ -338,7 +349,10 @@ module.exports.view = function(ctrl, args, extras) {
 			m('div.col-sm-9#right', [m('h3', 'Messages ',
 					m('button.btn btn-default glyphicon glyphicon-refresh', {
 						onclick: ctrl.refresh
-					})),
+					}, ' Refresh'),
+					m('button.btn btn-default glyphicon glyphicon-edit', {
+						onclick: ctrl.toggleEditMode,
+					}, ctrl.editMode() ? ' Done' : ' Edit Mode')),
 
 				m('div.form-group', m('label', 'New Message: '), m('br'),
 					m('textarea.form-control', {
