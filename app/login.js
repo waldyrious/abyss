@@ -1,6 +1,7 @@
 'use strict';
 var m = require('mithril');
 var messages = require('./messages');
+var radio = require('./radio');
 var styler = require('./styler');
 var regsw = require('./regsw');
 var Cookies = require('cookies-js');
@@ -16,19 +17,6 @@ module.exports.controller = function(args, extras) {
 	self.codeInput = m.prop('');
 	self.nicknameInput = m.prop('');
 	self.jwt = m.prop(Cookies.get('jwt'));
-
-	self.audioSources = {
-		'Trap': 'http://67.223.237.33:8000/trap/;',
-		'Chillstep': 'http://67.223.237.33:8000/chillstep/;',
-		'Get Psyched': 'http://67.223.237.33:8000/getpsyched/;'
-	}
-	self.audioSource = m.prop(self.audioSources['Trap']);
-	self.autoPlay = false;
-
-	self.changeStation = function (key) {
-		self.autoPlay = true;
-		self.audioSource(self.audioSources[key]);
-	}
 
 	var withAuth = function(xhr) {
 		if (self.jwt()) {
@@ -269,32 +257,14 @@ module.exports.view = function(ctrl) {
 				m('button.btn btn-default', {
 					onclick: ctrl.changeNickname
 				}, 'Change Nickname'),
-				' ',				
+				' ',
 				m('button.btn btn-default', {
 					onclick: ctrl.logout,
 					style: {
 						float: 'right'
 					}
 				}, 'Logout'),
-				m('audio', {
-					src: ctrl.audioSource(),
-					controls: true,
-					autoplay: ctrl.autoPlay,
-					preload: 'metadata',
-					style: {
-						float: 'right',
-						'margin-right': '1em'
-					}
-				}),
-				m('select', {
-					style: {
-						float: 'right'
-					},
-					onchange : function() { ctrl.changeStation(this.options[this.selectedIndex].value) }
-					// onchange: m.withAttr('options[this.selectedIndex].value', ctrl.changeStation)
-				}, Object.keys(ctrl.audioSources).map(function (item) {
-					return m('option', {value: item}, item)
-				})),
+				m.component(radio),
 				m('span', {
 					style: {
 						float: 'right',
