@@ -17,6 +17,19 @@ module.exports.controller = function(args, extras) {
 	self.nicknameInput = m.prop('');
 	self.jwt = m.prop(Cookies.get('jwt'));
 
+	self.audioSources = {
+		'Trap': 'http://67.223.237.33:8000/trap/;',
+		'Chillstep': 'http://67.223.237.33:8000/chillstep/;',
+		'Get Psyched': 'http://67.223.237.33:8000/getpsyched/;'
+	}
+	self.audioSource = m.prop(self.audioSources['Trap']);
+	self.autoPlay = false;
+
+	self.changeStation = function (key) {
+		self.autoPlay = true;
+		self.audioSource(self.audioSources[key]);
+	}
+
 	var withAuth = function(xhr) {
 		if (self.jwt()) {
 			xhr.setRequestHeader('Authorization', 'Bearer ' + self.jwt());
@@ -258,26 +271,43 @@ module.exports.view = function(ctrl) {
 				}, 'Change Nickname'),
 				' ',
 				m('button.btn btn-default', {
+					onclick: ctrl.nextStation,
+					style: {
+						float: 'right'
+					}
+				}, 'nextStation'),
+
+				m('button.btn btn-default', {
 					onclick: ctrl.logout,
 					style: {
 						float: 'right'
 					}
 				}, 'Logout'),
 				m('audio', {
-					src: 'http://67.223.237.33:8000/;',
+					src: ctrl.audioSource(),
 					controls: true,
-					preload: 'auto',
+					autoplay: ctrl.autoPlay,
+					preload: 'metadata',
 					style: {
 						float: 'right',
 						'margin-right': '1em'
 					}
 				}),
+				m('select', {
+					style: {
+						float: 'right'
+					},
+					onchange : function() { ctrl.changeStation(this.options[this.selectedIndex].value) }
+					// onchange: m.withAttr('options[this.selectedIndex].value', ctrl.changeStation)
+				}, Object.keys(ctrl.audioSources).map(function (item) {
+					return m('option', {value: item}, item)
+				})),
 				m('span', {
 					style: {
 						float: 'right',
 						'margin-right': '1em'
 					}
-				}, 'LoungeTek Radio'),
+				}, 'Featuring LoungeTek Radio'),
 			])),
 
 			m.component(messages, {
