@@ -269,14 +269,7 @@ module.exports.view = function(ctrl) {
 				m('button.btn btn-default', {
 					onclick: ctrl.changeNickname
 				}, 'Change Nickname'),
-				' ',
-				m('button.btn btn-default', {
-					onclick: ctrl.nextStation,
-					style: {
-						float: 'right'
-					}
-				}, 'nextStation'),
-
+				' ',				
 				m('button.btn btn-default', {
 					onclick: ctrl.logout,
 					style: {
