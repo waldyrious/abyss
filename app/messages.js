@@ -32,8 +32,13 @@ module.exports.controller = function(args, extras) {
 
 	self.editMode = m.prop(false);
 
-	self.upload = function(ev) {
-		var fileList = ev.target.files;
+	self.files = m.prop();
+	self.fileChange = function(ev) {
+		self.files(ev.target.files);
+	}
+
+	self.uploadFile = function() {
+		var fileList = self.files();
 
 		var data = new FormData();
 		data.append("file", fileList[0]);
@@ -391,14 +396,32 @@ module.exports.view = function(ctrl, args, extras) {
 						config: textInputAreaConfig,
 						value: ctrl.message()
 					}),
-					m('button.btn btn-default btn-primary glyphicon glyphicon-send', {
+					m('button.btn btn-success glyphicon glyphicon-send', {
 						onclick: ctrl.send,
-						config: sendButtonConfig
-					}),
+						config: sendButtonConfig,
+						style: {
+							'margin-right': '1em'
+						}
+					}, ' Send text'),
+
+					// m('label', {
+					// 	style: {
+					// 		'margin-right': '1em'
+					// 	}
+					// }, 'Send file:'),
 					m('input', {
+						style: {
+							display: 'inline'
+						},
 						type: 'file',
-						onchange: ctrl.upload
-					})),
+						onchange: ctrl.fileChange
+					}),
+					m('button.btn btn-success glyphicon glyphicon-picture', {
+						disabled: ctrl.files() ? false : true,
+						onclick: ctrl.uploadFile,
+						config: sendButtonConfig
+					}, ' Send picture')
+				),
 				ctrl.messages.map(displayMessage)
 			])
 		]
