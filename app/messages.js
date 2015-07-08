@@ -304,6 +304,13 @@ module.exports.view = function(ctrl, args, extras) {
 	}
 
 	function displayMessage(message) {
+
+		if (message.fileid) {
+			console.dir(message);
+			return m('img', {
+				src: '/api/file/' + message.fileid
+			})
+		} else
 		return m('div', {
 				key: message.id,
 				config: fadesIn
