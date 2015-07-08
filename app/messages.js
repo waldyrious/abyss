@@ -303,7 +303,7 @@ module.exports.view = function(ctrl, args, extras) {
 				m('b', fromMe(message) ? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' (' + ctrl.getNickname(message.from) + ')' : '')),
 				': ',
 
-				m.trust(autolinker.link(message.text))
+				m.trust(autolinker.link(message.text).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
 			]
 		)
 	}
