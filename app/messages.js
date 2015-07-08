@@ -45,6 +45,7 @@ module.exports.controller = function(args, extras) {
 			data: data,
 		    serialize: function(data) {return data}
 		})
+		.then(self.refresh)
 	}
 
 	self.toggleEditMode = function () {
@@ -307,9 +308,10 @@ module.exports.view = function(ctrl, args, extras) {
 
 		if (message.fileid) {
 			console.dir(message);
-			return m('img', {
+			return [m('img', {
 				src: '/api/file/' + message.fileid
-			})
+			}),
+			m('br')]
 		} else
 		return m('div', {
 				key: message.id,
