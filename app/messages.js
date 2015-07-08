@@ -32,6 +32,21 @@ module.exports.controller = function(args, extras) {
 
 	self.editMode = m.prop(false);
 
+	self.upload = function(ev) {
+		var fileList = ev.target.files;
+
+		var data = new FormData();
+		data.append("file", fileList[0]);
+
+		m.request({
+		    method: "POST",
+			config: withAuth,
+		    url: '/api/file?group=' + encodeURIComponent(JSON.stringify(self.to)),
+			data: data,
+		    serialize: function(data) {return data}
+		})
+	}
+
 	self.toggleEditMode = function () {
 
 		if (self.editMode()) {
@@ -369,6 +384,10 @@ module.exports.view = function(ctrl, args, extras) {
 					m('button.btn btn-default btn-primary glyphicon glyphicon-send', {
 						onclick: ctrl.send,
 						config: sendButtonConfig
+					}),
+					m('input', {
+						type: 'file',
+						onchange: ctrl.upload
 					})),
 				ctrl.messages.map(displayMessage)
 			])
