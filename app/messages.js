@@ -260,7 +260,7 @@ module.exports.view = function(ctrl, args, extras) {
 			//don't redraw yet
 			m.redraw.strategy("none");
 
-			Velocity(e.target.parentNode.parentNode.parentNode, {
+			Velocity(e.target.parentNode, {
 				opacity: 0
 			}, {
 				complete: function() {
