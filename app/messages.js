@@ -322,7 +322,11 @@ module.exports.view = function(ctrl, args, extras) {
 				': ',
 
 				message.fileid ? m('img', {
-					src: '/api/file/' + message.fileid + '?jwt=' + encodeURIComponent(args.jwt())
+					src: '/api/file/' + message.fileid + '?jwt=' + encodeURIComponent(args.jwt()),
+					style: {
+						'max-width': '100%',
+						'max-height': '100%'
+					}
 				}) :
 				m.trust(autolinker.link(message.text).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
 			]
