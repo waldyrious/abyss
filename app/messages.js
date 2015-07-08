@@ -289,20 +289,20 @@ module.exports.view = function(ctrl, args, extras) {
 	}
 
 	function displayMessage(message) {
-		return m('.media', {
+		return m('div', {
 				key: message.id,
 				config: fadesIn
 			},
 
-			[m('.media-body', [m('.media-heading',
-					m('b', fromMe(message) ? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' (' + ctrl.getNickname(message.from) + ')' : '')),
-					m('br'),
-					m('i', ' ' + moment(message.date).fromNow()),
-					' ',
-					ctrl.editMode() ? m('button.btn btn-default glyphicon glyphicon-erase', {
-						onclick: fadesOut(ctrl.delete.bind(this, message))
-					}) : null
-				)]),
+			[
+				ctrl.editMode() ? m('button.btn btn-default glyphicon glyphicon-erase', {
+					onclick: fadesOut(ctrl.delete.bind(this, message))
+				}) : null,
+				m('i', ' ' + moment(message.date).fromNow()),
+				' ',
+				m('b', fromMe(message) ? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' (' + ctrl.getNickname(message.from) + ')' : '')),
+				': ',
+
 				m.trust(autolinker.link(message.text))
 			]
 		)
