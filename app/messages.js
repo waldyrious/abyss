@@ -306,14 +306,6 @@ module.exports.view = function(ctrl, args, extras) {
 
 	function displayMessage(message) {
 
-		if (message.fileid) {
-			console.dir(message);
-			return [m('img', {
-				src: '/api/file/' + message.fileid + '?jwt=' + encodeURIComponent(args.jwt())
-				// src: '/api/file/' + message.fileid
-			}),
-			m('br')]
-		} else
 		return m('div', {
 				key: message.id,
 				config: fadesIn
@@ -323,11 +315,15 @@ module.exports.view = function(ctrl, args, extras) {
 				ctrl.editMode() ? m('button.btn btn-default glyphicon glyphicon-erase', {
 					onclick: fadesOut(ctrl.delete.bind(this, message))
 				}) : null,
+
 				m('i', ' ' + moment(message.date).fromNow()),
 				' ',
 				m('b', fromMe(message) ? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
 				': ',
 
+				message.fileid ? m('img', {
+					src: '/api/file/' + message.fileid + '?jwt=' + encodeURIComponent(args.jwt())
+				}) :
 				m.trust(autolinker.link(message.text).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
 			]
 		)
