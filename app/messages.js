@@ -309,7 +309,8 @@ module.exports.view = function(ctrl, args, extras) {
 		if (message.fileid) {
 			console.dir(message);
 			return [m('img', {
-				src: '/api/file/' + message.fileid
+				src: '/api/file/' + message.fileid + '?jwt=' + encodeURIComponent(args.jwt())
+				// src: '/api/file/' + message.fileid
 			}),
 			m('br')]
 		} else
