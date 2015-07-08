@@ -252,7 +252,7 @@ module.exports.view = function(ctrl) {
 				ctrl.isChangingNickname ? m('input', {
 					oninput: m.withAttr('value', ctrl.nicknameInput),
 					value: ctrl.nicknameInput()
-				}) : (ctrl.me().nickname !== '' ? '(' + ctrl.me().nickname + ')' : null),
+				}) : (ctrl.me().nickname !== '' ? ctrl.me().nickname : null),
 				' ',
 				m('button.btn btn-default', {
 					onclick: ctrl.changeNickname

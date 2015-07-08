@@ -300,7 +300,7 @@ module.exports.view = function(ctrl, args, extras) {
 				}) : null,
 				m('i', ' ' + moment(message.date).fromNow()),
 				' ',
-				m('b', fromMe(message) ? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' (' + ctrl.getNickname(message.from) + ')' : '')),
+				m('b', fromMe(message) ? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
 				': ',
 
 				m.trust(autolinker.link(message.text).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
@@ -342,7 +342,7 @@ module.exports.view = function(ctrl, args, extras) {
 						},
 						class: isEqual(flatten(grouping.group), ctrl.to) ? 'btn-success' : 'btn-default'
 					})), [simplify(grouping.group).map(function(ph) {
-						return m('div', ph + (ctrl.getNickname(ph) ? ' (' + ctrl.getNickname(ph) + ')' : ''))
+						return m('div', ph + (ctrl.getNickname(ph) ? ' ' + ctrl.getNickname(ph) : ''))
 					}), ])
 				})
 			]),
