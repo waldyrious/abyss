@@ -333,7 +333,7 @@ module.exports.view = function(ctrl, args, extras) {
 				': ',
 
 				message.fileid ? m('img', {
-					src: '/api/file/' + encodeURIComponent(args.jwt()) + '/' + message.fileid,
+					src: '/api/file/' + message.fileid,
 					style: {
 						'max-width': '100%',
 						'max-height': '100%'
