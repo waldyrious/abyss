@@ -332,8 +332,8 @@ module.exports.view = function(ctrl, args, extras) {
 				m('b', fromMe(message) ? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
 				': ',
 
-				message.fileid ? m('img', {
-					src: '/api/file/' + message.fileid,
+				message.file ? m('img', {
+					src: '/api/file/' + message.id,
 					style: {
 						'max-width': '100%',
 						'max-height': '100%'
