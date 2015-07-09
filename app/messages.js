@@ -331,11 +331,15 @@ module.exports.view = function(ctrl, args, extras) {
 			})
 		} else if (file.type.startsWith('video')) {
 			return m('video', {
-				src: '/api/file/' + message.id
+				src: '/api/file/' + message.id,
+				preload: 'none',
+				controls: true
 			})
 		} else if (file.type.startsWith('audio')) {
 			return m('audio', {
-				src: '/api/file/' + message.id
+				src: '/api/file/' + message.id,
+				preload: 'none',
+				controls: true
 			})
 		} else {
 			return m('a', {
@@ -445,11 +449,11 @@ module.exports.view = function(ctrl, args, extras) {
 						type: 'file',
 						onchange: ctrl.fileChange
 					}),
-					m('button.btn btn-success glyphicon glyphicon-picture', {
+					m('button.btn btn-success glyphicon glyphicon-file', {
 						disabled: ctrl.files() ? false : true,
 						onclick: ctrl.uploadFile,
 						config: sendButtonConfig
-					}, ' Send picture')
+					}, ' Send file')
 				),
 				ctrl.messages.map(displayMessage)
 			])
