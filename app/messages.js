@@ -315,6 +315,35 @@ module.exports.view = function(ctrl, args, extras) {
 		return ret;
 	}
 
+	function renderFileMessage(message) {
+
+		if (!message.file) return;
+
+		var file = message.file;
+
+		if (file.type.startsWith('image')) {
+			return m('img', {
+				src: '/api/file/' + message.id,
+				style: {
+					'max-width': '100%',
+					'max-height': '100%'
+				}
+			})
+		} else if (file.type.startsWith('video')) {
+			return m('video', {
+				src: '/api/file/' + message.id
+			})
+		} else if (file.type.startsWith('audio')) {
+			return m('audio', {
+				src: '/api/file/' + message.id
+			})
+		} else {
+			return m('a', {
+				href: '/api/file/' + message.id,
+			}, file.name)
+		}
+	}
+
 	function displayMessage(message) {
 
 		return m('div', {
@@ -332,13 +361,7 @@ module.exports.view = function(ctrl, args, extras) {
 				m('b', fromMe(message) ? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
 				': ',
 
-				message.file ? m('img', {
-					src: '/api/file/' + message.id,
-					style: {
-						'max-width': '100%',
-						'max-height': '100%'
-					}
-				}) :
+				message.file ? renderFileMessage(message) :
 				m.trust(autolinker.link(message.text).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
 			]
 		)
