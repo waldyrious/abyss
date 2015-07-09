@@ -331,6 +331,10 @@ module.exports.view = function(ctrl, args, extras) {
 		} else if (file.type.indexOf('video') > -1) {
 			return m('video', {
 				src: '/api/file/' + encodeURIComponent(message.id),
+				style: {
+					'max-width': '100%',
+					'max-height': '100%'
+				},
 				preload: 'none',
 				controls: true
 			})
