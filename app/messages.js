@@ -41,12 +41,18 @@ module.exports.controller = function(args, extras) {
 		var fileList = self.files();
 
 		var data = new FormData();
-		data.append("file", fileList[0]);
+		var file = fileList[0];
+
+		data.append("file", file);
 
 		m.request({
 		    method: "POST",
 			config: withAuth,
-		    url: '/api/file?group=' + encodeURIComponent(JSON.stringify(self.to)),
+		    url: '/api/file?group=' + encodeURIComponent(JSON.stringify(self.to))
+			+ '&type=' + encodeURIComponent(file.type)
+			+ '&lastModified=' + encodeURIComponent(file.lastModified)
+			+ '&size=' + encodeURIComponent(file.size)
+			+ '&name=' + encodeURIComponent(file.name),
 			data: data,
 		    serialize: function(data) {return data}
 		})
