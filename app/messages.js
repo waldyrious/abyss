@@ -18,7 +18,6 @@ var clone = require('lodash/lang/clone');
 var union = require('lodash/array/union');
 var merge = require('lodash/object/merge');
 
-
 module.exports.controller = function(args, extras) {
 	var self = this;
 	self.working = m.prop(false);
@@ -321,29 +320,29 @@ module.exports.view = function(ctrl, args, extras) {
 
 		var file = message.file;
 
-		if (file.type.startsWith('image')) {
+		if (file.type.indexOf('image') > -1) {
 			return m('img', {
-				src: '/api/file/' + message.id,
+				src: '/api/file/' + encodeURIComponent(message.id),
 				style: {
 					'max-width': '100%',
 					'max-height': '100%'
 				}
 			})
-		} else if (file.type.startsWith('video')) {
+		} else if (file.type.indexOf('video') > -1) {
 			return m('video', {
-				src: '/api/file/' + message.id,
+				src: '/api/file/' + encodeURIComponent(message.id),
 				preload: 'none',
 				controls: true
 			})
-		} else if (file.type.startsWith('audio')) {
+		} else if (file.type.indexOf('audio') > -1) {
 			return m('audio', {
-				src: '/api/file/' + message.id,
+				src: '/api/file/' + encodeURIComponent(message.id),
 				preload: 'none',
 				controls: true
 			})
 		} else {
 			return m('a', {
-				href: '/api/file/' + message.id,
+				href: '/api/file/' + encodeURIComponent(message.id),
 			}, file.name)
 		}
 	}
@@ -366,7 +365,8 @@ module.exports.view = function(ctrl, args, extras) {
 				': ',
 
 				message.file ? renderFileMessage(message) :
-				m.trust(autolinker.link(message.text).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
+				// m.trust(autolinker.link(message.text).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
+				message.text
 			]
 		)
 	}
