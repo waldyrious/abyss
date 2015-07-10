@@ -36,7 +36,12 @@ module.exports.controller = function(args, extras) {
 		self.files(ev.target.files);
 	}
 
+	self.uploadTotal = m.prop();
+	self.uploaded = m.prop();
 	self.uploadFile = function() {
+		self.uploadTotal(0);
+		self.uploaded(0);
+
 		var fileList = self.files();
 
 		var data = new FormData();
@@ -44,15 +49,24 @@ module.exports.controller = function(args, extras) {
 
 		data.append("file", file);
 
+		var xhrConfig = function(xhr) {
+			xhr = withAuth(xhr);
+		    xhr.upload.addEventListener("progress", function (ev) {
+				self.uploaded(ev.loaded);
+				self.uploadTotal(ev.total);
+				m.redraw();
+			});
+		}
+
 		m.request({
 		    method: "POST",
-			config: withAuth,
 		    url: '/api/file?group=' + encodeURIComponent(JSON.stringify(self.to))
 			+ '&type=' + encodeURIComponent(file.type)
 			+ '&lastModified=' + encodeURIComponent(file.lastModified)
 			+ '&size=' + encodeURIComponent(file.size)
 			+ '&name=' + encodeURIComponent(file.name),
 			data: data,
+			config: xhrConfig,
 		    serialize: function(data) {return data}
 		})
 		.then(self.refresh)
@@ -70,6 +84,7 @@ module.exports.controller = function(args, extras) {
 		if (args.jwt()) {
 			xhr.setRequestHeader('Authorization', 'Bearer ' + args.jwt());
 		}
+		return xhr;
 	}
 
 	var oboeAuth = function() {
@@ -457,7 +472,8 @@ module.exports.view = function(ctrl, args, extras) {
 						disabled: ctrl.files() ? false : true,
 						onclick: ctrl.uploadFile,
 						config: sendButtonConfig
-					}, ' Send file')
+					}, ' Send file'),
+					ctrl.uploaded() ? m('span', ctrl.uploaded() + ' uploaded out of ' + ctrl.uploadTotal()) : null
 				),
 				ctrl.messages.map(displayMessage)
 			])
