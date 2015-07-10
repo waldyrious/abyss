@@ -5,7 +5,7 @@
 First install:
 
 1. [RethinkDB](http://rethinkdb.com/)
-2. nodejs 0.12 or later, preferrably latest https://iojs.org/en/index.html
+2. Preferrably the latest https://iojs.org/en/index.html , but you can use Node 0.12 if you need to. Note that iojs is becoming the new node.js.
 
 On Mac...
     
