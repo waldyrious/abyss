@@ -5,7 +5,7 @@
 You need to install:
 
 1. [RethinkDB](http://rethinkdb.com/)
-2. [iojs.js](https://iojs.org/) 2.3.2 or later
+2. nodejs 0.12 or later
 
 On Mac...
     
@@ -65,7 +65,7 @@ Bluebird lets you easily convert them to Promise based APIs, which are much easi
  
 [Lodash API](https://lodash.com/docs) Utility belt library. Useful for working with arrays and objects.
 
-[Express](http://expressjs.com) minimalist web application framework
+[Koa](http://koajs.com/) minimalist web application framework
 
 [Mithril](https://lhorie.github.io/mithril) minimalist MVC frontend framework
 
