@@ -5,7 +5,7 @@
 First install:
 
 1. [RethinkDB](http://rethinkdb.com/)
-2. Preferrably the latest https://iojs.org/en/index.html , but you can use Node 0.12 if you need to. Note that iojs is becoming the new node.js.
+2. Preferrably the latest https://iojs.org/en/index.html , but you can use Node 0.12 if you need to. Note that iojs is getting merged back into node and is becoming the next version of node.js.
 
 On Mac...
     
@@ -44,8 +44,6 @@ Run schema.js. It's safe to accidentally re-run this as it won't drop anything.
 
 ## Command line ways to run:
 
-Don't really need to do this with WebStorm. WebStorm provides the best debugger.
-
 1. From the command line, `node --harmony server.js` to run. If you are on iojs, you don't need `--harmony`
 1. Run `node debug --harmony server.js` to use the debugger. The command line debugger is very easy to use
 and quite fast. If you are on iojs, you don't need `--harmony`.
@@ -53,7 +51,7 @@ and quite fast. If you are on iojs, you don't need `--harmony`.
 
 In JavaScript, the debugger is your best friend. Love your debuggers. You will use it all the time.
 
-# API reference
+# Library API reference
 
 [Node.js Cheat Sheet](https://gist.github.com/LeCoupa/985b82968d8285987dc3)
 
