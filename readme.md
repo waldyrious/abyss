@@ -40,7 +40,7 @@ Run schema.js. It's safe to accidentally re-run this as it won't drop anything.
 ## Run system from WebStorm:
 1. Run the server.js from file. You have to add *--harmony* to the Node parameters in the run config! This flag enables ES6 features like *const*. If you are on iojs, you don't need `--harmony`.
 
-1. You can also run `runner.js`. This one reloads the server on every file change and rebuilds the client on every client/* file change, so don't use npm run watch with this one. However, debugging does not work in it.
+1. You can also run `runner.js`. This one reloads the server on every file change, but, debugging does not work in it.
 
 ## Command line ways to run:
 
