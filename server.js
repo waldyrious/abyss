@@ -19,7 +19,7 @@ const https = require('https');
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 
-if (cluster.isMaster) {
+if (secret.cluster && cluster.isMaster) {
 	// Fork workers.
 	for (var i = 0; i < numCPUs; i++) {
 		cluster.fork();

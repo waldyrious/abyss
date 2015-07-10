@@ -18,7 +18,6 @@ var clone = require('lodash/lang/clone');
 var union = require('lodash/array/union');
 var merge = require('lodash/object/merge');
 
-
 module.exports.controller = function(args, extras) {
 	var self = this;
 	self.working = m.prop(false);
@@ -32,6 +31,47 @@ module.exports.controller = function(args, extras) {
 
 	self.editMode = m.prop(false);
 
+	self.files = m.prop();
+	self.fileChange = function(ev) {
+		self.files(ev.target.files);
+	}
+
+	self.uploadTotal = m.prop();
+	self.uploaded = m.prop();
+	self.uploadFile = function() {
+		self.uploadTotal(0);
+		self.uploaded(0);
+
+		var fileList = self.files();
+
+		var data = new FormData();
+		var file = fileList[0];
+
+		data.append("file", file);
+
+		var xhrConfig = function(xhr) {
+			xhr = withAuth(xhr);
+		    xhr.upload.addEventListener("progress", function (ev) {
+				self.uploaded(ev.loaded);
+				self.uploadTotal(ev.total);
+				m.redraw();
+			});
+		}
+
+		m.request({
+		    method: "POST",
+		    url: '/api/file?group=' + encodeURIComponent(JSON.stringify(self.to))
+			+ '&type=' + encodeURIComponent(file.type)
+			+ '&lastModified=' + encodeURIComponent(file.lastModified)
+			+ '&size=' + encodeURIComponent(file.size)
+			+ '&name=' + encodeURIComponent(file.name),
+			data: data,
+			config: xhrConfig,
+		    serialize: function(data) {return data}
+		})
+		.then(self.refresh)
+	}
+
 	self.toggleEditMode = function () {
 
 		if (self.editMode()) {
@@ -44,6 +84,7 @@ module.exports.controller = function(args, extras) {
 		if (args.jwt()) {
 			xhr.setRequestHeader('Authorization', 'Bearer ' + args.jwt());
 		}
+		return xhr;
 	}
 
 	var oboeAuth = function() {
@@ -288,7 +329,45 @@ module.exports.view = function(ctrl, args, extras) {
 		return ret;
 	}
 
+	function renderFileMessage(message) {
+
+		if (!message.file) return;
+
+		var file = message.file;
+
+		if (file.type.indexOf('image') > -1) {
+			return m('img', {
+				src: '/api/file/' + encodeURIComponent(message.id),
+				style: {
+					'max-width': '100%',
+					'max-height': '100%'
+				}
+			})
+		} else if (file.type.indexOf('video') > -1) {
+			return m('video', {
+				src: '/api/file/' + encodeURIComponent(message.id),
+				style: {
+					'max-width': '100%',
+					'max-height': '100%'
+				},
+				preload: 'none',
+				controls: true
+			})
+		} else if (file.type.indexOf('audio') > -1) {
+			return m('audio', {
+				src: '/api/file/' + encodeURIComponent(message.id),
+				preload: 'none',
+				controls: true
+			})
+		} else {
+			return m('a', {
+				href: '/api/file/' + encodeURIComponent(message.id),
+			}, file.name)
+		}
+	}
+
 	function displayMessage(message) {
+
 		return m('div', {
 				key: message.id,
 				config: fadesIn
@@ -298,12 +377,15 @@ module.exports.view = function(ctrl, args, extras) {
 				ctrl.editMode() ? m('button.btn btn-default glyphicon glyphicon-erase', {
 					onclick: fadesOut(ctrl.delete.bind(this, message))
 				}) : null,
+
 				m('i', ' ' + moment(message.date).fromNow()),
 				' ',
 				m('b', fromMe(message) ? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
 				': ',
 
-				m.trust(autolinker.link(message.text).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
+				message.file ? renderFileMessage(message) :
+				// m.trust(autolinker.link(message.text).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
+				message.text
 			]
 		)
 	}
@@ -366,10 +448,33 @@ module.exports.view = function(ctrl, args, extras) {
 						config: textInputAreaConfig,
 						value: ctrl.message()
 					}),
-					m('button.btn btn-default btn-primary glyphicon glyphicon-send', {
+					m('button.btn btn-success glyphicon glyphicon-send', {
 						onclick: ctrl.send,
+						config: sendButtonConfig,
+						style: {
+							'margin-right': '1em'
+						}
+					}, ' Send text'),
+
+					// m('label', {
+					// 	style: {
+					// 		'margin-right': '1em'
+					// 	}
+					// }, 'Send file:'),
+					m('input', {
+						style: {
+							display: 'inline'
+						},
+						type: 'file',
+						onchange: ctrl.fileChange
+					}),
+					m('button.btn btn-success glyphicon glyphicon-file', {
+						disabled: ctrl.files() ? false : true,
+						onclick: ctrl.uploadFile,
 						config: sendButtonConfig
-					})),
+					}, ' Send file'),
+					ctrl.uploaded() ? m('span', ctrl.uploaded() + ' uploaded out of ' + ctrl.uploadTotal()) : null
+				),
 				ctrl.messages.map(displayMessage)
 			])
 		]
