@@ -75,6 +75,7 @@ module.exports.controller = function(args, extras) {
 			self.fileInput().value = '';
 			self.uploadTotal(undefined);
 			self.uploaded(undefined);
+			self.files(undefined);
 		})
 		.then(self.refresh)
 	}
