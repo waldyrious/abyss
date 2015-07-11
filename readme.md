@@ -2,22 +2,22 @@
 
 # Installing
 
-You need to install:
+First install:
 
 1. [RethinkDB](http://rethinkdb.com/)
-2. nodejs 0.12 or later, preferrably latest https://iojs.org/en/index.html
+2. Preferrably the latest https://iojs.org/en/index.html , but you can use Node 0.12 if you need to. Note that iojs is getting merged back into node and is becoming the next version of node.js.
 
 On Mac...
     
     brew update   
     brew install rethinkdb    
-    brew install node
+    brew install iojs
 
-Also get [WebStorm](https://www.jetbrains.com/webstorm/)! Seriously, its the best thing for JavaScript!
+Also get [WebStorm](https://www.jetbrains.com/webstorm/) if you need an IDE. Its the best one for JavaScript!
 
 # Webstorm config
 
-Use tabs for indent and turn of continuation indents, which get annoying with promises.
+Use tabs for indent. And turn off continuation indents, which are annoying with promises.
 
 1. Check use tab character in Default Indent Options
 2. Tab size 4, Indent 4, Continuation indent 0
@@ -27,32 +27,31 @@ Use tabs for indent and turn of continuation indents, which get annoying with pr
 
 1. git clone the repo and cd into the project
 1. Start an instance of Rethinkdb:  `rethinkdb` This will start an instance of RethinkDB with datafiles in the working directory. Once running, go to [http://localhost:8080](http://localhost:8080)
- to access the RethinkDB admin tool. Leave this running in a terminal tab.
+ to access the RethinkDB admin tool. Leave Rethinkdb running in a terminal tab.
 1. Install node modules: `npm i`  This installs the node_modules for the project.
-1. Build front end: `npm run watch` This continually builds the front end. Leave it running in a terminal tab too.
+1. Build front end: `npm run watch` This continually builds the front end upon file change. Leave it running in a terminal tab too.
 `npm run build` does a single build. These are defined in package.json.
+1. Start the server. `node runner.js` This restarts the server each time you change a file. If you need to debug, `node-debug server.js` or `node server.js` will run without restarting the server on file change.
 
 ## Setup DB Schema
 
 Run schema.js. It's safe to accidentally re-run this as it won't drop anything.
 
 ## Run system from WebStorm:
-1. Run the server.js from file. You have to add *--harmony* to the Node parameters in the run config! This flag enables ES6 features like *const*. (The need to use this flag will go away soon with Node 3.0.0.)
+1. Run the server.js from file. You have to add *--harmony* to the Node parameters in the run config! This flag enables ES6 features like *const*. If you are on iojs, you don't need `--harmony`.
 
-1. You can also run `runner.js`. This one reloads the server on every file change and rebuilds the client on every client/* file change, so don't use npm run watch with this one. However, debugging does not work in it.
+1. You can also run `runner.js`. This one reloads the server on every file change, but, debugging does not work in it.
 
 ## Command line ways to run:
 
-Don't really need to do this with WebStorm. WebStorm provides the best debugger.
-
-1. From the command line, `node --harmony server.js` to run.
+1. From the command line, `node --harmony server.js` to run. If you are on iojs, you don't need `--harmony`
 1. Run `node debug --harmony server.js` to use the debugger. The command line debugger is very easy to use
-and quite fast. 
-1.  Run `node-debug -p 8081 --harmony server.js` to use the web based debugger. First you'll need to have run `npm i -g node-inspector` to install this program.
+and quite fast. If you are on iojs, you don't need `--harmony`.
+1.  Run `node-debug -p 8081 --harmony server.js` to use a web based debugger. First you'll need to have run `npm i -g node-inspector` to install that program.
 
-Be prepared to get accustomed to using the debuggers! You will find yourself inserting 'debugger' to trace code frequently, inspect variables and experiment.
+In JavaScript, the debugger is your best friend. Love your debuggers. You will use it all the time.
 
-# API reference
+# Library API reference
 
 [Node.js Cheat Sheet](https://gist.github.com/LeCoupa/985b82968d8285987dc3)
 
