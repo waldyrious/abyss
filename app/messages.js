@@ -27,6 +27,7 @@ module.exports.controller = function(args, extras) {
 	self.nicknames = {};
 	self.to = [''];
 	self.message = m.prop('');
+	self.fileInput = m.prop();
 	self.error = error.ErrorHolder();
 
 	self.editMode = m.prop(false);
@@ -68,6 +69,12 @@ module.exports.controller = function(args, extras) {
 			data: data,
 			config: xhrConfig,
 		    serialize: function(data) {return data}
+		})
+		.then(function () {
+			//reset file input here
+			self.fileInput().value = '';
+			self.uploadTotal(undefined);
+			self.uploaded(undefined);
 		})
 		.then(self.refresh)
 	}
@@ -466,6 +473,7 @@ module.exports.view = function(ctrl, args, extras) {
 							display: 'inline'
 						},
 						type: 'file',
+						config: ctrl.fileInput,
 						onchange: ctrl.fileChange
 					}),
 					m('button.btn btn-success glyphicon glyphicon-file', {
@@ -473,7 +481,7 @@ module.exports.view = function(ctrl, args, extras) {
 						onclick: ctrl.uploadFile,
 						config: sendButtonConfig
 					}, ' Send file'),
-					ctrl.uploaded() ? m('span', ctrl.uploaded() + ' uploaded out of ' + ctrl.uploadTotal()) : null
+					ctrl.uploaded() ? m('span', Math.trunc(ctrl.uploaded()/ctrl.uploadTotal()*100) + '% (' + ctrl.uploaded() + ' uploaded out of ' + ctrl.uploadTotal() +')') : null
 				),
 				ctrl.messages.map(displayMessage)
 			])
