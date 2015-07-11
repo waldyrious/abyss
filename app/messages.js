@@ -481,7 +481,7 @@ module.exports.view = function(ctrl, args, extras) {
 						onclick: ctrl.uploadFile,
 						config: sendButtonConfig
 					}, ' Send file'),
-					ctrl.uploaded() ? m('span', Math.trunc(ctrl.uploaded()/ctrl.uploadTotal()*100) + '% (' + ctrl.uploaded() + ' uploaded out of ' + ctrl.uploadTotal() +')') : null
+					ctrl.uploaded() ? m('span', Math.trunc(ctrl.uploaded()/ctrl.uploadTotal()*100) + '% (' + ctrl.uploaded() + '/' + ctrl.uploadTotal() +' uploaded)') : null
 				),
 				ctrl.messages.map(displayMessage)
 			])
