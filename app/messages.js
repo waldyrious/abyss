@@ -334,7 +334,7 @@ module.exports.view = function(ctrl, args, extras) {
 		return ret;
 	}
 
-	function renderFileMessage(message) {
+	function displayMessageWithFile(message) {
 
 		if (!message.file) return;
 
@@ -388,7 +388,7 @@ module.exports.view = function(ctrl, args, extras) {
 				m('b', fromMe(message) ? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
 				': ',
 
-				message.file ? renderFileMessage(message) :
+				message.file ? displayMessageWithFile(message) :
 				// m.trust(autolinker.link(message.text).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
 				message.text
 			]
@@ -401,46 +401,11 @@ module.exports.view = function(ctrl, args, extras) {
 		error.renderError(ctrl.error),
 		// m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
 		[m('div.col-sm-3#left', [m('h3', 'Conversations'),
-				m('div', [
-					m('label', 'To: '), m('span', ' '),
-					m('br'),
-
-					ctrl.to.map(function(item, index) {
-						return m('input', {
-							style: {
-								'border-radius': '5em',
-								margin: '2px',
-								padding: '4px'
-							},
-							placeholder: 'Phone number...',
-							type: 'tel',
-							onchange: m.withAttr('value', function(value) {
-								ctrl.to[index] = value
-							}),
-							value: ctrl.to[index]
-						})
-					}),
-					m('br'),
-					m('button.btn btn-default', {
-						style: {
-							'border-radius': '10em',
-							margin: '1px'
-						},
-						onclick: ctrl.toPlus
-					}, '+'),
-					m('button.btn btn-default', {
-						style: {
-							'border-radius': '10em',
-							margin: '1px'
-						},
-						onclick: ctrl.toMinus
-					}, '-'),
-				]),
 				ctrl.conversations.map(function(grouping) {
 					return m('button.btn ', {
 						style: {
 							'border-radius': '1em',
-							cursor:'pointer',
+							cursor: 'pointer',
 							margin: '4px'
 						},
 						onclick: function() {
@@ -460,6 +425,40 @@ module.exports.view = function(ctrl, args, extras) {
 						onclick: ctrl.toggleEditMode,
 					}, ctrl.editMode() ? ' Done' : ' Edit Mode')),
 
+				m('div', [
+					m('label', 'To: '), m('span', ' '),
+					m('button.btn btn-default', {
+						style: {
+							'border-radius': '1em',
+							margin: '1px'
+						},
+						onclick: ctrl.toPlus
+					}, '+'),
+					m('button.btn btn-default', {
+						style: {
+							'border-radius': '1em',
+							margin: '1px'
+						},
+						onclick: ctrl.toMinus
+					}, '-'),
+					m('br'),
+					ctrl.to.map(function(item, index) {
+						return m('input', {
+							style: {
+								margin: '2px',
+								padding: '4px'
+							},
+							placeholder: 'Phone number...',
+							type: 'tel',
+							onchange: m.withAttr('value', function(value) {
+								ctrl.to[index] = value
+							}),
+							value: ctrl.to[index]
+						})
+					}),
+					m('br'),
+				]),
+
 				m('div.form-group', m('label', 'New Message: '), m('br'),
 					m('textarea.form-control', {
 						rows: 2,
@@ -478,7 +477,7 @@ module.exports.view = function(ctrl, args, extras) {
 						style: {
 							'margin-right': '1em'
 						}
-					}, ' Send text'),
+					}, ' Send'),
 
 					// m('label', {
 					// 	style: {
