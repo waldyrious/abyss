@@ -403,15 +403,15 @@ module.exports.view = function(ctrl, args, extras) {
 		[m('div.col-sm-3#left', [m('h3', 'Conversations'),
 				m('div', [
 					m('label', 'To: '), m('span', ' '),
-					m('button.btn btn-default', {
-						onclick: ctrl.toPlus
-					}, '+'),
-					m('button.btn btn-default', {
-						onclick: ctrl.toMinus
-					}, '-'),
 					m('br'),
+
 					ctrl.to.map(function(item, index) {
 						return m('input', {
+							style: {
+								'border-radius': '5em',
+								margin: '2px',
+								padding: '4px'
+							},
 							placeholder: 'Phone number...',
 							type: 'tel',
 							onchange: m.withAttr('value', function(value) {
@@ -419,14 +419,29 @@ module.exports.view = function(ctrl, args, extras) {
 							}),
 							value: ctrl.to[index]
 						})
-					})
+					}),
+					m('br'),
+					m('button.btn btn-default', {
+						style: {
+							'border-radius': '10em',
+							margin: '1px'
+						},
+						onclick: ctrl.toPlus
+					}, '+'),
+					m('button.btn btn-default', {
+						style: {
+							'border-radius': '10em',
+							margin: '1px'
+						},
+						onclick: ctrl.toMinus
+					}, '-'),
 				]),
-
 				ctrl.conversations.map(function(grouping) {
 					return m('button.btn ', {
 						style: {
 							'border-radius': '1em',
-							cursor:'pointer'
+							cursor:'pointer',
+							margin: '4px'
 						},
 						onclick: function() {
 							ctrl.selectGroup(grouping.group)

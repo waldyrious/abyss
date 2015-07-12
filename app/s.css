@@ -29,3 +29,7 @@ body {
 audio {
     background-color: rgb(28, 119, 199);
 }
+
+.btn {
+	box-shadow: 7px 7px 3px #888888;
+}
