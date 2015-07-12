@@ -194,6 +194,7 @@ module.exports.view = function(ctrl) {
 					m('input.form-control', {
 						placeholder: '10-digit phone number',
 						type: 'tel',
+						autofocus: true,
 						oninput: m.withAttr('value', ctrl.phoneInput),
 						value: ctrl.phoneInput()
 					}),
