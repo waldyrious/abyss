@@ -176,11 +176,12 @@ module.exports.view = function(ctrl) {
 						oninput: m.withAttr('value', ctrl.codeInput),
 						value: ctrl.codeInput()
 					}),
-					m('span.input-group-btn', m('button.btn btn-default btn-lg btn-primary', {
+					m('span.input-group-btn', m('button.btn btn-default', {
+						class: codeInputValid() ? 'btn-success' : '',
 						disabled: !codeInputValid(),
 						onclick: ctrl.submitCode
 					}, 'Submit Code')),
-					m('span.input-group-btn', m('button.btn btn-default btn-lg btn-primary', {
+					m('span.input-group-btn', m('button.btn btn-default', {
 						onclick: ctrl.cancelCode
 					}, 'Cancel'))))
 			] : [
@@ -196,7 +197,8 @@ module.exports.view = function(ctrl) {
 						oninput: m.withAttr('value', ctrl.phoneInput),
 						value: ctrl.phoneInput()
 					}),
-					m('span.input-group-btn', m('button.btn btn-default btn-lg btn-primary', {
+					m('span.input-group-btn', m('button.btn btn-default', {
+						class: phoneInputValid() ? 'btn-success' : '',
 						disabled: !phoneInputValid(),
 						onclick: ctrl.loginClick
 					}, 'Login')))
