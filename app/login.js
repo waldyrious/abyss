@@ -1,7 +1,6 @@
 'use strict';
 var m = require('mithril');
 var messages = require('./messages');
-var styler = require('./styler');
 var regsw = require('./regsw');
 var Cookies = require('cookies-js');
 var validator = require('validator');
@@ -177,13 +176,13 @@ module.exports.view = function(ctrl) {
 						oninput: m.withAttr('value', ctrl.codeInput),
 						value: ctrl.codeInput()
 					}),
-					m('span.input-group-btn', m('button', styler.buttonify({
+					m('span.input-group-btn', m('button.btn btn-default btn-lg btn-primary', {
 						disabled: !codeInputValid(),
 						onclick: ctrl.submitCode
-					}), 'Submit Code')),
-					m('span.input-group-btn', m('button', styler.buttonify({
+					}, 'Submit Code')),
+					m('span.input-group-btn', m('button.btn btn-default btn-lg btn-primary', {
 						onclick: ctrl.cancelCode
-					}), 'Cancel'))))
+					}, 'Cancel'))))
 			] : [
 				m('div', ['Just sign in with your existing mobile phone number.', ctrl.me().id]),
 				m('div.input-group', {
@@ -197,10 +196,10 @@ module.exports.view = function(ctrl) {
 						oninput: m.withAttr('value', ctrl.phoneInput),
 						value: ctrl.phoneInput()
 					}),
-					m('span.input-group-btn', m('button', styler.buttonify({
+					m('span.input-group-btn', m('button.btn btn-default btn-lg btn-primary', {
 						disabled: !phoneInputValid(),
 						onclick: ctrl.loginClick
-					}), 'Login')))
+					}, 'Login')))
 			], error.renderError(ctrl.error),
 			m('br'),
 			m('br'),

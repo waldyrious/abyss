@@ -3,7 +3,6 @@ var moment = require('moment');
 var m = require('mithril');
 var Autolinker = require('autolinker');
 var autolinker = new Autolinker();
-var styler = require('./styler');
 var error = require('./error');
 var Velocity = require('velocity-animate');
 var oboe = require('oboe');
@@ -52,7 +51,7 @@ module.exports.controller = function(args, extras) {
 
 		var xhrConfig = function(xhr) {
 			xhr = withAuth(xhr);
-		    xhr.upload.addEventListener("progress", function (ev) {
+			xhr.upload.addEventListener("progress", function(ev) {
 				self.uploaded(ev.loaded);
 				self.uploadTotal(ev.total);
 				m.redraw();
@@ -60,27 +59,25 @@ module.exports.controller = function(args, extras) {
 		}
 
 		m.request({
-		    method: "POST",
-		    url: '/api/file?group=' + encodeURIComponent(JSON.stringify(self.to))
-			+ '&type=' + encodeURIComponent(file.type)
-			+ '&lastModified=' + encodeURIComponent(file.lastModified)
-			+ '&size=' + encodeURIComponent(file.size)
-			+ '&name=' + encodeURIComponent(file.name),
-			data: data,
-			config: xhrConfig,
-		    serialize: function(data) {return data}
-		})
-		.then(function () {
-			//reset file input here
-			self.fileInput().value = '';
-			self.uploadTotal(undefined);
-			self.uploaded(undefined);
-			self.files(undefined);
-		})
-		.then(self.refresh)
+				method: "POST",
+				url: '/api/file?group=' + encodeURIComponent(JSON.stringify(self.to)) + '&type=' + encodeURIComponent(file.type) + '&lastModified=' + encodeURIComponent(file.lastModified) + '&size=' + encodeURIComponent(file.size) + '&name=' + encodeURIComponent(file.name),
+				data: data,
+				config: xhrConfig,
+				serialize: function(data) {
+					return data
+				}
+			})
+			.then(function() {
+				//reset file input here
+				self.fileInput().value = '';
+				self.uploadTotal(undefined);
+				self.uploaded(undefined);
+				self.files(undefined);
+			})
+			.then(self.refresh)
 	}
 
-	self.toggleEditMode = function () {
+	self.toggleEditMode = function() {
 
 		if (self.editMode()) {
 			self.refresh();
@@ -278,13 +275,13 @@ module.exports.view = function(ctrl, args, extras) {
 	}
 
 	function clickSend(key) {
-			sendButton.focus();
-			sendButton.click();
-			setImmediate(function () {
-				sendButton.blur();
-				textInputArea.focus();
-				m.redraw();
-			});
+		sendButton.focus();
+		sendButton.click();
+		setImmediate(function() {
+			sendButton.blur();
+			textInputArea.focus();
+			m.redraw();
+		});
 	}
 
 	function sendButtonConfig(element, isInitialized) {
@@ -426,12 +423,16 @@ module.exports.view = function(ctrl, args, extras) {
 				]),
 
 				ctrl.conversations.map(function(grouping) {
-					return m('button.btn ', styler.pointer(styler.round({
+					return m('button.btn ', {
+						style: {
+							'border-radius': '1em',
+							cursor:'pointer'
+						},
 						onclick: function() {
 							ctrl.selectGroup(grouping.group)
 						},
 						class: isEqual(flatten(grouping.group), ctrl.to) ? 'btn-success' : 'btn-default'
-					})), [simplify(grouping.group).map(function(ph) {
+					}, [simplify(grouping.group).map(function(ph) {
 						return m('div', ph + (ctrl.getNickname(ph) ? ' ' + ctrl.getNickname(ph) : ''))
 					}), ])
 				})
@@ -482,7 +483,7 @@ module.exports.view = function(ctrl, args, extras) {
 						onclick: ctrl.uploadFile,
 						config: sendButtonConfig
 					}, ' Send file'),
-					ctrl.uploaded() ? m('span', Math.trunc(ctrl.uploaded()/ctrl.uploadTotal()*100) + '% (' + ctrl.uploaded() + '/' + ctrl.uploadTotal() +' uploaded)') : null
+					ctrl.uploaded() ? m('span', Math.trunc(ctrl.uploaded() / ctrl.uploadTotal() * 100) + '% (' + ctrl.uploaded() + '/' + ctrl.uploadTotal() + ' uploaded)') : null
 				),
 				ctrl.messages.map(displayMessage)
 			])
