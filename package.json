@@ -20,6 +20,7 @@
     "cookies-js": "^1.2.1",
     "cuid": "^1.2.5",
     "event-loop-monitor": "^0.1.0",
+    "html-escaper": "^1.0.0",
     "http-proxy": "^1.11.1",
     "http2": "^3.2.0",
     "json-middleware": "^1.0.2",

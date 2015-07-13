@@ -16,6 +16,7 @@ var isEqual = require('lodash/lang/isEqual');
 var clone = require('lodash/lang/clone');
 var union = require('lodash/array/union');
 var merge = require('lodash/object/merge');
+var html = require('html-escaper');
 
 module.exports.controller = function(args, extras) {
 	var self = this;
@@ -389,8 +390,7 @@ module.exports.view = function(ctrl, args, extras) {
 				': ',
 
 				message.file ? displayMessageWithFile(message) :
-				// m.trust(autolinker.link(message.text).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
-				message.text
+					m.trust(autolinker.link(html.escape(message.text)).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
 			]
 		)
 	}
