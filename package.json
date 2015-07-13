@@ -55,6 +55,7 @@
     "stream-to-buffer": "^0.1.0",
     "superb": "^1.1.4",
     "thunkify": "^2.1.2",
+    "tmp": "0.0.26",
     "uuid": "^2.0.1",
     "validator": "^3.41.2",
     "velocity-animate": "^1.2.2",

@@ -5,3 +5,4 @@ dist/
 rethinkdb_data/
 .idea/
 npm-debug.log
+blobs/
