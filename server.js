@@ -6,6 +6,16 @@ process.on('exit', function () {
 	console.log('Process exit at ' + (new Date).toISOString());
 });
 
+const Promise = require('bluebird');
+Promise.longStackTraces();
+const co = require('co');
+require('bluebird-co');
+co.wrap = function(fn) {
+    return Promise.coroutine(fn);
+}
+//Optionally use bluebird Promises globally
+global.Promise = Promise;
+
 const fs = require('fs');
 const net = require('net');
 const app = require('./lib/app');
