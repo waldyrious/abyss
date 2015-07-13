@@ -374,6 +374,10 @@ module.exports.view = function(ctrl, args, extras) {
 
 	function displayMessage(message) {
 
+		if (!message.text) {
+			message.text = '';
+		}
+
 		return m('div', {
 				key: message.id,
 				config: fadesIn
