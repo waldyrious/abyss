@@ -3,6 +3,7 @@ var m = require('mithril');
 
 module.exports.controller = function(args, extras) {
 	var self = this;
+	self.to = [];
 
     var withAuth = function(xhr) {
         if (args.jwt()) {
@@ -43,7 +44,7 @@ module.exports.controller = function(args, extras) {
 
 		m.request({
 				method: "POST",
-				url: '/api/file?group=' + encodeURIComponent(JSON.stringify(args.to)) + '&type=' + encodeURIComponent(file.type) + '&lastModified=' + encodeURIComponent(file.lastModified) + '&size=' + encodeURIComponent(file.size) + '&name=' + encodeURIComponent(file.name),
+				url: '/api/file?group=' + encodeURIComponent(JSON.stringify(self.to)) + '&type=' + encodeURIComponent(file.type) + '&lastModified=' + encodeURIComponent(file.lastModified) + '&size=' + encodeURIComponent(file.size) + '&name=' + encodeURIComponent(file.name),
 				data: data,
 				config: xhrConfig,
 				serialize: function(data) {
@@ -63,6 +64,9 @@ module.exports.controller = function(args, extras) {
 
 module.exports.view = function(ctrl, args, extras) {
     var sendButton;
+
+	// since args.to changes, we have to pass it back to the controller, since the controller is only initialized once.
+	ctrl.to = args.to;
 
     function sendButtonConfig(element, isInitialized) {
         sendButton = element;
