@@ -4,6 +4,7 @@ var m = require('mithril');
 var Autolinker = require('autolinker');
 var autolinker = new Autolinker();
 var error = require('./error');
+var fileuploader = require('./fileuploader');
 var Velocity = require('velocity-animate');
 var oboe = require('oboe');
 var filter = require('lodash/collection/filter');
@@ -483,11 +484,11 @@ module.exports.view = function(ctrl, args, extras) {
 						}
 					}, ' Send'),
 
-					// m('label', {
-					// 	style: {
-					// 		'margin-right': '1em'
-					// 	}
-					// }, 'Send file:'),
+					m.component(fileuploader, {
+						jwt: args.jwt,
+						to: ctrl.to,
+						refresh: ctrl.refresh
+					}),
 					m('input', {
 						style: {
 							display: 'inline'
