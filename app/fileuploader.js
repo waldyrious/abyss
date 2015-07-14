@@ -40,10 +40,10 @@ module.exports.controller = function(args, extras) {
 		if (self.uploads.length === 0) {
 			return true;
 		} else {
-			for (var i =0; i<self.uploads.length; i++) {
-				console.log(self.uploads[i].xhr.readyState)
-				if (self.uploads[i].xhr.readyState !== 4)
+			for (var i = 0; i < self.uploads.length; i++) {
+				if (self.uploads[i] && self.uploads[i].xhr.readyState && self.uploads[i].xhr.readyState !== 4) {
 					return false;
+				}
 			}
 			return true;
 		}
@@ -70,7 +70,7 @@ module.exports.controller = function(args, extras) {
 					xhr = withAuth(xhr);
 					xhr.upload.addEventListener("progress", function(ev) {
 						self.uploads[index].loaded = ev.loaded;
-						// self.uploads[index].total = ev.total;
+						self.uploads[index].total = ev.total;
 						m.redraw();
 					});
 					xhr.upload.addEventListener("abort", function(ev) {
@@ -109,8 +109,8 @@ module.exports.controller = function(args, extras) {
 			.then(function() {
 				if (self.uploadsComplete()) {
 					self.fileInput().value = '';
-					args.getMessagesStreaming();
 					self.uploads = [];
+					return args.refresh();
 				}
 			})
 	}
