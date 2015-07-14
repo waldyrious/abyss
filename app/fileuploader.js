@@ -1,6 +1,7 @@
 'use strict';
 var m = require('mithril');
 var Promise = require('bluebird');
+Promise.longStackTraces();
 
 module.exports.controller = function(args, extras) {
 	var self = this;
@@ -18,6 +19,10 @@ module.exports.controller = function(args, extras) {
 
 	self.fileChange = function(ev) {
 		self.files(ev.target.files);
+	}
+
+	self.abort = function(upload) {
+		self.uploads[self.uploads.indexOf(upload)].xhr.abort();
 	}
 
 	self.uploads = [];
@@ -40,21 +45,33 @@ module.exports.controller = function(args, extras) {
 						// self.uploads[index].total = ev.total;
 						m.redraw();
 					});
+					xhr.upload.addEventListener("abort", function(ev) {
+						self.uploads[index].loaded = undefined;
+						self.uploads[index].aborted = true;
+					});
+					xhr.upload.addEventListener("error", function(err) {
+						self.uploads[index].loaded = undefined;
+						self.uploads[index].error = err;
+					});
+					self.uploads[index].xhr = xhr;
 				}
 
 				return m.request({
-					method: "POST",
-					url: '/api/file?group=' + encodeURIComponent(JSON.stringify(self.to)) + '&type=' + encodeURIComponent(file.type) + '&lastModified=' + encodeURIComponent(file.lastModified) + '&size=' + encodeURIComponent(file.size) + '&name=' + encodeURIComponent(file.name),
-					data: data,
-					config: xhrConfig,
-					serialize: function(data) {
-						return data
-					}
-				})
-				.then(function () {
-					self.uploads.splice(index, 1);
-				})
-				.then(args.refresh)
+						method: "POST",
+						url: '/api/file?group=' + encodeURIComponent(JSON.stringify(self.to)) + '&type=' + encodeURIComponent(file.type) + '&lastModified=' + encodeURIComponent(file.lastModified) + '&size=' + encodeURIComponent(file.size) + '&name=' + encodeURIComponent(file.name),
+						data: data,
+						config: xhrConfig,
+						serialize: function(data) {
+							return data
+						}
+					})
+					.then(function() {
+						self.uploads.splice(index, 1);
+						m.redraw();
+					}, function () {
+						// we handled errors with the xhr event listeners, just need to redraw now.
+						m.redraw();
+					})
 			}, {
 				concurrency: 1
 			})
@@ -62,8 +79,10 @@ module.exports.controller = function(args, extras) {
 				//reset file input here
 				self.fileInput().value = '';
 				self.files(undefined);
+				if (self.uploads.length === 0) {
+					args.refresh();
+				}
 			})
-			.then(args.refresh)
 	}
 }
 
@@ -78,18 +97,31 @@ module.exports.view = function(ctrl, args, extras) {
 	}
 
 	return m('div', {
-			style: {
-				'margin-top': '4px'
-			}
-	},[
-		m('button.btn btn-success glyphicon glyphicon-file', {
+		style: {
+			'margin-top': '4px'
+		}
+	}, [
+		m('button.btn btn-success glyphicon glyphicon-cloud-upload', {
 			disabled: ctrl.files() ? false : true,
 			onclick: ctrl.uploadFile,
 			config: sendButtonConfig
 		}, ' Send files'),
 		' ',
-		ctrl.uploads.length > 0 ? ctrl.uploads.map(function (upload) {
-			return m('div', upload.name + ' ' + Math.trunc(upload.loaded / upload.total * 100) + '% (' + upload.loaded + '/' + upload.total + ' uploaded)')
+		ctrl.uploads.length > 0 ? ctrl.uploads.map(function(upload) {
+			if (upload.err) {
+				return m('div', upload.name + ' errored.')
+			} else if (upload.aborted) {
+				return m('div', upload.name + ' aborted.')
+			} else {
+				return m('div', upload.name + ' ' + Math.trunc(upload.loaded / upload.total * 100) + '% (' + upload.loaded + '/' + upload.total + ' uploaded)',
+					' ',
+					m('button.btn btn-danger glyphicon glyphicon-stop', {
+						onclick: function() {
+							ctrl.abort(upload);
+						}
+					})
+				)
+			}
 		}) : '',
 		' ',
 		m('input', {
