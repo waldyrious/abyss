@@ -20,22 +20,23 @@ module.exports.controller = function(args, extras) {
 		self.files(ev.target.files);
 	}
 
-
-	self.uploadTotal = m.prop();
-	self.uploaded = m.prop();
+	self.uploads = [];
 	self.uploadFile = function() {
-		self.uploadTotal(0);
-		self.uploaded(0);
-
-		return Promise.map(Array.prototype.slice.call(self.files()), function(file) {
+		return Promise.map(Array.prototype.slice.call(self.files()), function(file, index) {
 				var data = new FormData();
 				data.append("file", file);
+
+				self.uploads[index] = {
+					name: file.name,
+					loaded: 0,
+					total: file.size
+				}
 
 				var xhrConfig = function(xhr) {
 					xhr = withAuth(xhr);
 					xhr.upload.addEventListener("progress", function(ev) {
-						self.uploaded(ev.loaded);
-						self.uploadTotal(ev.total);
+						self.uploads[index].loaded = ev.loaded;
+						// self.uploads[index].total = ev.total;
 						m.redraw();
 					});
 				}
@@ -56,8 +57,7 @@ module.exports.controller = function(args, extras) {
 			.then(function() {
 				//reset file input here
 				self.fileInput().value = '';
-				self.uploadTotal(undefined);
-				self.uploaded(undefined);
+				self.uploads = [];
 				self.files(undefined);
 			})
 			.then(args.refresh)
@@ -85,7 +85,9 @@ module.exports.view = function(ctrl, args, extras) {
 			config: sendButtonConfig
 		}, ' Send files'),
 		' ',
-		ctrl.uploaded() ? m('span',  Math.trunc(ctrl.uploaded() / ctrl.uploadTotal() * 100) + '% (' + ctrl.uploaded() + '/' + ctrl.uploadTotal() + ' uploaded)') : null,
+		ctrl.uploads.length > 0 ? ctrl.uploads.map(function (upload) {
+			return m('div', upload.name + ' ' + Math.trunc(upload.loaded / upload.total * 100) + '% (' + upload.loaded + '/' + upload.total + ' uploaded)')
+		}) : '',
 		' ',
 		m('input', {
 			style: {
