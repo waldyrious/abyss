@@ -23,6 +23,7 @@ module.exports.controller = function(args, extras) {
 	self.uploads = [];
 	self.uploadFile = function() {
 		return Promise.map(Array.prototype.slice.call(self.files()), function(file, index) {
+				index = index + self.uploads.length; // account for possible concurrent uploads from prior click.
 				var data = new FormData();
 				data.append("file", file);
 
@@ -50,6 +51,9 @@ module.exports.controller = function(args, extras) {
 						return data
 					}
 				})
+				.then(function () {
+					self.uploads.splice(index, 1);
+				})
 				.then(args.refresh)
 			}, {
 				concurrency: 1
@@ -57,7 +61,6 @@ module.exports.controller = function(args, extras) {
 			.then(function() {
 				//reset file input here
 				self.fileInput().value = '';
-				self.uploads = [];
 				self.files(undefined);
 			})
 			.then(args.refresh)
