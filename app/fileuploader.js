@@ -5,15 +5,15 @@ module.exports.controller = function(args, extras) {
 	var self = this;
 	self.to = [];
 
-    var withAuth = function(xhr) {
-        if (args.jwt()) {
-            xhr.setRequestHeader('Authorization', 'Bearer ' + args.jwt());
-        }
-        return xhr;
-    }
+	var withAuth = function(xhr) {
+		if (args.jwt()) {
+			xhr.setRequestHeader('Authorization', 'Bearer ' + args.jwt());
+		}
+		return xhr;
+	}
 
 	self.files = m.prop();
-    self.fileInput = m.prop();
+	self.fileInput = m.prop();
 
 	self.fileChange = function(ev) {
 		self.files(ev.target.files);
@@ -63,14 +63,14 @@ module.exports.controller = function(args, extras) {
 }
 
 module.exports.view = function(ctrl, args, extras) {
-    var sendButton;
+	var sendButton;
 
 	// since args.to changes, we have to pass it back to the controller, since the controller is only initialized once.
 	ctrl.to = args.to;
 
-    function sendButtonConfig(element, isInitialized) {
-        sendButton = element;
-    }
+	function sendButtonConfig(element, isInitialized) {
+		sendButton = element;
+	}
 
 	return m('div', [
 		m('button.btn btn-success glyphicon glyphicon-file', {
@@ -79,13 +79,13 @@ module.exports.view = function(ctrl, args, extras) {
 			config: sendButtonConfig
 		}, ' Send file'),
 		ctrl.uploaded() ? m('span', ' ' + Math.trunc(ctrl.uploaded() / ctrl.uploadTotal() * 100) + '% (' + ctrl.uploaded() + '/' + ctrl.uploadTotal() + ' uploaded)') : null,
-        m('input', {
-    			style: {
-    				display: 'inline'
-    			},
-    			type: 'file',
-    			config: ctrl.fileInput,
-    			onchange: ctrl.fileChange
-    	})
+		m('input', {
+			style: {
+				display: 'inline'
+			},
+			type: 'file',
+			config: ctrl.fileInput,
+			onchange: ctrl.fileChange
+		})
 	])
 }
