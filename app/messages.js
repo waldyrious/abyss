@@ -1,12 +1,16 @@
 'use strict';
 var moment = require('moment');
 var m = require('mithril');
+
+// auto convert links to HTML tags
 var Autolinker = require('autolinker');
 var autolinker = new Autolinker();
-var error = require('./error');
-var fileuploader = require('./fileuploader');
 var Velocity = require('velocity-animate');
+
+// streaming JSON library
 var oboe = require('oboe');
+
+// lodash modules
 var filter = require('lodash/collection/filter');
 var flatten = require('lodash/array/flatten');
 var uniq = require('lodash/array/uniq');
@@ -19,6 +23,11 @@ var union = require('lodash/array/union');
 var merge = require('lodash/object/merge');
 var html = require('html-escaper');
 
+// my custom mithril components
+var error = require('./error');
+var fileuploader = require('./fileuploader');
+
+
 module.exports.controller = function(args, extras) {
 	var self = this;
 	self.working = m.prop(false);
@@ -28,65 +37,18 @@ module.exports.controller = function(args, extras) {
 	self.nicknames = {};
 	self.to = [''];
 	self.message = m.prop('');
-	self.fileInput = m.prop();
 	self.error = error.ErrorHolder();
 
 	self.editMode = m.prop(false);
 
-	self.files = m.prop();
-	self.fileChange = function(ev) {
-		self.files(ev.target.files);
-	}
-
-	self.uploadTotal = m.prop();
-	self.uploaded = m.prop();
-	self.uploadFile = function() {
-		self.uploadTotal(0);
-		self.uploaded(0);
-
-		var fileList = self.files();
-
-		var data = new FormData();
-		var file = fileList[0];
-
-		data.append("file", file);
-
-		var xhrConfig = function(xhr) {
-			xhr = withAuth(xhr);
-			xhr.upload.addEventListener("progress", function(ev) {
-				self.uploaded(ev.loaded);
-				self.uploadTotal(ev.total);
-				m.redraw();
-			});
-		}
-
-		m.request({
-				method: "POST",
-				url: '/api/file?group=' + encodeURIComponent(JSON.stringify(self.to)) + '&type=' + encodeURIComponent(file.type) + '&lastModified=' + encodeURIComponent(file.lastModified) + '&size=' + encodeURIComponent(file.size) + '&name=' + encodeURIComponent(file.name),
-				data: data,
-				config: xhrConfig,
-				serialize: function(data) {
-					return data
-				}
-			})
-			.then(function() {
-				//reset file input here
-				self.fileInput().value = '';
-				self.uploadTotal(undefined);
-				self.uploaded(undefined);
-				self.files(undefined);
-			})
-			.then(self.refresh)
-	}
-
 	self.toggleEditMode = function() {
-
 		if (self.editMode()) {
 			self.refresh();
 		}
 		self.editMode(!self.editMode());
 	}
 
+	// adds JWT to XHR
 	var withAuth = function(xhr) {
 		if (args.jwt()) {
 			xhr.setRequestHeader('Authorization', 'Bearer ' + args.jwt());
@@ -94,6 +56,7 @@ module.exports.controller = function(args, extras) {
 		return xhr;
 	}
 
+	// used to add Auth header to Oboe requests
 	var oboeAuth = function() {
 		return {
 			'Authorization': 'Bearer ' + args.jwt()
@@ -130,6 +93,7 @@ module.exports.controller = function(args, extras) {
 		return message.from === args.me().id;
 	}
 
+	// run a function with setImmediate, then tell mithril to redraw. maybe it should just use m.redraw()
 	function immediate(fn) {
 		m.startComputation();
 		setImmediate(function() {
@@ -212,7 +176,7 @@ module.exports.controller = function(args, extras) {
 	};
 
 	self.getMessagesStreaming = function() {
-		// Stream in first 10 messages and try to render them ASAP as we load the rest
+		// Stream in first 10 messages and try to render them ASAP, then we load the rest
 		var count = 0;
 		var show = 9;
 
@@ -272,7 +236,7 @@ module.exports.view = function(ctrl, args, extras) {
 	function withKey(key, callback) {
 		return function(e) {
 			if (key == e.keyCode && e.ctrlKey) callback(key);
-			else m.redraw.strategy("none");
+			else m.redraw.strategy("none"); // don't do a redraw, the default is to redraw in event listeners.
 		}
 	}
 
@@ -488,21 +452,7 @@ module.exports.view = function(ctrl, args, extras) {
 						jwt: args.jwt,
 						to: ctrl.to,
 						refresh: ctrl.refresh
-					}),
-					m('input', {
-						style: {
-							display: 'inline'
-						},
-						type: 'file',
-						config: ctrl.fileInput,
-						onchange: ctrl.fileChange
-					}),
-					m('button.btn btn-success glyphicon glyphicon-file', {
-						disabled: ctrl.files() ? false : true,
-						onclick: ctrl.uploadFile,
-						config: sendButtonConfig
-					}, ' Send file'),
-					ctrl.uploaded() ? m('span', Math.trunc(ctrl.uploaded() / ctrl.uploadTotal() * 100) + '% (' + ctrl.uploaded() + '/' + ctrl.uploadTotal() + ' uploaded)') : null
+					})
 				),
 				ctrl.messages.map(displayMessage)
 			])
