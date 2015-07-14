@@ -16,18 +16,46 @@ module.exports.controller = function(args, extras) {
 
 	self.files = m.prop();
 	self.fileInput = m.prop();
+	self.uploads = [];
 
 	self.fileChange = function(ev) {
-		self.files(ev.target.files);
+		if (ev.target.files.length === 0) {
+			self.files(null);
+		} else {
+			self.files(ev.target.files);
+		}
 	}
 
 	self.abort = function(upload) {
-		self.uploads[self.uploads.indexOf(upload)].xhr.abort();
+		var index = self.uploads.indexOf(upload);
+		var xhr = upload.xhr;
+		if (xhr.readyState === 4 || xhr.readyState === 0) {
+			self.uploads.splice(index, 1);
+		} else {
+			xhr.abort();
+		}
 	}
 
-	self.uploads = [];
+	self.uploadsComplete = function () {
+		if (self.uploads.length === 0) {
+			return true;
+		} else {
+			for (var i =0; i<self.uploads.length; i++) {
+				console.log(self.uploads[i].xhr.readyState)
+				if (self.uploads[i].xhr.readyState !== 4)
+					return false;
+			}
+			return true;
+		}
+	}
+
+	self.remove = function (upload) {
+		var index = self.uploads.indexOf(upload);
+		self.uploads.splice(index, 1);
+	}
+
 	self.uploadFile = function() {
-		return Promise.map(Array.prototype.slice.call(self.files()), function(file, index) {
+		return Promise.map(Array.prototype.slice.call(self.fileInput().files), function(file, index) {
 				index = index + self.uploads.length; // account for possible concurrent uploads from prior click.
 				var data = new FormData();
 				data.append("file", file);
@@ -48,10 +76,12 @@ module.exports.controller = function(args, extras) {
 					xhr.upload.addEventListener("abort", function(ev) {
 						self.uploads[index].loaded = undefined;
 						self.uploads[index].aborted = true;
+						m.redraw();
 					});
 					xhr.upload.addEventListener("error", function(err) {
 						self.uploads[index].loaded = undefined;
 						self.uploads[index].error = err;
+						m.redraw();
 					});
 					self.uploads[index].xhr = xhr;
 				}
@@ -66,21 +96,21 @@ module.exports.controller = function(args, extras) {
 						}
 					})
 					.then(function() {
-						self.uploads.splice(index, 1);
-						m.redraw();
+						// setTimeout(function () {
+						// 	self.uploads.splice(index, 1);
+						// 	m.redraw();
+						// }, 500);
 					}, function () {
-						// we handled errors with the xhr event listeners, just need to redraw now.
-						m.redraw();
+						// we handled errors with the xhr event listeners
 					})
 			}, {
 				concurrency: 1
 			})
 			.then(function() {
-				//reset file input here
-				self.fileInput().value = '';
-				self.files(undefined);
-				if (self.uploads.length === 0) {
-					args.refresh();
+				if (self.uploadsComplete()) {
+					self.fileInput().value = '';
+					args.getMessagesStreaming();
+					self.uploads = [];
 				}
 			})
 	}
@@ -111,7 +141,12 @@ module.exports.view = function(ctrl, args, extras) {
 			if (upload.err) {
 				return m('div', upload.name + ' errored.')
 			} else if (upload.aborted) {
-				return m('div', upload.name + ' aborted.')
+				return m('div', upload.name + ' aborted.',
+					m('button.btn btn-default glyphicon glyphicon-remove', {
+						onclick: function() {
+							ctrl.remove(upload);
+						}
+					}))
 			} else {
 				return m('div', upload.name + ' ' + Math.trunc(upload.loaded / upload.total * 100) + '% (' + upload.loaded + '/' + upload.total + ' uploaded)',
 					' ',

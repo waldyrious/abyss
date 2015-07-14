@@ -451,7 +451,8 @@ module.exports.view = function(ctrl, args, extras) {
 					m.component(fileuploader, {
 						jwt: args.jwt,
 						to: ctrl.to,
-						refresh: ctrl.refresh
+						refresh: ctrl.refresh,
+						getMessagesStreaming: ctrl.getMessagesStreaming
 					})
 				),
 				ctrl.messages.map(displayMessage)

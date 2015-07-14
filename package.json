@@ -67,7 +67,7 @@
   },
   "devDependencies": {
     "base64-font-loader": "0.0.2",
-    "css-loader": "^0.15.2",
+    "css-loader": "^0.15.3",
     "exports-loader": "^0.6.2",
     "file-loader": "^0.8.4",
     "jshint": "^2.8.0",
