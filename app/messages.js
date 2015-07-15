@@ -27,10 +27,26 @@ var html = require('html-escaper');
 var error = require('./error');
 var fileuploader = require('./fileuploader');
 
+// spinner
+var spinner = require('./spinner');
+
 
 module.exports.controller = function(args, extras) {
 	var self = this;
-	self.working = m.prop(false);
+	self.working = (function () {
+		var working = true;
+		return function (bool) {
+			console.log('Was working ' + working + ' now working ' + bool);
+			if (working !== bool) {
+				if (bool) {
+					spinner.spin();
+				} else {
+					spinner.stop();
+				}
+				working = bool;
+			}
+		}
+	})();
 
 	self.messages = [];
 	self.conversations = [];
@@ -149,18 +165,22 @@ module.exports.controller = function(args, extras) {
 			})
 			.then(function() {
 				self.message('');
-				self.working(true);
+				self.working(false);
 			})
 			.then(self.refresh, self.error)
 	};
 
 	self.getMessages = function() {
+		self.working(true);
 		m.request({
 				method: 'GET',
 				config: withAuth,
 				url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))
 			})
 			.then(self.setMessages, self.error)
+			.then(function () {
+				self.working(false);
+			})
 	};
 
 	self.refresh = self.getConversations = function() {
@@ -171,8 +191,12 @@ module.exports.controller = function(args, extras) {
 				background: false,
 				url: '/api/conversations'
 			})
+
 			.then(self.setConversations, self.error)
 			.then(self.getMessagesStreaming, self.error)
+			.then(function () {
+				self.working(false);
+			})
 	};
 
 	self.getMessagesStreaming = function() {
@@ -181,6 +205,7 @@ module.exports.controller = function(args, extras) {
 		var show = 9;
 
 		m.startComputation();
+		self.working(true);
 		self.messages = [];
 		oboe({
 				url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to)),
@@ -192,10 +217,10 @@ module.exports.controller = function(args, extras) {
 					m.endComputation();
 					m.startComputation();
 				}
+				self.working(false);
 				return oboe.drop;
 			})
 			.done(function() {
-				self.working(false);
 				m.endComputation();
 			});
 	};
@@ -209,6 +234,9 @@ module.exports.controller = function(args, extras) {
 				url: '/api/messages'
 			})
 			.then(self.refresh, self.error)
+			.then(function () {
+				self.working(false);
+			})
 	};
 
 	self.delete = function(message) {
@@ -218,6 +246,9 @@ module.exports.controller = function(args, extras) {
 				config: withAuth,
 				background: false,
 				url: '/api/messages/' + encodeURIComponent(message.id)
+			})
+			.then(function () {
+				self.working(false);
 			})
 			// .then(function () {
 			// 	self.messages.splice(self.messages.indexOf(message), 1);
