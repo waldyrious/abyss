@@ -20,7 +20,7 @@ var opts = {
 , left: '50%' // Left position relative to parent
 , shadow: true // Whether to render a shadow
 , hwaccel: true // Whether to use hardware acceleration
-, position: 'absolute' // Element positioning
+, position: 'fixed' // Element positioning
 }
 
 var target = document.getElementById('spinner');
