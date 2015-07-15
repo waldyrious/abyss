@@ -3,6 +3,8 @@ var m = require('mithril');
 var Promise = require('bluebird');
 Promise.longStackTraces();
 
+var uploads = [];
+
 module.exports.controller = function(args, extras) {
 	var self = this;
 	self.to = [];
@@ -16,7 +18,7 @@ module.exports.controller = function(args, extras) {
 
 	self.files = m.prop();
 	self.fileInput = m.prop();
-	self.uploads = [];
+	self.uploads = uploads; // keep outside of controller, to preserve across controller reinitialization.
 
 	self.fileChange = function(ev) {
 		if (ev.target.files.length === 0) {
