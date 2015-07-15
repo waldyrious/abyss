@@ -28,7 +28,7 @@ module.exports.controller = function(args, extras) {
 		}
 	}
 
-	self.abort = function(upload) {
+	self.abortOrClear = function(upload) {
 		var index = self.uploads.indexOf(upload);
 		var xhr = upload.xhr;
 		if (xhr.readyState === 4 || xhr.readyState === 0) {
@@ -62,30 +62,36 @@ module.exports.controller = function(args, extras) {
 				var data = new FormData();
 				data.append("file", file);
 
-				self.uploads[index] = {
+				var upload = {
 					name: file.name,
 					loaded: 0,
 					total: file.size
 				}
 
+				self.uploads.push(upload);
+
 				var xhrConfig = function(xhr) {
 					xhr = withAuth(xhr);
+					self.uploads[self.uploads.indexOf(upload)].xhr = xhr;
 					xhr.upload.addEventListener("progress", function(ev) {
-						self.uploads[index].loaded = ev.loaded;
-						self.uploads[index].total = ev.total;
+						self.uploads[self.uploads.indexOf(upload)].loaded = ev.loaded;
+						self.uploads[self.uploads.indexOf(upload)].total = ev.total;
 						m.redraw();
 					});
 					xhr.upload.addEventListener("abort", function(ev) {
-						self.uploads[index].loaded = undefined;
-						self.uploads[index].aborted = true;
+						self.uploads[self.uploads.indexOf(upload)].loaded = undefined;
+						self.uploads[self.uploads.indexOf(upload)].aborted = true;
 						m.redraw();
 					});
 					xhr.upload.addEventListener("error", function(err) {
-						self.uploads[index].loaded = undefined;
-						self.uploads[index].error = err;
+						self.uploads[self.uploads.indexOf(upload)].loaded = undefined;
+						self.uploads[self.uploads.indexOf(upload)].error = err;
 						m.redraw();
 					});
-					self.uploads[index].xhr = xhr;
+					xhr.upload.addEventListener("load", function(err) {
+						self.uploads[self.uploads.indexOf(upload)].done = true;
+						m.redraw();
+					});
 				}
 
 				return m.request({
@@ -152,9 +158,10 @@ module.exports.view = function(ctrl, args, extras) {
 			} else {
 				return m('div', upload.name + ' ' + Math.trunc(upload.loaded / upload.total * 100) + '% (' + upload.loaded + '/' + upload.total + ' uploaded)',
 					' ',
-					m('button.btn btn-danger glyphicon glyphicon-stop', {
+					m('button.btn glyphicon', {
+						class: upload.done ? 'glyphicon-ok btn-success' : 'glyphicon-stop btn-danger',
 						onclick: function() {
-							ctrl.abort(upload);
+							ctrl.abortOrClear(upload);
 						}
 					})
 				)
