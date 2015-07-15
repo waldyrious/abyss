@@ -2,12 +2,12 @@
 @media (min-width: 768px) {
 	#left {
 		overflow-y: scroll;
-		height: 100vh;
+		height: 92vh;
 	}
 
 	#right {
 		overflow-y: scroll;
-		height: 100vh;
+		height: 92vh;
 	}
 /*
 	.faq {
