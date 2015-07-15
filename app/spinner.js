@@ -23,14 +23,14 @@ var opts = {
 , position: 'fixed' // Element positioning
 }
 
-var target = document.getElementById('spinner');
-var spinner = new Spinner(opts).spin(target);
-var count = 1;
+var spinner;
+var count = 0;
 
 module.exports = {
     spin: function () {
         count++;
         if (count === 1) {
+            var target = document.getElementById('spinner');
             spinner = new Spinner(opts).spin(target);
         }
     },

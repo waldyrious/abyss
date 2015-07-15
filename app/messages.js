@@ -34,9 +34,8 @@ var spinner = require('./spinner');
 module.exports.controller = function(args, extras) {
 	var self = this;
 	self.working = (function () {
-		var working = true;
+		var working = false;
 		return function (bool) {
-			console.log('Was working ' + working + ' now working ' + bool);
 			if (working !== bool) {
 				if (bool) {
 					spinner.spin();
