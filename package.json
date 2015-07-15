@@ -25,6 +25,7 @@
     "html-escaper": "^1.0.0",
     "http-proxy": "^1.11.1",
     "http2": "^3.2.0",
+    "intl": "^1.0.0",
     "json-middleware": "^1.0.2",
     "jsonwebtoken": "^5.0.2",
     "koa": "^0.21.0",
