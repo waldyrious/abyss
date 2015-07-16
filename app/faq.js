@@ -10,7 +10,7 @@ module.exports.view = function(ctrl, args, extras) {
 		m('li', 'A. Usernames are hard to remember. Passwords are a little easier (perhaps you cleverly use the same one on every site). However, according to our scientific research, 55% of mobile phone users can recall their own phone number on command. We like those odds.'),
 		m('br'),
 		m('li', 'Q. How does message erasing work?'),
-		m('li', 'A. Pressing the trash can looking button next to a message will instantly erase it. Now, the way this site works is, senders and recipients always see the same copy of the message. So if the sender or recipient erases the message, it\'s gone for good!'),
+		m('li', 'A. Pressing the eraser looking button next to a message will instantly erase it. Now, the way this site works is, senders and recipients always see the same copy of the message. So if the sender or recipient erases the message, it\'s gone for good!'),
 		m('br'),
 		m('li', 'Q. How does erasing work with group messages?'),
 		m('li', 'A. If you sent the message, it\'s gone for everybody. If you received the message, you are removed from the recipients list and no longer see the message. The other recipients will still see the message until the sender or all of the recipients erases it.'),
