@@ -56,6 +56,21 @@ module.exports.controller = function(args, extras) {
 
 	self.editMode = m.prop(false);
 
+	self.page = m.prop(0);
+	self.per_page = m.prop(200);
+
+	self.nextPage = function () {
+		self.page(self.page() + 1);
+		self.getMessagesStreaming()
+	}
+
+	self.previousPage = function () {
+		if (self.page() !== 0) {
+			self.page(self.page() - 1);
+			self.getMessagesStreaming()
+		}
+	}
+
 	self.toggleEditMode = function() {
 		if (self.editMode()) {
 			self.refresh();
@@ -89,6 +104,7 @@ module.exports.controller = function(args, extras) {
 	}
 
 	self.selectGroup = function(group) {
+		self.page(0);
 		self.to = clone(group);
 		self.getMessagesStreaming();
 	};
@@ -105,6 +121,7 @@ module.exports.controller = function(args, extras) {
 	self.selectFirstGroup = function() {
 		return; // disable for now, might be nicer from a UI perspe
 		if (isEqual(self.to, ['']) && self.conversations[0]) {
+			self.page(0);
 			self.to = clone(self.conversations[0].group);
 			self.getMessagesStreaming();
 		}
@@ -180,7 +197,7 @@ module.exports.controller = function(args, extras) {
 		m.request({
 				method: 'GET',
 				config: withAuth,
-				url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))
+				url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to)) + '&page='+self.page()+'&per_page='+self.per_page()
 			})
 			.then(function (response) {
 				self.working(false);
@@ -216,7 +233,7 @@ module.exports.controller = function(args, extras) {
 		self.working(true);
 		self.messages = [];
 		oboe({
-				url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to)),
+				url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to)) + '&page='+self.page()+'&per_page='+self.per_page(),
 				headers: oboeAuth()
 			}).node('![*]', function(item) {
 				self.messages.push(item);
@@ -500,7 +517,20 @@ module.exports.view = function(ctrl, args, extras) {
 						getMessagesStreaming: ctrl.getMessagesStreaming
 					})
 				),
-				ctrl.messages.map(displayMessage)
+				ctrl.messages.map(displayMessage),
+				m('button.btn btn-default glyphicon glyphicon-step-backward', {
+					onclick: ctrl.previousPage,
+					style: {
+						'margin-right': '1em'
+					}
+				}, ' Previous Page'),
+				m('button.btn btn-default glyphicon glyphicon-step-forward', {
+					onclick: ctrl.nextPage,
+					style: {
+						'margin-right': '1em'
+					}
+				}, ' Next Page'),
+
 			])
 		]
 	])
