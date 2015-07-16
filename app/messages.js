@@ -57,7 +57,7 @@ module.exports.controller = function(args, extras) {
 	self.editMode = m.prop(false);
 
 	self.page = m.prop(0);
-	self.per_page = m.prop(200);
+	self.per_page = m.prop(50);
 
 	self.nextPage = function () {
 		self.page(self.page() + 1);
@@ -69,6 +69,11 @@ module.exports.controller = function(args, extras) {
 			self.page(self.page() - 1);
 			self.getMessagesStreaming()
 		}
+	}
+
+	self.allPages = function () {
+		self.page(null);
+		self.getMessagesStreaming()
 	}
 
 	self.toggleEditMode = function() {
@@ -197,7 +202,7 @@ module.exports.controller = function(args, extras) {
 		m.request({
 				method: 'GET',
 				config: withAuth,
-				url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to)) + '&page='+self.page()+'&per_page='+self.per_page()
+				url: getMessagesUrl()
 			})
 			.then(function (response) {
 				self.working(false);
@@ -224,6 +229,14 @@ module.exports.controller = function(args, extras) {
 
 	};
 
+	function getMessagesUrl() {
+		var url = '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to));
+		if (self.page() !== null) {
+			url += '&page='+self.page()+'&per_page='+self.per_page();
+		}
+		return url;
+	}
+
 	self.getMessagesStreaming = function() {
 		// Stream in first 10 messages and try to render them ASAP, then we load the rest
 		var count = 0;
@@ -233,7 +246,7 @@ module.exports.controller = function(args, extras) {
 		self.working(true);
 		self.messages = [];
 		oboe({
-				url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to)) + '&page='+self.page()+'&per_page='+self.per_page(),
+				url: getMessagesUrl(),
 				headers: oboeAuth()
 			}).node('![*]', function(item) {
 				self.messages.push(item);
@@ -518,18 +531,24 @@ module.exports.view = function(ctrl, args, extras) {
 					})
 				),
 				ctrl.messages.map(displayMessage),
-				m('button.btn btn-default glyphicon glyphicon-step-backward', {
+				m('button.btn btn-default glyphicon glyphicon-triangle-left', {
 					onclick: ctrl.previousPage,
 					style: {
 						'margin-right': '1em'
 					}
 				}, ' Previous Page'),
-				m('button.btn btn-default glyphicon glyphicon-step-forward', {
+				m('button.btn btn-default glyphicon glyphicon-triangle-right', {
 					onclick: ctrl.nextPage,
 					style: {
 						'margin-right': '1em'
 					}
 				}, ' Next Page'),
+				m('button.btn btn-default glyphicon glyphicon-triangle-bottom', {
+					onclick: ctrl.allPages,
+					style: {
+						'margin-right': '1em'
+					}
+				}, ' View All'),
 
 			])
 		]
