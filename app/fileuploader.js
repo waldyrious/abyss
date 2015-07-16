@@ -3,7 +3,7 @@ var m = require('mithril');
 var Promise = require('bluebird');
 Promise.longStackTraces();
 
-window.IntlPolyfill = require('intl');
+require('intl');
 
 var uploads = [];
 

@@ -190,12 +190,13 @@ module.exports.controller = function(args, extras) {
 				background: false,
 				url: '/api/conversations'
 			})
-
+			.then(function (result) {
+				self.working(false);
+				return result;
+			})
 			.then(self.setConversations, self.error)
 			.then(self.getMessagesStreaming, self.error)
-			.then(function () {
-				self.working(false);
-			})
+
 	};
 
 	self.getMessagesStreaming = function() {
@@ -216,10 +217,10 @@ module.exports.controller = function(args, extras) {
 					m.endComputation();
 					m.startComputation();
 				}
-				self.working(false);
 				return oboe.drop;
 			})
 			.done(function() {
+				self.working(false);
 				m.endComputation();
 			});
 	};
