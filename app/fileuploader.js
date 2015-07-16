@@ -3,7 +3,7 @@ var m = require('mithril');
 var Promise = require('bluebird');
 Promise.longStackTraces();
 
-require('intl');
+// require('intl');
 
 var uploads = [];
 
@@ -11,7 +11,16 @@ module.exports.controller = function(args, extras) {
 	var self = this;
 	self.to = [];
 
-	self.nf = new Intl.NumberFormat();
+	if (window.Intl) {
+		var inf = new Intl.NumberFormat();
+		self.nf = function (num) {
+			return inf.format(num);
+		}
+	} else {
+		self.nf = function (num) {
+			return num;
+		}
+	}
 
 	var withAuth = function(xhr) {
 		if (args.jwt()) {
@@ -160,7 +169,7 @@ module.exports.view = function(ctrl, args, extras) {
 						}
 					}))
 			} else {
-				return m('div', upload.name + ' ' + Math.trunc(upload.loaded / upload.total * 100) + '% (' + ctrl.nf.format(upload.loaded) + ' / ' + ctrl.nf.format(upload.total) + ' uploaded)',
+				return m('div', upload.name + ' ' + Math.trunc(upload.loaded / upload.total * 100) + '% (' + ctrl.nf(upload.loaded) + ' / ' + ctrl.nf(upload.total) + ' uploaded)',
 					' ',
 					m('button.btn glyphicon', {
 						class: upload.done ? 'glyphicon-ok btn-success' : 'glyphicon-stop btn-danger',
