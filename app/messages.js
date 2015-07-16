@@ -93,11 +93,16 @@ module.exports.controller = function(args, extras) {
 		self.getMessagesStreaming();
 	};
 
+	self.newMessage = function () {
+		self.to = [''];
+	}
+
 	self.reselectGroup = function() {
 		self.getMessagesStreaming();
 	};
 
 	self.selectFirstGroup = function() {
+		return; // disable for now, might be nicer from a UI perspe
 		if (isEqual(self.to, ['']) && self.conversations[0]) {
 			self.to = clone(self.conversations[0].group);
 			self.getMessagesStreaming();
@@ -420,12 +425,18 @@ module.exports.view = function(ctrl, args, extras) {
 				})
 			]),
 			m('div.col-sm-9#right', [m('h3', 'Messages ',
+
+				m('.input-group',
 					m('button.btn btn-default glyphicon glyphicon-refresh', {
 						onclick: ctrl.refresh
 					}, ' Refresh'),
+					m('button.btn btn-default glyphicon glyphicon-envelope', {
+						onclick: ctrl.newMessage,
+					}, ' New Message'),
 					m('button.btn btn-default glyphicon glyphicon-edit', {
 						onclick: ctrl.toggleEditMode,
-					}, ctrl.editMode() ? ' Done' : ' Edit Mode')),
+					}, ctrl.editMode() ? ' Done' : ' Show Actions')
+				)),
 
 				m('div', [
 					m('label', 'To: '), m('span', ' '),
