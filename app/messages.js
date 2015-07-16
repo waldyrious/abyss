@@ -176,10 +176,12 @@ module.exports.controller = function(args, extras) {
 				config: withAuth,
 				url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))
 			})
-			.then(self.setMessages, self.error)
-			.then(function () {
+			.then(function (response) {
 				self.working(false);
+				return response;
 			})
+			.then(self.setMessages, self.error)
+
 	};
 
 	self.refresh = self.getConversations = function() {
