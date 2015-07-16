@@ -8,24 +8,28 @@ self.addEventListener('push', function (event) {
 
 	clients.matchAll({includeUncontrolled: true}).then(function (clients) {
 		console.log('outer clients');
-		console.log(clients);
+		console.log(clients)
+		windowclients = clients;
+
 		for (var i = 0; i < clients.length; i++) {
 			var client = clients[i];
-			console.log('clients ' + i);
+			console.log('client: ' + i);
 			console.log(client);
 			if (client['postMesssage']) {
 				client['postMesssage']('yourmessage');
 			}
+
+			// https://developer.mozilla.org/en-US/docs/Web/API/WindowClient
+			if (client.focus) {
+				client.focus();
+			}
 		}
+
 	});
 
-	event.waitUntil(self.registration.showNotification(title, {
+	console.log(event.waitUntil(self.registration.showNotification(title, {
 		body: body,
 		//      icon: icon,
 		tag: tag
-	}));
+	})));
 });
-
-notification.on('click', function () {
-	window.focus();
-})
