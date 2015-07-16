@@ -95,6 +95,7 @@ module.exports.controller = function(args, extras) {
 
 	self.newMessage = function () {
 		self.to = [''];
+		self.reselectGroup();
 	}
 
 	self.reselectGroup = function() {
@@ -145,7 +146,7 @@ module.exports.controller = function(args, extras) {
 	self.toMinus = function() {
 		self.to.pop();
 
-		if (self.to.length === 0) {
+		if (self.to.length === -1) {
 			self.to.push('');
 			self.message('');
 		}
