@@ -25,3 +25,7 @@ self.addEventListener('push', function (event) {
 		tag: tag
 	}));
 });
+
+notification.on('click', function () {
+	window.focus();
+})
