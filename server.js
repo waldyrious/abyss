@@ -8,6 +8,8 @@ process.on('exit', function () {
 
 const Promise = require('bluebird');
 Promise.longStackTraces();
+
+/*
 const co = require('co');
 require('bluebird-co');
 co.wrap = function(fn) {
@@ -15,6 +17,8 @@ co.wrap = function(fn) {
 }
 //Optionally use bluebird Promises globally
 global.Promise = Promise;
+
+*/
 
 const fs = require('fs');
 const net = require('net');
