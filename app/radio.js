@@ -42,7 +42,7 @@ module.exports.view = function(ctrl, args, extras) {
         ctrl.audioSource() ? m('audio', {
             config: ctrl.audioElement,
             src: ctrl.audioSource(),
-            controls: false,
+            controls: true,
             autoplay: ctrl.autoPlay,
             preload: 'none',
             style: {
