@@ -43,3 +43,7 @@ audio {
 #left {
 	text-align: center
 }
+
+#right {
+	word-wrap: break-word; /* prevent long URLs from widening the view. */
+}
