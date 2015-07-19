@@ -242,7 +242,7 @@ module.exports.view = function(ctrl) {
 						float: 'right',
 						'margin-right': '1em'
 					}
-				}, 'Featuring LoungeTek Radio'),
+				}, 'Featuring ', m('a', { href: 'http://loungetek.com/radio/', target: '_blank' }, 'LoungeTek Radio')),
 			])),
 
 			m.component(messages, {
