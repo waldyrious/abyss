@@ -158,12 +158,6 @@ module.exports.view = function(ctrl, args, extras) {
 			'margin-top': '4px'
 		}
 	}, [
-		m('button.btn btn-success glyphicon glyphicon-cloud-upload', {
-			disabled: ctrl.files() ? false : true,
-			onclick: ctrl.uploadFile,
-			config: sendButtonConfig
-		}, ' Send files'),
-		' ',
 		ctrl.uploads.length > 0 ? ctrl.uploads.map(function(upload) {
 			if (upload.err) {
 				return m('div', upload.name + ' errored.')
@@ -186,6 +180,12 @@ module.exports.view = function(ctrl, args, extras) {
 				)
 			}
 		}) : '',
+		m('button.btn btn-success glyphicon glyphicon-cloud-upload', {
+			disabled: ctrl.files() ? false : true,
+			onclick: ctrl.uploadFile,
+			config: sendButtonConfig
+		}, ' Send files'),
+
 		' ',
 		m('input', {
 			style: {

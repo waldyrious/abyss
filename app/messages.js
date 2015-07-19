@@ -522,7 +522,10 @@ module.exports.view = function(ctrl, args, extras) {
 						style: {
 							'margin-right': '1em'
 						}
-					}, ' Send'),
+					}, ' Send message'),
+
+					m('br'),m('br'),
+					m('label', 'Upload Files: '), m('br'),
 
 					m.component(fileuploader, {
 						jwt: args.jwt,
