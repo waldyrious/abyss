@@ -137,6 +137,12 @@ module.exports.controller = function(args, extras) {
 	}
 }
 
+function truncate(number) {
+    return number > 0
+         ? Math.floor(number)
+         : Math.ceil(number);
+}
+
 module.exports.view = function(ctrl, args, extras) {
 	var sendButton;
 
@@ -169,7 +175,7 @@ module.exports.view = function(ctrl, args, extras) {
 						}
 					}))
 			} else {
-				return m('div', upload.name + ' ' + Math.trunc(upload.loaded / upload.total * 100) + '% (' + ctrl.nf(upload.loaded) + ' / ' + ctrl.nf(upload.total) + ' uploaded)',
+				return m('div', upload.name + ' ' + truncate(upload.loaded / upload.total * 100) + '% (' + ctrl.nf(upload.loaded) + ' / ' + ctrl.nf(upload.total) + ' uploaded)',
 					' ',
 					m('button.btn glyphicon', {
 						class: upload.done ? 'glyphicon-ok btn-success' : 'glyphicon-stop btn-danger',
