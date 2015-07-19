@@ -440,7 +440,7 @@ module.exports.view = function(ctrl, args, extras) {
 		// m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
 		[m('div.col-sm-3#left', [m('h3', 'Conversations'),
 				ctrl.conversations.map(function(grouping) {
-					return m('button.btn ', {
+					return [m('button.btn ', {
 						style: {
 							'border-radius': '1em',
 							cursor: 'pointer',
@@ -452,7 +452,8 @@ module.exports.view = function(ctrl, args, extras) {
 						class: isEqual(flatten(grouping.group), ctrl.to) ? 'btn-success' : 'btn-default'
 					}, [simplify(grouping.group).map(function(ph) {
 						return m('div', ph + (ctrl.getNickname(ph) ? ' ' + ctrl.getNickname(ph) : ''))
-					}), ])
+					})]),
+					m('br')]
 				})
 			]),
 			m('div.col-sm-9#right', [m('h3', 'Messages ',
