@@ -17,7 +17,7 @@ Promise.join(
 	return Promise.join(r.table('messages').indexCreate('from').catch(ignore),
 	r.table('messages').indexCreate('from').catch(ignore)
 	, r.table('messages').indexCreate('to').catch(ignore)
-})
+	)})
 .then(function () {
 	"use strict";
 	console.log('Done.');
