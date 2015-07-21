@@ -47,10 +47,12 @@ module.exports.controller = function(args, extras) {
 		}
 	})();
 
-	window.addEventListener('message', receiveMessage, false);
+	window.addEventListener('message', receiveMessage);
 
-	function receiveMessage(message) {
-		if (message === 'notificationclick') {
+	function receiveMessage(messageEvent) {
+		console.log('Received window message: ')
+		console.log(messageEvent);
+		if (messageEvent.data === 'notificationclick') {
 			self.refresh();
 		}
 	}
