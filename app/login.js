@@ -159,7 +159,7 @@ module.exports.view = function(ctrl) {
 
 	if (ctrl.noauth()) {
 		return [
-			m('h1', 'YoBro.net'),
+			m('h1', 'yobro.net'),
 			// m('h3', m('i', 'Own your messages!')),
 			// m('h4', 'Ever sent a message by mistake, or just don\'t want to make it a permanent record?'),
 			m('h4', 'Simple group and individual messaging, with messages that you can erase at any time.'),
