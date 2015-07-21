@@ -47,6 +47,18 @@ module.exports.controller = function(args, extras) {
 		}
 	})();
 
+	window.addEventListener('message', receiveMessage, false);
+
+	function receiveMessage(message) {
+		if (message === 'notificationclick') {
+			self.refresh();
+		}
+	}
+
+	self.onunload = function () {
+		window.removeEventListener('message', receiveMessage);
+	}
+
 	self.messages = [];
 	self.conversations = [];
 	self.nicknames = {};

@@ -56,7 +56,9 @@ self.addEventListener('notificationclick', function(event) {
 				var client = clientList[i];
 				// if (client.url == '/' && 'focus' in client)
 				if ('focus' in client)
-					return client.focus();
+					client.focus();
+				if ('postMessage' in client)
+					client.postMessage('notificationclick');
 			}
 			if (clients.openWindow && clientList.length == 0) {
 				return clients.openWindow('/');
