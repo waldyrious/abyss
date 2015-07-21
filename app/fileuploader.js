@@ -2,6 +2,7 @@
 var m = require('mithril');
 var Promise = require('bluebird');
 Promise.longStackTraces();
+var identity = require('./identity');
 
 // require('intl');
 
@@ -20,13 +21,6 @@ module.exports.controller = function(args, extras) {
 		self.nf = function (num) {
 			return num;
 		}
-	}
-
-	var withAuth = function(xhr) {
-		if (args.jwt()) {
-			xhr.setRequestHeader('Authorization', 'Bearer ' + args.jwt());
-		}
-		return xhr;
 	}
 
 	self.files = m.prop();
@@ -84,7 +78,7 @@ module.exports.controller = function(args, extras) {
 				self.uploads.push(upload);
 
 				var xhrConfig = function(xhr) {
-					xhr = withAuth(xhr);
+					xhr = identity.withAuth(xhr);
 					self.uploads[self.uploads.indexOf(upload)].xhr = xhr;
 					xhr.upload.addEventListener("progress", function(ev) {
 						self.uploads[self.uploads.indexOf(upload)].loaded = ev.loaded;

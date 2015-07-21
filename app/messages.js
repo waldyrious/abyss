@@ -29,7 +29,7 @@ var fileuploader = require('./fileuploader');
 
 // spinner
 var spinner = require('./spinner');
-
+var identity = require('./identity');
 
 module.exports.controller = function(args, extras) {
 	var self = this;
@@ -97,26 +97,11 @@ module.exports.controller = function(args, extras) {
 		self.editMode(!self.editMode());
 	}
 
-	// adds JWT to XHR
-	var withAuth = function(xhr) {
-		if (args.jwt()) {
-			xhr.setRequestHeader('Authorization', 'Bearer ' + args.jwt());
-		}
-		return xhr;
-	}
-
-	// used to add Auth header to Oboe requests
-	var oboeAuth = function() {
-		return {
-			'Authorization': 'Bearer ' + args.jwt()
-		}
-	}
-
 	self.getNickname = function(ph) {
 		if (self.nicknames[ph] !== undefined) {
 			return self.nicknames[ph];
-		} else if (ph === args.me().id) {
-			return args.me().nickname;
+		} else if (ph === identity.me().id) {
+			return identity.me().nickname;
 		} else {
 			return null;
 		}
@@ -147,7 +132,7 @@ module.exports.controller = function(args, extras) {
 	};
 
 	function fromMe(message) {
-		return message.from === args.me().id;
+		return message.from === identity.me().id;
 	}
 
 	// run a function with setImmediate, then tell mithril to redraw. maybe it should just use m.redraw()
@@ -196,7 +181,7 @@ module.exports.controller = function(args, extras) {
 		});
 		m.request({
 				method: 'POST',
-				config: withAuth,
+				config: identity.withAuth,
 				background: false,
 				url: '/api/messages',
 				data: {
@@ -215,7 +200,7 @@ module.exports.controller = function(args, extras) {
 		self.working(true);
 		m.request({
 				method: 'GET',
-				config: withAuth,
+				config: identity.withAuth,
 				url: getMessagesUrl()
 			})
 			.then(function (response) {
@@ -230,7 +215,7 @@ module.exports.controller = function(args, extras) {
 		self.working(true);
 		m.request({
 				method: 'GET',
-				config: withAuth,
+				config: identity.withAuth,
 				background: false,
 				url: '/api/conversations'
 			})
@@ -261,7 +246,7 @@ module.exports.controller = function(args, extras) {
 		self.messages = [];
 		oboe({
 				url: getMessagesUrl(),
-				headers: oboeAuth()
+				headers: identity.oboeAuth()
 			}).node('![*]', function(item) {
 				self.messages.push(item);
 				count++;
@@ -276,12 +261,13 @@ module.exports.controller = function(args, extras) {
 				m.endComputation();
 			});
 	};
+	// self.getMessagesStreaming = self.getMessages // quick uncommentable to disable streaming messages
 
 	self.clearMessages = function() {
 		self.working(true);
 		m.request({
 				method: 'DELETE',
-				config: withAuth,
+				config: identity.withAuth,
 				background: false,
 				url: '/api/messages'
 			})
@@ -295,7 +281,7 @@ module.exports.controller = function(args, extras) {
 		self.working(true);
 		m.request({
 				method: 'DELETE',
-				config: withAuth,
+				config: identity.withAuth,
 				background: false,
 				url: '/api/messages/' + encodeURIComponent(message.id)
 			})
@@ -369,7 +355,7 @@ module.exports.view = function(ctrl, args, extras) {
 	};
 
 	function fromMe(message) {
-		return message.from === args.me().id;
+		return message.from === identity.me().id;
 	}
 
 	function groupMessage(message) {
@@ -377,9 +363,9 @@ module.exports.view = function(ctrl, args, extras) {
 	}
 
 	function simplify(group) {
-		var ret = without(flatten(group), args.me().id);
+		var ret = without(flatten(group), identity.me().id);
 		if (ret.length === 0)
-			ret = [args.me().id];
+			ret = [identity.me().id];
 		return ret;
 	}
 
@@ -439,7 +425,7 @@ module.exports.view = function(ctrl, args, extras) {
 
 				m('i', ' ' + moment(message.date).fromNow()),
 				' ',
-				m('b', fromMe(message) ? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
+				m('b', fromMe(message) ? (identity.me().nickname ? identity.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
 				': ',
 
 				message.file ? displayMessageWithFile(message) :
@@ -524,7 +510,6 @@ module.exports.view = function(ctrl, args, extras) {
 						rows: 2,
 						placeholder: 'Message Text...\nControl + Enter sends.',
 						onchange: m.withAttr('value', function(value) {
-							// debugger
 							ctrl.message(value);
 						}),
 						onkeyup: withKey(13, clickSend),
@@ -543,7 +528,6 @@ module.exports.view = function(ctrl, args, extras) {
 					m('label', 'Upload Files: '), m('br'),
 
 					m.component(fileuploader, {
-						jwt: args.jwt,
 						to: ctrl.to,
 						refresh: ctrl.refresh,
 						getMessagesStreaming: ctrl.getMessagesStreaming
