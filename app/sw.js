@@ -8,34 +8,35 @@ self.addEventListener('push', function(event) {
 	//  var icon = '/images/icon-192x192.png';
 	var tag = 'simple-push-demo-notification-tag';
 
-	clients.matchAll({
-		includeUncontrolled: true
-	}).then(function(clients) {
-		console.log('outer clients');
-		console.log(clients)
-		windowclients = clients;
+    // this does work at all:
+	// clients.matchAll({
+	// 	includeUncontrolled: true
+	// }).then(function(clients) {
+	// 	console.log('outer clients');
+	// 	console.log(clients)
+	// 	windowclients = clients;
+	//
+	// 	for (var i = 0; i < clients.length; i++) {
+	// 		var client = clients[i];
+	// 		console.log('client: ' + i);
+	// 		console.log(client);
+	// 		if (client['postMesssage']) {
+	// 			client['postMesssage']('yourmessage');
+	// 		}
+	//
+	// 		// https://developer.mozilla.org/en-US/docs/Web/API/WindowClient
+	// 		if (client.focus) {
+	// 			client.focus();
+	// 		}
+	// 	}
+	//
+	// });
 
-		for (var i = 0; i < clients.length; i++) {
-			var client = clients[i];
-			console.log('client: ' + i);
-			console.log(client);
-			if (client['postMesssage']) {
-				client['postMesssage']('yourmessage');
-			}
-
-			// https://developer.mozilla.org/en-US/docs/Web/API/WindowClient
-			if (client.focus) {
-				client.focus();
-			}
-		}
-
-	});
-
-	console.log(event.waitUntil(self.registration.showNotification(title, {
+	event.waitUntil(self.registration.showNotification(title, {
 		body: body,
 		//      icon: icon,
 		tag: tag
-	})));
+	}));
 });
 
 self.addEventListener('notificationclick', function(event) {
@@ -53,10 +54,11 @@ self.addEventListener('notificationclick', function(event) {
 		.then(function(clientList) {
 			for (var i = 0; i < clientList.length; i++) {
 				var client = clientList[i];
-				if (client.url == '/' && 'focus' in client)
+				// if (client.url == '/' && 'focus' in client)
+				if ('focus' in client)
 					return client.focus();
 			}
-			if (clients.openWindow) {
+			if (clients.openWindow && clientList.length == 0) {
 				return clients.openWindow('/');
 			}
 		})
