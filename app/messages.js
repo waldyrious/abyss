@@ -391,6 +391,7 @@ module.exports.view = function(ctrl, args, extras) {
 			return m('img', {
 				src: '/api/file/' + encodeURIComponent(message.id),
 				style: {
+					'object-fit': 'contain',
 					'max-width': '100%',
 					'max-height': '100%'
 				}
