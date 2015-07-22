@@ -294,10 +294,14 @@ module.exports.controller = function(args, extras) {
 			// .then(self.refresh, self.error)
 	};
 
-	var routeGroup = JSON.parse(m.route.param('group'));
-	if (routeGroup && !isEqual(routeGroup, self.to)) {
-		self.to = routeGroup;
+	if (m.route.param('group')) {
+		var group = m.route.param('group');
+		var routeGroup = JSON.parse(group);
+		if (routeGroup && !isEqual(routeGroup, self.to)) {
+			self.to = routeGroup;
+		}
 	}
+
  	self.refresh();
 };
 

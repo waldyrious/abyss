@@ -4,7 +4,7 @@ require('./s.css');
 require('setimmediate');
 
 var m = require('mithril');
-var mainElement = document.getElementById('login');
+var mainElement = document.getElementById('main');
 
 var login = require('./login');
 var messages = require('./messages');
@@ -17,8 +17,8 @@ m.route(mainElement, "/login", {
     '/navbar': navbar,
     '/login': login,
     '/message': messages,
-    '/conversations/:group': navbar,
     '/conversations': navbar,
+    '/conversations/:group': navbar,
     '/radio': radio
 });
 
