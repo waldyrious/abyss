@@ -64,7 +64,7 @@ module.exports.controller = function(args, extras) {
 	self.messages = [];
 	self.conversations = [];
 	self.nicknames = {};
-	self.to = [''];
+	self.to = [];
 	self.message = m.prop('');
 	self.error = error.ErrorHolder();
 
@@ -108,9 +108,9 @@ module.exports.controller = function(args, extras) {
 	}
 
 	self.selectGroup = function(group) {
-		self.page(0);
-		self.to = clone(group);
-		self.getMessagesStreaming();
+		// self.page(0);
+		// self.to = clone(group);
+		m.route('/conversations/' + JSON.stringify(group));
 	};
 
 	self.newMessage = function () {
@@ -213,7 +213,7 @@ module.exports.controller = function(args, extras) {
 
 	self.refresh = self.getConversations = function() {
 		self.working(true);
-		m.request({
+		return m.request({
 				method: 'GET',
 				config: identity.withAuth,
 				background: false,
@@ -294,7 +294,11 @@ module.exports.controller = function(args, extras) {
 			// .then(self.refresh, self.error)
 	};
 
-	self.refresh();
+	var routeGroup = JSON.parse(m.route.param('group'));
+	if (routeGroup && !isEqual(routeGroup, self.to)) {
+		self.to = routeGroup;
+	}
+ 	self.refresh();
 };
 
 module.exports.view = function(ctrl, args, extras) {

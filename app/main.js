@@ -16,8 +16,9 @@ m.route(mainElement, "/login", {
     '/faq': faq,
     '/navbar': navbar,
     '/login': login,
-    '/conversations/:group': messages,
-    '/conversations': messages,
+    '/message': messages,
+    '/conversations/:group': navbar,
+    '/conversations': navbar,
     '/radio': radio
 });
 
