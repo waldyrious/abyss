@@ -269,7 +269,7 @@ module.exports.controller = function(args, extras) {
 				method: 'DELETE',
 				config: identity.withAuth,
 				background: false,
-				url: '/api/messages'
+				url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))
 			})
 			.then(self.refresh, self.error)
 			.then(function () {
