@@ -8,6 +8,7 @@ var regsw = require('./regsw');
 var validator = require('validator');
 
 module.exports.controller = function(args, extras) {
+
 	var self = this;
 	self.error = error.ErrorHolder();
 	self.nicknameInput = m.prop(identity.nickname);
