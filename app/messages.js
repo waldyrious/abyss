@@ -110,10 +110,9 @@ module.exports.controller = function(args, extras) {
 	}
 
 	self.selectGroup = function(group) {
-		// self.page(0);
-		// self.to = clone(group);
-		// m.redraw.strategy("diff");
-		m.route('/conversations/' + JSON.stringify(group));
+		self.page(0);
+		self.to = clone(group);
+		self.refresh();
 	};
 
 	self.newMessage = function () {
