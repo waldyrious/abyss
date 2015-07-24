@@ -125,8 +125,9 @@ module.exports.controller = function(args, extras) {
 	};
 
 	self.newMessage = function () {
-		self.to = [''];
-		self.reselectGroup();
+		m.route('/conversations');
+		// self.to = [''];
+		// self.reselectGroup();
 	}
 
 	self.reselectGroup = function() {
