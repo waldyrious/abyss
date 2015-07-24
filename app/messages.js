@@ -173,7 +173,6 @@ module.exports.controller = function(args, extras) {
 
 	self.toPlus = function() {
 		self.to.push('');
-		self.reselectGroup();
 	};
 
 	self.toMinus = function() {
