@@ -101,9 +101,16 @@ module.exports.controller = function(args, extras) {
 					});
 				}
 
+
 				return m.request({
 						method: "POST",
-						url: '/api/file?group=' + encodeURIComponent(JSON.stringify(self.to)) + '&type=' + encodeURIComponent(file.type) + '&lastModified=' + encodeURIComponent(file.lastModified) + '&size=' + encodeURIComponent(file.size) + '&name=' + encodeURIComponent(file.name),
+						url: '/api/file?' + m.route.buildQueryString({
+					      to: self.to,
+						  type: file.type,
+						  lastModified: file.lastModified,
+						  size: file.size,
+						  name: file.name
+					  	}),
 						data: data,
 						config: xhrConfig,
 						serialize: function(data) {
