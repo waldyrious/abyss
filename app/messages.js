@@ -115,10 +115,9 @@ module.exports.controller = function(args, extras) {
 	}
 
 	self.selectGroup = function(group) {
-		var query = m.route.buildQueryString({
+		m.route('/conversations?' + m.route.buildQueryString({
 			to: group
-		})
-		m.route('/conversations?' + query);
+		}));
 		return;
 		self.page(0);
 		self.to = clone(group);
@@ -188,16 +187,12 @@ module.exports.controller = function(args, extras) {
 
 	self.send = function() {
 		self.working(true);
-		self.to = filter(self.to, function(item) {
-			return item !== '' && item !== ' ' && item !== null;
-		});
 		m.request({
 				method: 'POST',
 				config: identity.withAuth,
 				background: false,
-				url: '/api/messages',
+				url: getMessagesUrl(),
 				data: {
-					to: self.to,
 					text: self.message()
 				}
 			})
@@ -241,11 +236,14 @@ module.exports.controller = function(args, extras) {
 	};
 
 	function getMessagesUrl() {
-		var url = '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to));
-		if (self.page() !== null) {
-			url += '&page='+self.page()+'&per_page='+self.per_page();
-		}
-		return url;
+		self.to = filter(self.to, function(item) {
+			return item !== '' && item !== ' ' && item !== null;
+		});
+		 return '/api/messages?' + m.route.buildQueryString({
+			to: self.to,
+			page: self.page(),
+			'per_page': self.per_page()
+		});
 	}
 
 	self.getMessagesStreaming = function() {
