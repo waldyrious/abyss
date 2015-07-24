@@ -115,6 +115,11 @@ module.exports.controller = function(args, extras) {
 	}
 
 	self.selectGroup = function(group) {
+		var query = m.route.buildQueryString({
+			to: group
+		})
+		m.route('/conversations?' + query);
+		return;
 		self.page(0);
 		self.to = clone(group);
 		self.refresh();
@@ -301,11 +306,14 @@ module.exports.controller = function(args, extras) {
 			// .then(self.refresh, self.error)
 	};
 
-	if (m.route.param('group')) {
-		var group = m.route.param('group');
-		var routeGroup = JSON.parse(group);
-		if (routeGroup && !isEqual(routeGroup, self.to)) {
-			self.to = routeGroup;
+	if (m.route.param('to')) {
+		var to = m.route.param('to');
+		if (typeof to === 'string')
+		 	to = [to];
+
+		if (to && !isEqual(to, self.to)) {
+			self.to = to;
+			self.reselectGroup();
 		}
 	}
 
