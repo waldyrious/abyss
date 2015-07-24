@@ -75,6 +75,11 @@ module.exports.controller = function(args, extras) {
 	self.page = m.prop(0);
 	self.per_page = m.prop(50);
 
+	self.smallImages = m.prop(true);
+	self.toggleSmallImages = function () {
+		self.smallImages(!self.smallImages());
+	}
+
 	self.nextPage = function () {
 		self.page(self.page() + 1);
 		self.getMessagesStreaming()
@@ -388,10 +393,17 @@ module.exports.view = function(ctrl, args, extras) {
 		if (file.type.indexOf('image') > -1) {
 			return m('img', {
 				src: '/api/file/' + encodeURIComponent(message.id),
-				style: {
+				onclick: ctrl.toggleSmallImages,
+				style: ctrl.smallImages() ? {
+					'object-fit': 'contain',
+					'max-width': '50%',
+					'max-height': '50%',
+					'cursor': 'zoom-in'
+				} : {
 					'object-fit': 'contain',
 					'max-width': '100%',
-					'max-height': '100%'
+					'max-height': '100%',
+					'cursor': 'zoom-out'
 				}
 			})
 		} else if (file.type.indexOf('video') > -1) {
