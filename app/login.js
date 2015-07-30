@@ -89,6 +89,7 @@ module.exports.controller = function(args, extras) {
 				identity.me(response);
 				self.needCode(false);
 				self.codeInput('');
+				m.route('/conversations');
 				return identity.whoami();
 			}, self.error)
 	};
@@ -111,70 +112,55 @@ module.exports.view = function(ctrl) {
 		showFaq = !showFaq;
 	}
 
-	if (ctrl.noauth()) {
-		return [
-			m('h1', 'yobro.net'),
-			// m('h3', m('i', 'Own your messages!')),
-			// m('h4', 'Ever sent a message by mistake, or just don\'t want to make it a permanent record?'),
-			m('h4', 'Simple group and individual messaging, with messages that you can erase at any time.'),
-			ctrl.needCode() ? [
-				m('.col-md1',
-				m('.input-group', {
-						style: {
-							width: '30em'
-						}
-					},
-					m('input.form-control', {
-						placeholder: 'Enter 6-digit verification code...',
-						type: 'tel',
-						oninput: m.withAttr('value', ctrl.codeInput),
-						value: ctrl.codeInput()
-					}),
-					m('span.input-group-btn', m('button.btn btn-default', {
-						class: codeInputValid() ? 'btn-success' : '',
-						disabled: !codeInputValid(),
-						onclick: ctrl.submitCode
-					}, 'Submit Code')),
-					m('span.input-group-btn', m('button.btn btn-default', {
-						onclick: ctrl.cancelCode
-					}, 'Cancel'))))
-			] : [
-				m('div', ['Just sign in with your existing mobile phone number.', identity.me().id]),
-				m('div.input-group', {
-						style: {
-							width: '18em'
-						}
-					},
-					m('input.form-control', {
-						placeholder: '10-digit phone number',
-						type: 'tel',
-						autofocus: true,
-						oninput: m.withAttr('value', ctrl.phoneInput),
-						value: ctrl.phoneInput()
-					}),
-					m('span.input-group-btn', m('button.btn btn-default', {
-						class: phoneInputValid() ? 'btn-success' : '',
-						disabled: !phoneInputValid(),
-						onclick: ctrl.loginClick
-					}, 'Login')))
-			], error.renderError(ctrl.error),
-			m('br'),
-			m('br'),
-			m('div.faq', m('button.btn btn-default btn-large', {
-				onclick: showFaqButton
-			}, 'Frequently Asked Questions')),
-			showFaq ? m.component(faq) : null
-		]
-	} else {
-		return m('pre', 'Logged in as ' + JSON.stringify(identity.me()),
-		m('button.btn btn-default', {
-			onclick: ctrl.logout
-		}, 'Logout'),
-		m('button.btn btn-default', {
-			onclick: ctrl.gotoConversations
-		}, 'Conversations'),
-		m('button.btn btn-default', {
-			onclick: ctrl.gotoNavbar
-		}, 'navbar'))
-	}
+	return [
+		m('h1', 'yobro.net'),
+		m('h4', 'Simple group and individual messaging, with messages that you can erase at any time.'),
+		ctrl.needCode() ? [
+			m('.col-md1',
+			m('.input-group', {
+					style: {
+						width: '30em'
+					}
+				},
+				m('input.form-control', {
+					placeholder: 'Enter 6-digit verification code...',
+					type: 'tel',
+					oninput: m.withAttr('value', ctrl.codeInput),
+					value: ctrl.codeInput()
+				}),
+				m('span.input-group-btn', m('button.btn btn-default', {
+					class: codeInputValid() ? 'btn-success' : '',
+					disabled: !codeInputValid(),
+					onclick: ctrl.submitCode
+				}, 'Submit Code')),
+				m('span.input-group-btn', m('button.btn btn-default', {
+					onclick: ctrl.cancelCode
+				}, 'Cancel'))))
+		] : [
+			m('div', ['Just sign in with your existing mobile phone number. ', identity.me().id]),
+			m('div.input-group', {
+					style: {
+						width: '18em'
+					}
+				},
+				m('input.form-control', {
+					placeholder: '10-digit phone number',
+					type: 'tel',
+					autofocus: true,
+					oninput: m.withAttr('value', ctrl.phoneInput),
+					value: ctrl.phoneInput()
+				}),
+				m('span.input-group-btn', m('button.btn btn-default', {
+					class: phoneInputValid() ? 'btn-success' : '',
+					disabled: !phoneInputValid(),
+					onclick: ctrl.loginClick
+				}, 'Login')))
+		], error.renderError(ctrl.error),
+		m('br'),
+		m('br'),
+		m('div.faq', m('button.btn btn-default btn-large', {
+			onclick: showFaqButton
+		}, 'Frequently Asked Questions')),
+		showFaq ? m.component(faq) : null
+	]
 };

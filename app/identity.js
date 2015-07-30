@@ -75,7 +75,14 @@ module.exports.logout = function() {
         })
 };
 
-whoami();
+whoami()
+.then(function () {
+    if (me().id) {
+        m.route('/conversations');
+    } else {
+        m.route('/login');
+    }
+});
 
 Object.defineProperty(module.exports, 'nickname', {
     get: function () {
