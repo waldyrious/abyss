@@ -29,9 +29,11 @@ var fileuploader = require('./fileuploader');
 
 // spinner
 var spinner = require('./spinner');
-
+var identity = require('./identity');
 
 module.exports.controller = function(args, extras) {
+	// m.redraw.strategy("all")
+
 	var self = this;
 	self.working = (function () {
 		var working = false;
@@ -64,7 +66,7 @@ module.exports.controller = function(args, extras) {
 	self.messages = [];
 	self.conversations = [];
 	self.nicknames = {};
-	self.to = [''];
+	self.to = [];
 	self.message = m.prop('');
 	self.error = error.ErrorHolder();
 
@@ -102,40 +104,30 @@ module.exports.controller = function(args, extras) {
 		self.editMode(!self.editMode());
 	}
 
-	// adds JWT to XHR
-	var withAuth = function(xhr) {
-		if (args.jwt()) {
-			xhr.setRequestHeader('Authorization', 'Bearer ' + args.jwt());
-		}
-		return xhr;
-	}
-
-	// used to add Auth header to Oboe requests
-	var oboeAuth = function() {
-		return {
-			'Authorization': 'Bearer ' + args.jwt()
-		}
-	}
-
 	self.getNickname = function(ph) {
 		if (self.nicknames[ph] !== undefined) {
 			return self.nicknames[ph];
-		} else if (ph === args.me().id) {
-			return args.me().nickname;
+		} else if (ph === identity.me().id) {
+			return identity.me().nickname;
 		} else {
 			return null;
 		}
 	}
 
 	self.selectGroup = function(group) {
+		m.route('/conversations?' + m.route.buildQueryString({
+			to: group
+		}));
+		return;
 		self.page(0);
 		self.to = clone(group);
-		self.getMessagesStreaming();
+		self.refresh();
 	};
 
 	self.newMessage = function () {
-		self.to = [''];
-		self.reselectGroup();
+		m.route('/conversations');
+		// self.to = [''];
+		// self.reselectGroup();
 	}
 
 	self.reselectGroup = function() {
@@ -152,7 +144,7 @@ module.exports.controller = function(args, extras) {
 	};
 
 	function fromMe(message) {
-		return message.from === args.me().id;
+		return message.from === identity.me().id;
 	}
 
 	// run a function with setImmediate, then tell mithril to redraw. maybe it should just use m.redraw()
@@ -181,7 +173,6 @@ module.exports.controller = function(args, extras) {
 
 	self.toPlus = function() {
 		self.to.push('');
-		self.reselectGroup();
 	};
 
 	self.toMinus = function() {
@@ -196,16 +187,12 @@ module.exports.controller = function(args, extras) {
 
 	self.send = function() {
 		self.working(true);
-		self.to = filter(self.to, function(item) {
-			return item !== '' && item !== ' ' && item !== null;
-		});
 		m.request({
 				method: 'POST',
-				config: withAuth,
+				config: identity.withAuth,
 				background: false,
-				url: '/api/messages',
+				url: getMessagesUrl(),
 				data: {
-					to: self.to,
 					text: self.message()
 				}
 			})
@@ -220,7 +207,7 @@ module.exports.controller = function(args, extras) {
 		self.working(true);
 		m.request({
 				method: 'GET',
-				config: withAuth,
+				config: identity.withAuth,
 				url: getMessagesUrl()
 			})
 			.then(function (response) {
@@ -233,9 +220,9 @@ module.exports.controller = function(args, extras) {
 
 	self.refresh = self.getConversations = function() {
 		self.working(true);
-		m.request({
+		return m.request({
 				method: 'GET',
-				config: withAuth,
+				config: identity.withAuth,
 				background: false,
 				url: '/api/conversations'
 			})
@@ -249,11 +236,14 @@ module.exports.controller = function(args, extras) {
 	};
 
 	function getMessagesUrl() {
-		var url = '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to));
-		if (self.page() !== null) {
-			url += '&page='+self.page()+'&per_page='+self.per_page();
-		}
-		return url;
+		self.to = filter(self.to, function(item) {
+			return item !== '' && item !== ' ' && item !== null;
+		});
+		 return '/api/messages?' + m.route.buildQueryString({
+			to: self.to,
+			page: self.page(),
+			'per_page': self.per_page()
+		});
 	}
 
 	self.getMessagesStreaming = function() {
@@ -266,7 +256,7 @@ module.exports.controller = function(args, extras) {
 		self.messages = [];
 		oboe({
 				url: getMessagesUrl(),
-				headers: oboeAuth()
+				headers: identity.oboeAuth()
 			}).node('![*]', function(item) {
 				self.messages.push(item);
 				count++;
@@ -281,14 +271,15 @@ module.exports.controller = function(args, extras) {
 				m.endComputation();
 			});
 	};
+	// self.getMessagesStreaming = self.getMessages // quick uncommentable to disable streaming messages
 
 	self.clearMessages = function() {
 		self.working(true);
 		m.request({
 				method: 'DELETE',
-				config: withAuth,
+				config: identity.withAuth,
 				background: false,
-				url: '/api/messages'
+				url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))
 			})
 			.then(self.refresh, self.error)
 			.then(function () {
@@ -300,7 +291,7 @@ module.exports.controller = function(args, extras) {
 		self.working(true);
 		m.request({
 				method: 'DELETE',
-				config: withAuth,
+				config: identity.withAuth,
 				background: false,
 				url: '/api/messages/' + encodeURIComponent(message.id)
 			})
@@ -313,7 +304,18 @@ module.exports.controller = function(args, extras) {
 			// .then(self.refresh, self.error)
 	};
 
-	self.refresh();
+	if (m.route.param('to')) {
+		var to = m.route.param('to');
+		if (typeof to === 'string')
+		 	to = [to];
+
+		if (to && !isEqual(to, self.to)) {
+			self.to = to;
+			self.reselectGroup();
+		}
+	}
+
+ 	self.refresh();
 };
 
 module.exports.view = function(ctrl, args, extras) {
@@ -374,7 +376,7 @@ module.exports.view = function(ctrl, args, extras) {
 	};
 
 	function fromMe(message) {
-		return message.from === args.me().id;
+		return message.from === identity.me().id;
 	}
 
 	function groupMessage(message) {
@@ -382,9 +384,9 @@ module.exports.view = function(ctrl, args, extras) {
 	}
 
 	function simplify(group) {
-		var ret = without(flatten(group), args.me().id);
+		var ret = without(flatten(group), identity.me().id);
 		if (ret.length === 0)
-			ret = [args.me().id];
+			ret = [identity.me().id];
 		return ret;
 	}
 
@@ -451,7 +453,7 @@ module.exports.view = function(ctrl, args, extras) {
 
 				m('i', ' ' + moment(message.date).fromNow()),
 				' ',
-				m('b', fromMe(message) ? (args.me().nickname ? args.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
+				m('b', fromMe(message) ? (identity.me().nickname ? identity.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
 				': ',
 
 				message.file ? displayMessageWithFile(message) :
@@ -460,9 +462,7 @@ module.exports.view = function(ctrl, args, extras) {
 		)
 	}
 
-	return m('div', {
-		config: fadesIn
-	}, [
+	return m('div', [
 		error.renderError(ctrl.error),
 		// m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
 		[m('div.col-sm-3#left', [m('h3', 'Conversations'),
@@ -483,7 +483,9 @@ module.exports.view = function(ctrl, args, extras) {
 					m('br')]
 				})
 			]),
-			m('div.col-sm-9#right', [m('h3', 'Messages ',
+			m('div.col-sm-9#right', [m('h3', {
+				config: fadesIn
+			}, 'Messages ',
 
 				m('.input-group',
 					m('button.btn btn-default glyphicon glyphicon-refresh', {
@@ -536,7 +538,6 @@ module.exports.view = function(ctrl, args, extras) {
 						rows: 2,
 						placeholder: 'Message Text...\nControl + Enter sends.',
 						onchange: m.withAttr('value', function(value) {
-							// debugger
 							ctrl.message(value);
 						}),
 						onkeyup: withKey(13, clickSend),
@@ -555,7 +556,6 @@ module.exports.view = function(ctrl, args, extras) {
 					m('label', 'Upload Files: '), m('br'),
 
 					m.component(fileuploader, {
-						jwt: args.jwt,
 						to: ctrl.to,
 						refresh: ctrl.refresh,
 						getMessagesStreaming: ctrl.getMessagesStreaming

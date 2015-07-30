@@ -1,61 +1,72 @@
 'use strict';
 var m = require('mithril');
 
+var audioSources = {
+    'Trap': 'http://208.113.211.151:443/trap/;',
+    'Chillstep': 'http://208.113.211.151:443/chillstep/;',
+    'Progressive House': 'http://208.113.211.151:443/prog-house/;',
+    'Dubstep': 'http://208.113.211.151:443/dubstep/;',
+    'Pop': 'http://208.113.211.151:443/getpsyched/;'
+}
+var audioKey = 'Trap';
+var element = new Audio(audioSources[audioKey]);
+element.preload = 'none';
+
+var playing = false;
+
+function stop() {
+    element.pause();
+    element.preload = 'none';
+    element.src = '';
+    playing = false;
+}
+
+function play() {
+    element.src = audioSources[audioKey];
+    element.load();
+    element.play();
+    playing = true;
+}
+
+function toggle() {
+    if (playing) stop()
+    else play();
+}
+
+
 module.exports.controller = function(args, extras) {
     var self = this;
-    var lastAudioElement = null;
-	self.audioSources = {
-        'Off': null,
-		'Trap': 'http://208.113.211.151:443/trap/;',
-		'Chillstep': 'http://208.113.211.151:443/chillstep/;',
-		'Progressive House': 'http://208.113.211.151:443/prog-house/;',
-        'Dubstep': 'http://208.113.211.151:443/dubstep/;',
-        'Pop': 'http://208.113.211.151:443/getpsyched/;'
-	}
-	self.audioSource = m.prop(self.audioSources['Off']);
-	self.autoPlay = true;
+
+    self.play = function (ev) {
+        element.play();
+    }
 
 	self.changeStation = function (key) {
-        if (lastAudioElement) {
-            lastAudioElement.src = '';
-        }
-		self.autoPlay = true;
-		self.audioSource(self.audioSources[key]);
+        audioKey = key;
+        element.src = audioSources[audioKey];
+        element.load();
+        element.play();
 	}
-
-    var oldSrc;
-
-    self.audioElement = function (element) {
-        element.addEventListener('pause', function (ev) {
-            ev.target.autoplay = false;
-            oldSrc = ev.target.src;
-            ev.target.src = '';
-            ev.target.src = oldSrc;
-        });
-        element.autoplay = self.autoPlay;
-        lastAudioElement = element;
-    }
 }
 
 module.exports.view = function(ctrl, args, extras) {
     return m('span', [
-        ctrl.audioSource() ? m('audio', {
-            config: ctrl.audioElement,
-            src: ctrl.audioSource(),
-            controls: true,
-            autoplay: ctrl.autoPlay,
-            preload: 'none',
+        m('button.btn btn-default glyphicon', { // needed for mobile safari
+            class: playing ? 'glyphicon-pause' : 'glyphicon-play',
             style: {
-                float: 'right',
-                'margin-right': '1em'
-            }
-        }) : '',
+                float: 'right'
+            },
+            onclick: toggle
+        }
+        // , playing ? ' Pause' : ' Play'
+    ),
         m('select', {
             style: {
                 float: 'right'
             },
-            onchange : function() { ctrl.changeStation(this.options[this.selectedIndex].value) }
-        }, Object.keys(ctrl.audioSources).map(function (item) {
+            value: audioKey,
+            onchange : function() { ctrl.changeStation(this.options[this.selectedIndex].value) },
+        }, Object.keys(audioSources).map(function (item) {
             return m('option', {value: item}, item)
         }))
     ])

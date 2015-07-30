@@ -2,6 +2,7 @@
 var m = require('mithril');
 var Promise = require('bluebird');
 Promise.longStackTraces();
+var identity = require('./identity');
 
 // require('intl');
 
@@ -13,20 +14,13 @@ module.exports.controller = function(args, extras) {
 
 	if (window.Intl) {
 		var inf = new Intl.NumberFormat();
-		self.nf = function (num) {
+		self.nf = function(num) {
 			return inf.format(num);
 		}
 	} else {
-		self.nf = function (num) {
+		self.nf = function(num) {
 			return num;
 		}
-	}
-
-	var withAuth = function(xhr) {
-		if (args.jwt()) {
-			xhr.setRequestHeader('Authorization', 'Bearer ' + args.jwt());
-		}
-		return xhr;
 	}
 
 	self.files = m.prop();
@@ -51,7 +45,7 @@ module.exports.controller = function(args, extras) {
 		}
 	}
 
-	self.uploadsComplete = function () {
+	self.uploadsComplete = function() {
 		if (self.uploads.length === 0) {
 			return true;
 		} else {
@@ -64,7 +58,7 @@ module.exports.controller = function(args, extras) {
 		}
 	}
 
-	self.remove = function (upload) {
+	self.remove = function(upload) {
 		var index = self.uploads.indexOf(upload);
 		self.uploads.splice(index, 1);
 	}
@@ -84,7 +78,7 @@ module.exports.controller = function(args, extras) {
 				self.uploads.push(upload);
 
 				var xhrConfig = function(xhr) {
-					xhr = withAuth(xhr);
+					xhr = identity.withAuth(xhr);
 					self.uploads[self.uploads.indexOf(upload)].xhr = xhr;
 					xhr.upload.addEventListener("progress", function(ev) {
 						self.uploads[self.uploads.indexOf(upload)].loaded = ev.loaded;
@@ -107,9 +101,16 @@ module.exports.controller = function(args, extras) {
 					});
 				}
 
+
 				return m.request({
 						method: "POST",
-						url: '/api/file?group=' + encodeURIComponent(JSON.stringify(self.to)) + '&type=' + encodeURIComponent(file.type) + '&lastModified=' + encodeURIComponent(file.lastModified) + '&size=' + encodeURIComponent(file.size) + '&name=' + encodeURIComponent(file.name),
+						url: '/api/file?' + m.route.buildQueryString({
+							to: self.to,
+							type: file.type,
+							lastModified: file.lastModified,
+							size: file.size,
+							name: file.name
+						}),
 						data: data,
 						config: xhrConfig,
 						serialize: function(data) {
@@ -121,7 +122,7 @@ module.exports.controller = function(args, extras) {
 						// 	self.uploads.splice(index, 1);
 						// 	m.redraw();
 						// }, 500);
-					}, function () {
+					}, function() {
 						// we handled errors with the xhr event listeners
 					})
 			}, {
@@ -138,9 +139,7 @@ module.exports.controller = function(args, extras) {
 }
 
 function truncate(number) {
-    return number > 0
-         ? Math.floor(number)
-         : Math.ceil(number);
+	return number > 0 ? Math.floor(number) : Math.ceil(number);
 }
 
 module.exports.view = function(ctrl, args, extras) {
