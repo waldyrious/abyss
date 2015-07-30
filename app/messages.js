@@ -93,7 +93,8 @@ module.exports.controller = function(args, extras) {
 	}
 
 	self.allPages = function () {
-		self.page(null);
+		self.page(0);
+		self.per_page(Infinity);
 		self.getMessagesStreaming()
 	}
 
