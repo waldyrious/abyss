@@ -12,7 +12,7 @@ var navbar = require('./navbar');
 var radio = require('./radio');
 var faq = require('./faq');
 
-m.route(mainElement, "/login", {
+m.route(mainElement, "/conversations", {
     '/faq': faq,
     '/navbar': navbar,
     '/login': login,
