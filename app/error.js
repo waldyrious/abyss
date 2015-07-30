@@ -6,6 +6,11 @@ module.exports.ErrorHolder = function() {
 
 	return function (value) {
 		if (value) {
+
+			if (value.message && value.message.indexOf('UnauthorizedError: No Authorization header found') > -1) {
+				m.route('/login');
+				return;
+			}
 			error = value;
 
 			if (timeout) {
