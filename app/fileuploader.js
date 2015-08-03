@@ -63,8 +63,24 @@ module.exports.controller = function(args, extras) {
 		self.uploads.splice(index, 1);
 	}
 
-	self.uploadFile = function() {
-		return Promise.map(Array.prototype.slice.call(self.fileInput().files), function(file, index) {
+	module.exports.uploadFile = self.uploadFile = function(arg) {
+		var files;
+
+		if (arg instanceof DataTransferItemList) {
+			var newfiles = [];
+			for (var i=0; i<arg.length; i++) {
+				if (arg[i].kind === 'file') {
+					newfiles.push(arg[i].getAsFile());
+				}
+			}
+			files = newfiles;
+		} else if (arg instanceof Event) { // user clicked "upload files"
+			files = Array.prototype.slice.call(self.fileInput().files);
+		} else {
+			throw new TypeError('unable to handle ' + arg);
+		}
+
+		return Promise.map(files, function(file, index) {
 				index = index + self.uploads.length; // account for possible concurrent uploads from prior click.
 				var data = new FormData();
 				data.append("file", file);

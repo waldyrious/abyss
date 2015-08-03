@@ -50,6 +50,7 @@ module.exports.controller = function(args, extras) {
 	})();
 
 	window.addEventListener('message', receiveMessage);
+	window.addEventListener('paste', handlePaste);
 
 	function receiveMessage(messageEvent) {
 		console.log('Received window message: ')
@@ -59,8 +60,18 @@ module.exports.controller = function(args, extras) {
 		}
 	}
 
+	function handlePaste (ev) {
+		if (ev.clipboardData && ev.clipboardData.files) {
+			var items = ev.clipboardData.items;
+
+			fileuploader.uploadFile(items);
+
+		}
+	}
+
 	self.onunload = function () {
 		window.removeEventListener('message', receiveMessage);
+		window.removeEventListener('paste', handlePaste);
 	}
 
 	self.messages = [];
