@@ -31,6 +31,8 @@ var fileuploader = require('./fileuploader');
 var spinner = require('./spinner');
 var identity = require('./identity');
 
+var mountedDragAndDrop = false;
+
 module.exports.controller = function(args, extras) {
 	// m.redraw.strategy("all")
 
@@ -51,6 +53,36 @@ module.exports.controller = function(args, extras) {
 
 	window.addEventListener('message', receiveMessage);
 	window.addEventListener('paste', handlePaste);
+
+	function dragdrop(element, options) {
+	    options = options || {}
+
+	    element.addEventListener("dragover", activate)
+	    element.addEventListener("dragleave", deactivate)
+	    element.addEventListener("dragend", deactivate)
+	    element.addEventListener("drop", deactivate)
+	    element.addEventListener("drop", update)
+
+	    function activate(e) {
+	        e.preventDefault()
+	    }
+	    function deactivate() {}
+	    function update(e) {
+	        e.preventDefault()
+	        if (typeof options.onchange == "function") {
+	            options.onchange((e.dataTransfer || e.target).files)
+	        }
+	    }
+	}
+
+	if (!mountedDragAndDrop) {
+		dragdrop(document.getElementsByTagName('body')[0], {
+			onchange: function(files) {
+				fileuploader.uploadFile(files);
+			}
+		});
+		mountedDragAndDrop = true;
+	}
 
 	function receiveMessage(messageEvent) {
 		console.log('Received window message: ')
@@ -596,4 +628,5 @@ module.exports.view = function(ctrl, args, extras) {
 			])
 		]
 	])
+
 };
