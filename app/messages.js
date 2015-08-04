@@ -93,11 +93,9 @@ module.exports.controller = function(args, extras) {
 	}
 
 	function handlePaste (ev) {
-		if (ev.clipboardData && ev.clipboardData.files) {
+		if (ev.clipboardData && ev.clipboardData.files && ev.clipboardData.files.length > 0) {
 			var items = ev.clipboardData.items;
-
 			fileuploader.uploadFile(items);
-
 		}
 	}
 
