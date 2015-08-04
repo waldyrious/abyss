@@ -217,13 +217,8 @@ module.exports.controller = function(args, extras) {
 		self.to.push('');
 	};
 
-	self.toMinus = function() {
-		self.to.pop();
-
-		if (self.to.length === -1) {
-			self.to.push('');
-			self.message('');
-		}
+	self.toMinus = function(index) {
+		self.to.splice(index, 1);
 		self.reselectGroup();
 	};
 
@@ -556,16 +551,10 @@ module.exports.view = function(ctrl, args, extras) {
 						},
 						onclick: ctrl.toPlus
 					}, '+'),
-					m('button.btn btn-default', {
-						style: {
-							'border-radius': '1em',
-							margin: '1px'
-						},
-						onclick: ctrl.toMinus
-					}, '-'),
+
 					m('br'),
 					ctrl.to.map(function(item, index) {
-						return m('input', {
+						return [m('input', {
 							style: {
 								margin: '2px',
 								padding: '4px'
@@ -576,7 +565,16 @@ module.exports.view = function(ctrl, args, extras) {
 								ctrl.to[index] = value
 							}),
 							value: ctrl.to[index]
-						})
+						}),
+						m('button.btn btn-default', {
+							index: index,
+							style: {
+								'border-radius': '1em',
+								margin: '1px',
+								right: '2em'
+							},
+							onclick: m.withAttr('index', ctrl.toMinus)
+						}, '✗')]
 					}),
 					m('br'),
 				]),
