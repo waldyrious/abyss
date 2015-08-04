@@ -610,19 +610,19 @@ module.exports.view = function(ctrl, args, extras) {
 					})
 				),
 				ctrl.messages.map(displayMessage),
-				m('div.hoveropaque', {
+				m('div.hoveropaque btn-group', {
 						style: {
 							position: 'fixed',
 							bottom: '10px',
 							right: '2px'
 						}
 				},[
-				m('a.leftanchor btn btn-default', {
+				m('a.leftanchor btn btn-default glyphicon glyphicon-th-list', {
 					href: '#left'
-				}, ' Conversations'),
-				m('a.rightanchor btn btn-default', {
+				}),
+				m('a.rightanchor btn btn-default glyphicon glyphicon-envelope', {
 					href: '#right'
-				}, ' Messages'),
+				}),
 				m('button.btn btn-default glyphicon glyphicon-triangle-left', {
 					onclick: ctrl.previousPage,
 					disabled: ctrl.page() === 0 || ctrl.per_page() === Infinity,
@@ -630,8 +630,8 @@ module.exports.view = function(ctrl, args, extras) {
 						'margin-right': '1em',
 						display: ctrl.per_page() === Infinity ? 'none' : 'initial'
 					}
-				}, ' Previous Page'),
-				m('span', ctrl.per_page() === Infinity ? '' : 'Page ' + (ctrl.page()+1) + ' '),
+				}),
+				// m('span', ctrl.per_page() === Infinity ? '' : 'Page ' + (ctrl.page()+1) + ' '),
 				m('button.btn btn-default glyphicon glyphicon-triangle-right', {
 					onclick: ctrl.nextPage,
 					disabled:  ctrl.per_page() === Infinity,
@@ -639,14 +639,14 @@ module.exports.view = function(ctrl, args, extras) {
 						'margin-right': '1em',
 						display: ctrl.per_page() === Infinity ? 'none' : 'initial'
 					}
-				}, ' Next Page'),
+				}),
 				m('button.btn btn-default glyphicon glyphicon-triangle-bottom', {
 					onclick: ctrl.allPages,
 					style: {
 						'margin-right': '1em',
 						display: ctrl.per_page() === Infinity ? 'none' : 'initial'
 					}
-				}, ' View All')
+				})
 				])
 
 			])
