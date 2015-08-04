@@ -47,3 +47,10 @@ audio {
 #right {
 	word-wrap: break-word; /* prevent long URLs from widening the view. */
 }
+
+.hoveropaque {
+	opacity: 0.60
+}
+.hoveropaque:hover {
+	opacity: 1 !important
+}

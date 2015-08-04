@@ -610,24 +610,38 @@ module.exports.view = function(ctrl, args, extras) {
 					})
 				),
 				ctrl.messages.map(displayMessage),
+				m('div.hoveropaque', {
+						style: {
+							position: 'fixed',
+							bottom: '10px',
+							right: '2px'
+						}
+				},[
 				m('button.btn btn-default glyphicon glyphicon-triangle-left', {
 					onclick: ctrl.previousPage,
+					disabled: ctrl.page() === 0 || ctrl.per_page() === Infinity,
 					style: {
-						'margin-right': '1em'
+						'margin-right': '1em',
+						display: ctrl.per_page() === Infinity ? 'none' : 'initial'
 					}
 				}, ' Previous Page'),
+				m('span', ctrl.per_page() === Infinity ? '' : 'Page ' + (ctrl.page()+1) + ' '),
 				m('button.btn btn-default glyphicon glyphicon-triangle-right', {
 					onclick: ctrl.nextPage,
+					disabled:  ctrl.per_page() === Infinity,
 					style: {
-						'margin-right': '1em'
+						'margin-right': '1em',
+						display: ctrl.per_page() === Infinity ? 'none' : 'initial'
 					}
 				}, ' Next Page'),
 				m('button.btn btn-default glyphicon glyphicon-triangle-bottom', {
 					onclick: ctrl.allPages,
 					style: {
-						'margin-right': '1em'
+						'margin-right': '1em',
+						display: ctrl.per_page() === Infinity ? 'none' : 'initial'
 					}
-				}, ' View All'),
+				}, ' View All')
+				])
 
 			])
 		]
