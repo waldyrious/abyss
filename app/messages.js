@@ -634,7 +634,7 @@ module.exports.view = function(ctrl, args, extras) {
 				// m('span', ctrl.per_page() === Infinity ? '' : 'Page ' + (ctrl.page()+1) + ' '),
 				m('button.btn btn-default glyphicon glyphicon-triangle-right', {
 					onclick: ctrl.nextPage,
-					disabled:  ctrl.per_page() === Infinity,
+					disabled:  ctrl.per_page() === Infinity || ctrl.messages.length === 0,
 					style: {
 						'margin-right': '1em',
 						display: ctrl.per_page() === Infinity ? 'none' : 'initial'
