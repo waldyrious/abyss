@@ -557,7 +557,7 @@ module.exports.view = function(ctrl, args, extras) {
 							}),
 							value: ctrl.to[index]
 						}),
-						m('button.btn btn-default btn-warning', {
+						m('button.btn btn-default btn-default', {
 							index: index,
 							style: {
 								'border-radius': '10em',
