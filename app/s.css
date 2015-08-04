@@ -1,11 +1,17 @@
 
 
-
 @media (max-width: 768px) {
-
 
 }
 @media (min-width: 768px) {
+	.leftanchor {
+		opacity: 0;
+	}
+
+	.rightanchor {
+		opacity: 0;
+	}
+
 	#left {
 		overflow-y: scroll;
 		height: 92vh;
@@ -49,8 +55,8 @@ audio {
 }
 
 .hoveropaque {
-	opacity: 0.25
+	opacity: 0.50
 }
 .hoveropaque:hover {
-	opacity: 1
+	opacity: 0.9
 }

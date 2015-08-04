@@ -617,6 +617,12 @@ module.exports.view = function(ctrl, args, extras) {
 							right: '2px'
 						}
 				},[
+				m('a.leftanchor btn btn-default', {
+					href: '#left'
+				}, ' Conversations'),
+				m('a.rightanchor btn btn-default', {
+					href: '#right'
+				}, ' Messages'),
 				m('button.btn btn-default glyphicon glyphicon-triangle-left', {
 					onclick: ctrl.previousPage,
 					disabled: ctrl.page() === 0 || ctrl.per_page() === Infinity,
