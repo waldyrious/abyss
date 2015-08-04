@@ -54,6 +54,10 @@ audio {
 	word-wrap: break-word; /* prevent long URLs from widening the view. */
 }
 
+.nowrap {
+	word-wrap: break-word;
+}
+
 .hoveropaque {
 	opacity: 0.50
 }

@@ -544,17 +544,8 @@ module.exports.view = function(ctrl, args, extras) {
 
 				m('div', [
 					m('label', 'To: '), m('span', ' '),
-					m('button.btn btn-default', {
-						style: {
-							'border-radius': '1em',
-							margin: '1px'
-						},
-						onclick: ctrl.toPlus
-					}, '+'),
-
-					m('br'),
 					ctrl.to.map(function(item, index) {
-						return [m('input', {
+						return m('span.nowrap', m('input', {
 							style: {
 								margin: '2px',
 								padding: '4px'
@@ -566,15 +557,26 @@ module.exports.view = function(ctrl, args, extras) {
 							}),
 							value: ctrl.to[index]
 						}),
-						m('button.btn btn-default', {
+						m('button.btn btn-default btn-danger', {
 							index: index,
 							style: {
-								'border-radius': '1em',
+								'border-radius': '10em',
 								margin: '1px',
-								right: '2em'
+								position: 'relative',
+								right: '1em'
 							},
 							onclick: m.withAttr('index', ctrl.toMinus)
-						}, '✗')]
+						}, '✗'))
+					}),
+					' ',
+					m('button.btn btn-default btn-success glyphicon glyphicon-plus', {
+						style: {
+							'border-radius': '10em',
+							margin: '1px',
+							position: 'relative',
+							left: '10em'
+						},
+						onclick: ctrl.toPlus
 					}),
 					m('br'),
 				]),
