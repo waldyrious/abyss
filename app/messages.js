@@ -490,7 +490,7 @@ module.exports.view = function(ctrl, args, extras) {
 			},
 
 			[
-				ctrl.editMode() ? m('button.btn btn-default glyphicon glyphicon-erase', {
+				ctrl.editMode() ? m('button.btn btn-danger glyphicon glyphicon-fire', {
 					onclick: fadesOut(ctrl.delete.bind(this, message))
 				}) : null,
 
@@ -557,7 +557,7 @@ module.exports.view = function(ctrl, args, extras) {
 							}),
 							value: ctrl.to[index]
 						}),
-						m('button.btn btn-default btn-danger', {
+						m('button.btn btn-default btn-warning', {
 							index: index,
 							style: {
 								'border-radius': '10em',
