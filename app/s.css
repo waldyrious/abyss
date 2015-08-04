@@ -49,8 +49,8 @@ audio {
 }
 
 .hoveropaque {
-	opacity: 0.60
+	opacity: 0.25
 }
 .hoveropaque:hover {
-	opacity: 1 !important
+	opacity: 1
 }
