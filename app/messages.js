@@ -623,7 +623,7 @@ module.exports.view = function(ctrl, args, extras) {
 				m('a.rightanchor btn btn-default glyphicon glyphicon-envelope', {
 					href: '#right'
 				}),
-				m('button.btn btn-default glyphicon glyphicon-triangle-left', {
+				m('button.btn btn-default glyphicon glyphicon-arrow-left', {
 					onclick: ctrl.previousPage,
 					disabled: ctrl.page() === 0 || ctrl.per_page() === Infinity,
 					style: {
@@ -632,7 +632,7 @@ module.exports.view = function(ctrl, args, extras) {
 					}
 				}),
 				// m('span', ctrl.per_page() === Infinity ? '' : 'Page ' + (ctrl.page()+1) + ' '),
-				m('button.btn btn-default glyphicon glyphicon-triangle-right', {
+				m('button.btn btn-default glyphicon glyphicon-arrow-right', {
 					onclick: ctrl.nextPage,
 					disabled:  ctrl.per_page() === Infinity || ctrl.messages.length === 0 || ctrl.messages.length < ctrl.per_page(),
 					style: {
@@ -640,7 +640,7 @@ module.exports.view = function(ctrl, args, extras) {
 						display: ctrl.per_page() === Infinity ? 'none' : 'initial'
 					}
 				}),
-				m('button.btn btn-default glyphicon glyphicon-triangle-bottom', {
+				m('button.btn btn-default glyphicon glyphicon-arrow-down', {
 					onclick: ctrl.allPages,
 					style: {
 						'margin-right': '1em',
