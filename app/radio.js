@@ -43,9 +43,7 @@ module.exports.controller = function(args, extras) {
 
 	self.changeStation = function (key) {
         audioKey = key;
-        element.src = audioSources[audioKey];
-        element.load();
-        element.play();
+        play();
 	}
 }
 
