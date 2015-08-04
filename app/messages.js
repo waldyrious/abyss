@@ -242,9 +242,11 @@ module.exports.controller = function(args, extras) {
 			})
 			.then(function() {
 				self.message('');
-				self.working(false);
 			})
 			.then(self.refresh, self.error)
+			.finally(function () {
+				self.working(false);
+			})
 	};
 
 	self.getMessages = function() {
@@ -255,11 +257,12 @@ module.exports.controller = function(args, extras) {
 				url: getMessagesUrl()
 			})
 			.then(function (response) {
-				self.working(false);
 				return response;
 			})
 			.then(self.setMessages, self.error)
-
+			.then(function () {
+				self.working(false);
+			})
 	};
 
 	self.refresh = self.getConversations = function() {
@@ -276,6 +279,9 @@ module.exports.controller = function(args, extras) {
 			})
 			.then(self.setConversations, self.error)
 			.then(self.getMessagesStreaming, self.error)
+			.then(function () {
+				self.working(false);
+			})
 
 	};
 
