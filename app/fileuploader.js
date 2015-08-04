@@ -206,11 +206,11 @@ module.exports.view = function(ctrl, args, extras) {
 				)
 			}
 		}) : '',
-		m('button.btn btn-success glyphicon glyphicon-cloud-upload', {
+		m('button.btn btn-success glyphicon glyphicon-send', {
 			disabled: ctrl.files() ? false : true,
 			onclick: ctrl.uploadFile,
 			config: sendButtonConfig
-		}, ' Send files'),
+		}, ' Send file(s)'),
 
 		' ',
 		m('input', {

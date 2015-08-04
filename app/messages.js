@@ -592,7 +592,7 @@ module.exports.view = function(ctrl, args, extras) {
 						config: textInputAreaConfig,
 						value: ctrl.message()
 					}),
-					m('button.btn btn-success glyphicon glyphicon-send', {
+					m('button.btn btn-success glyphicon glyphicon-comment', {
 						onclick: ctrl.send,
 						config: sendButtonConfig,
 						style: {
