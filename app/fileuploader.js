@@ -66,29 +66,23 @@ module.exports.controller = function(args, extras) {
 	module.exports.uploadFile = self.uploadFile = function(arg) {
 		var files;
 
-		console.log('uploadFile');
-		console.log(arg);
-
-		if (arg instanceof DataTransferItemList) {
-			var newfiles = [];
-			for (var i=0; i<arg.length; i++) {
-				if (arg[i].kind === 'file') {
-					newfiles.push(arg[i].getAsFile());
+		try {
+			if (arg instanceof DataTransferItemList) {
+				var newfiles = [];
+				for (var i=0; i<arg.length; i++) {
+					if (arg[i].kind === 'file') {
+						newfiles.push(arg[i].getAsFile());
+					}
 				}
+				files = newfiles;
+			} else if (arg instanceof FileList) {
+				files = Array.prototype.slice.call(arg);
+			} else {
+				files = Array.prototype.slice.call(self.fileInput().files);
 			}
-			files = newfiles;
-		} else if (arg instanceof Event) { // user clicked "upload files"
+		} catch (e) {
+			// Handle browsers that don't know about the types above
 			files = Array.prototype.slice.call(self.fileInput().files);
-		} else if (arg instanceof FileList) {
-			files = Array.prototype.slice.call(arg);
-			//
-			// var newfiles = [];
-			// for (var i=0; i<arg.length; i++) {
-			// 	newfiles.push(arg[i].getAsFile());
-			// }
-			// files = newfiles;
-		} else {
-			throw new TypeError('unable to handle ' + arg);
 		}
 
 		return Promise.map(files, function(file, index) {
