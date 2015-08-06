@@ -572,9 +572,9 @@ module.exports.view = function(ctrl, args, extras) {
 					m('button.btn btn-default btn-success glyphicon glyphicon-plus', {
 						style: {
 							'border-radius': '10em',
-							margin: '1px',
-							position: 'relative',
-							left: '10em'
+							margin: '1px'
+							// position: 'relative',
+							// left: '1em'
 						},
 						onclick: ctrl.toPlus
 					}),
