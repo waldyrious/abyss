@@ -3,6 +3,9 @@ var m = require('mithril');
 
 module.exports.view = function(ctrl, args, extras) {
 	return m('ul.list-unstyled faq', [
+		m('li', 'Q. I can\'t sign in?'),
+		m('li', 'A. Currently, only AT&T, Sprint, T-Mobile and Verizon are supported. You must also not have disabled email-to-SMS at your wireless carrier.'),
+		m('br'),
 		m('li', 'Q. What is the point of this?'),
 		m('li', 'A. Twitter and SMS are perfect for short messages, and e-mail is great for long messages, but sometimes you just to have an off the record conversation, or share a file without jumping through a bunch of hoops.'),
 		m('br'),
