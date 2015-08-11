@@ -113,8 +113,7 @@ module.exports.view = function(ctrl) {
 	}
 
 	return [
-		m('h1', 'yobro.net'),
-		m('h4', 'Simple group and individual messaging, with messages that you can erase at any time.'),
+		m('h4', 'Simple group messaging and file sharing. Erasable conversations.'),
 		ctrl.needCode() ? [
 			m('.col-md1',
 			m('.input-group', {
@@ -158,8 +157,11 @@ module.exports.view = function(ctrl) {
 		], error.renderError(ctrl.error),
 		m('br'),
 		m('br'),
-		m('div.faq', m('button.btn btn-default btn-large', {
-			onclick: showFaqButton
+		m('div.faq', m('a', {
+			onclick: showFaqButton,
+			style: {
+				cursor: 'pointer'
+			}
 		}, 'Frequently Asked Questions')),
 		showFaq ? m.component(faq) : null
 	]
