@@ -2,12 +2,12 @@ var Spinner = require('spin.js');
 
 var opts = {
   lines: 12 // The number of lines to draw
-, length: 5 // The length of each line
+, length: 12 // The length of each line
 , width: 7 // The line thickness
 , radius: 42 // The radius of the inner circle
 , scale: 1 // Scales overall size of the spinner
 , corners: 1 // Corner roundness (0..1)
-, color: '#4cae4c' // #rgb or #rrggbb or array of colors
+, color: '#000000' // #rgb or #rrggbb or array of colors
 , opacity: 0.05 // Opacity of the lines
 , rotate: 0 // The rotation offset
 , direction: 1 // 1: clockwise, -1: counterclockwise

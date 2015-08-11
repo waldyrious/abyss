@@ -456,7 +456,12 @@ module.exports.view = function(ctrl, args, extras) {
 				}
 			})
 		} else if (file.type.indexOf('video') > -1) {
-			return m('video', {
+			return [
+				m('a', {
+					'href': '/api/file/' + encodeURIComponent(message.id)
+				}, message.file.name),
+				' ',
+				m('video', {
 				src: '/api/file/' + encodeURIComponent(message.id),
 				style: {
 					'max-width': '100%',
@@ -464,13 +469,18 @@ module.exports.view = function(ctrl, args, extras) {
 				},
 				preload: 'none',
 				controls: true
-			})
+			})]
 		} else if (file.type.indexOf('audio') > -1) {
-			return m('audio', {
+			return [
+				m('a', {
+					'href': '/api/file/' + encodeURIComponent(message.id)
+				}, message.file.name),
+				' ',
+				m('audio', {
 				src: '/api/file/' + encodeURIComponent(message.id),
 				preload: 'none',
 				controls: true
-			})
+			})]
 		} else {
 			return m('a', {
 				href: '/api/file/' + encodeURIComponent(message.id),
