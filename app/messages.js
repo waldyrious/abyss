@@ -445,8 +445,8 @@ module.exports.view = function(ctrl, args, extras) {
 				onclick: ctrl.toggleSmallImages,
 				style: ctrl.smallImages() ? {
 					'object-fit': 'contain',
-					'max-width': '50%',
-					'max-height': '50%',
+					'max-width': '70%',
+					'max-height': '70%',
 					'cursor': 'zoom-in'
 				} : {
 					'object-fit': 'contain',
