@@ -117,8 +117,15 @@ module.exports.controller = function(args, extras) {
 	self.per_page = m.prop(50);
 
 	self.smallImages = m.prop(true);
-	self.toggleSmallImages = function () {
+	self.toggleSmallImages = function (id) {
 		self.smallImages(!self.smallImages());
+
+		if (id) {
+			setImmediate(function () {
+				// setImmediate - allow for layout to occur.
+				document.getElementById(id).scrollIntoView();
+			})
+		}
 	}
 
 	self.nextPage = function () {
@@ -441,8 +448,9 @@ module.exports.view = function(ctrl, args, extras) {
 
 		if (file.type.indexOf('image') > -1) {
 			return m('img', {
+				id: message.id,
 				src: '/api/file/' + encodeURIComponent(message.id),
-				onclick: ctrl.toggleSmallImages,
+				onclick: m.withAttr('id', ctrl.toggleSmallImages),
 				style: ctrl.smallImages() ? {
 					'object-fit': 'contain',
 					'max-width': '70%',
