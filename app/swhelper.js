@@ -18,6 +18,9 @@ module.exports.isSubscribed = function () {
 			})
 		})
 	})
+	.catch(function () {
+		return false;
+	})
 }
 
 module.exports.register = function (jwt) {

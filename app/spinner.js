@@ -7,11 +7,11 @@ var opts = {
 , radius: 42 // The radius of the inner circle
 , scale: 1 // Scales overall size of the spinner
 , corners: 1 // Corner roundness (0..1)
-, color: '#000000' // #rgb or #rrggbb or array of colors
-, opacity: 0.05 // Opacity of the lines
+, color: '#000' // #rgb or #rrggbb or array of colors
+, opacity: 0.25 // Opacity of the lines
 , rotate: 0 // The rotation offset
 , direction: 1 // 1: clockwise, -1: counterclockwise
-, speed: 0.25 // Rounds per second
+, speed: 1.5 // Rounds per second
 , trail: 60 // Afterglow percentage
 , fps: 60 // Frames per second when using setTimeout() as a fallback for CSS
 , zIndex: 2e9 // The z-index (defaults to 2000000000)
@@ -26,19 +26,34 @@ var opts = {
 var spinner;
 var count = 0;
 
+var Promise = require('bluebird');
+
+var promise;
+
 module.exports = {
     spin: function () {
         count++;
         if (count === 1) {
             var target = document.getElementById('spinner');
-            spinner = new Spinner(opts).spin(target);
+            promise = Promise.delay(100)
+            .cancellable()
+            .then(function () {
+                spinner = new Spinner(opts).spin(target);
+            })
         }
     },
 
     stop: function () {
         count--;
         if (count === 0) {
-             spinner.stop();
+            if (promise) {
+                promise.cancel()
+                .catch(function () {})
+                .finally(function () {
+                    if (spinner)
+                        spinner.stop();
+                })
+            }
         }
     }
 };
