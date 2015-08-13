@@ -4,7 +4,7 @@ var identity = require('./identity');
 var radio = require('./radio');
 var messages = require('./messages');
 var error = require('./error');
-var regsw = require('./regsw');
+var swhelper = require('./swhelper'); //serviceworker helper
 var validator = require('validator');
 
 module.exports.controller = function(args, extras) {
@@ -23,6 +23,18 @@ module.exports.controller = function(args, extras) {
 					self.nicknameInput(identity.nickname);
 					self.isChangingNickname = false;
 				}, self.error)
+		}
+	}
+
+	self.notificationsEnabled = m.prop(true);
+
+	self.enableNotifications = function (bool) {
+		if (bool) {
+			return swhelper.register(identity.me().jwt)
+			.then(self.notificationsEnabled, self.notificationsEnabled)
+			.catch(error.renderError.bind(error))
+		} else {
+			swhelper.deregister();
 		}
 	}
 
@@ -52,6 +64,13 @@ module.exports.view = function(ctrl, args, extras) {
 				m('button.btn btn-default', {
 					onclick: ctrl.changeNickname
 				}, 'Change Nickname'),
+				m('label', [
+					m('input[type=checkbox]', {
+						onclick: function() {
+				            ctrl.enableNotifications(this.checked);
+				        },
+						checked: ctrl.notificationsEnabled()
+					}), ' Notifications']),
 				' ',
 				m('button.btn btn-default', {
 					onclick: ctrl.logout,

@@ -2,7 +2,6 @@
 var m = require('mithril');
 var identity = require('./identity');
 var messages = require('./messages');
-var regsw = require('./regsw');
 var Cookies = require('cookies-js');
 var validator = require('validator');
 
@@ -32,7 +31,6 @@ module.exports.controller = function(args, extras) {
 				self.nicknameInput(identity.me().nickname);
 			}
 			self.isChangingNickname = false;
-			regsw(self.jwt());
 		} else {
 			return identity.me();
 		}

@@ -244,7 +244,7 @@ module.exports.controller = function(args, extras) {
 				self.message('');
 			})
 			.then(self.refresh, self.error)
-			.finally(function () {
+			.then(function () {
 				self.working(false);
 			})
 	};
