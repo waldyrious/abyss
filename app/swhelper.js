@@ -1,5 +1,25 @@
 var existingRegistration;
 
+var Promise = require('bluebird');
+
+module.exports.isSubscribed = function () {
+	return Promise.try(function () {
+		return navigator.serviceWorker.register('/sw.js')
+		.then(function (registration) {
+			existingRegistration = registration;
+
+			if (!registration.pushManager) {
+				return false;
+			}
+			return registration.pushManager.getSubscription()
+			.then(function (subscription) {
+				console.log(subscription);
+				return subscription;
+			})
+		})
+	})
+}
+
 module.exports.register = function (jwt) {
 	return navigator.serviceWorker.register('/sw.js')
 	.then(function (registration) {

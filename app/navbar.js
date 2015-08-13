@@ -26,7 +26,12 @@ module.exports.controller = function(args, extras) {
 		}
 	}
 
-	self.notificationsEnabled = m.prop(true);
+	self.notificationsEnabled = m.prop(false);
+
+	swhelper.isSubscribed()
+	.then(self.notificationsEnabled, function () {
+		self.notificationsEnabled(false);
+	})
 
 	self.enableNotifications = function (bool) {
 		if (bool) {
@@ -70,7 +75,7 @@ module.exports.view = function(ctrl, args, extras) {
 				            ctrl.enableNotifications(this.checked);
 				        },
 						checked: ctrl.notificationsEnabled()
-					}), ' Notifications']),
+					}), ' Receive notifications (on this browser)']),
 				' ',
 				m('button.btn btn-default', {
 					onclick: ctrl.logout,
