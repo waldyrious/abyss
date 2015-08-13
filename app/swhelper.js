@@ -38,14 +38,12 @@ module.exports.deregister = function (jwt) {
 			.then(function (success) {
 				if (success) {
 					console.log('deleting subscription ' + JSON.stringify(subscription));
-					fetch('/api/registration/subscription', {
+					fetch('/api/registration/subscription/' + subscription.subscriptionId , {
 						credentials: 'include',
 						method: 'delete',
 						headers: {
-							'Authorization': 'Bearer ' + jwt,
-							'Content-type': 'application/json'
+							'Authorization': 'Bearer ' + jwt
 						},
-						body: JSON.stringify(subscription)
 					})
 				}
 			})

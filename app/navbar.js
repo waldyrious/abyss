@@ -34,7 +34,7 @@ module.exports.controller = function(args, extras) {
 			.then(self.notificationsEnabled, self.notificationsEnabled)
 			.catch(error.renderError.bind(error))
 		} else {
-			swhelper.deregister();
+			swhelper.deregister(identity.me().jwt);
 		}
 	}
 
