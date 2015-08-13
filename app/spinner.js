@@ -35,7 +35,7 @@ module.exports = {
         count++;
         if (count === 1) {
             var target = document.getElementById('spinner');
-            promise = Promise.delay(100)
+            promise = Promise.delay(300)
             .cancellable()
             .then(function () {
                 spinner = new Spinner(opts).spin(target);
