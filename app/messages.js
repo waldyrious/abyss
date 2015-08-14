@@ -265,6 +265,35 @@ module.exports.controller = function(args, extras) {
 			})
 	};
 
+
+	self.getMessagesStreaming = function() {
+			// Stream in first 10 messages and try to render them ASAP, then we load the rest
+			var count = 0;
+			var show = 9;
+
+			m.startComputation();
+			self.working(true);
+			self.messages = [];
+			oboe({
+					url: getMessagesUrl(),
+					headers: identity.oboeAuth()
+				}).node('![*]', function(item) {
+					self.messages.push(item);
+					count++;
+					if (count == show) {
+						m.endComputation();
+						m.startComputation();
+					}
+					return oboe.drop;
+				})
+				.done(function() {
+					self.working(false);
+					m.endComputation();
+				});
+	};
+	self.getMessagesStreaming = self.getMessages // quick uncommentable to disable streaming messages
+
+
 	self.refresh = self.getConversations = function() {
 		self.working(true, 0);
 		return m.request({
@@ -295,33 +324,6 @@ module.exports.controller = function(args, extras) {
 			'per_page': self.per_page()
 		});
 	}
-
-	self.getMessagesStreaming = function() {
-		// Stream in first 10 messages and try to render them ASAP, then we load the rest
-		var count = 0;
-		var show = 9;
-
-		m.startComputation();
-		self.working(true);
-		self.messages = [];
-		oboe({
-				url: getMessagesUrl(),
-				headers: identity.oboeAuth()
-			}).node('![*]', function(item) {
-				self.messages.push(item);
-				count++;
-				if (count == show) {
-					m.endComputation();
-					m.startComputation();
-				}
-				return oboe.drop;
-			})
-			.done(function() {
-				self.working(false);
-				m.endComputation();
-			});
-	};
-	// self.getMessagesStreaming = self.getMessages // quick uncommentable to disable streaming messages
 
 	self.clearMessages = function() {
 		self.working(true);
@@ -440,6 +442,8 @@ module.exports.view = function(ctrl, args, extras) {
 		return ret;
 	}
 
+	var lastTimeDisplayed = null;
+
 	function displayMessageWithFile(message) {
 
 		if (!message.file) return;
@@ -498,11 +502,13 @@ module.exports.view = function(ctrl, args, extras) {
 
 	function displayMessage(message) {
 
+		var fromNow = moment(message.date).fromNow();
+
 		if (!message.text) {
 			message.text = '';
 		}
 
-		return m('div', {
+		var retval = m('div', {
 				key: message.id,
 				config: fadesIn
 			},
@@ -511,9 +517,17 @@ module.exports.view = function(ctrl, args, extras) {
 				ctrl.editMode() ? m('button.btn btn-danger glyphicon glyphicon-fire', {
 					onclick: fadesOut(ctrl.delete.bind(this, message))
 				}) : null,
-
-				m('i', ' ' + moment(message.date).fromNow()),
-				' ',
+				m('div', {
+					style: {
+						'text-align': 'center',
+						'display': lastTimeDisplayed === fromNow ? 'none' : 'inherit',
+						'font-style': 'italic',
+						'line-height': '400%',
+						'font-size': '90%'
+					}
+				}, fromNow),
+				// m('i', ' ' + moment(message.date).fromNow()),
+				// ' ',
 				m('b', fromMe(message) ? (identity.me().nickname ? identity.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
 				': ',
 
@@ -521,6 +535,11 @@ module.exports.view = function(ctrl, args, extras) {
 					m.trust(autolinker.link(html.escape(message.text)).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
 			]
 		)
+
+		if (lastTimeDisplayed !== fromNow) {
+			lastTimeDisplayed = fromNow;
+		}
+		return retval;
 	}
 
 	return m('div', [
