@@ -213,7 +213,7 @@ module.exports.controller = function(args, extras) {
 		self.conversations = value.groupings;
 		self.nicknames = value.nicknames;
 
-		immediate(self.selectFirstGroup);
+		// immediate(self.selectFirstGroup);
 	}
 
 	function multiTo(message) {
@@ -250,6 +250,7 @@ module.exports.controller = function(args, extras) {
 	};
 
 	self.getMessages = function() {
+		console.log('getmsgs')
 		self.working(true);
 		m.request({
 				method: 'GET',
@@ -363,7 +364,7 @@ module.exports.controller = function(args, extras) {
 
 		if (to && !isEqual(to, self.to)) {
 			self.to = to;
-			self.reselectGroup();
+			// self.reselectGroup();
 		}
 	}
 
