@@ -2,25 +2,34 @@ var existingRegistration;
 
 var Promise = require('bluebird');
 
-module.exports.isSubscribed = function () {
-	return Promise.try(function () {
+module.exports.lastIsSubscribed = false;
+
+function checkRegistration() {
+	Promise.try(function () {
 		return navigator.serviceWorker.register('/sw.js')
 		.then(function (registration) {
 			existingRegistration = registration;
 
 			if (!registration.pushManager) {
+				module.exports.lastIsSubscribed = false;
 				return false;
 			}
 			return registration.pushManager.getSubscription()
 			.then(function (subscription) {
 				console.log(subscription);
+				module.exports.lastIsSubscribed = true;
 				return subscription;
 			})
 		})
 	})
 	.catch(function () {
+		module.exports.lastIsSubscribed = false;
 		return false;
 	})
+}
+
+module.exports.isSubscribed = function () {
+	return module.exports.lastIsSubscribed;
 }
 
 module.exports.register = function (jwt) {
@@ -49,6 +58,9 @@ module.exports.register = function (jwt) {
 				},
 				body: JSON.stringify(subscription)
 			})
+			.then(function () {
+				module.exports.lastIsSubscribed = true;
+			})
 		})
 	})
 };
@@ -67,6 +79,8 @@ module.exports.deregister = function (jwt) {
 						headers: {
 							'Authorization': 'Bearer ' + jwt
 						},
+					}).then(function () {
+						module.exports.lastIsSubscribed = false;
 					})
 				}
 			})

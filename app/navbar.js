@@ -26,18 +26,11 @@ module.exports.controller = function(args, extras) {
 		}
 	}
 
-	self.notificationsEnabled = m.prop(false);
-
-	swhelper.isSubscribed()
-	.then(self.notificationsEnabled, function () {
-		self.notificationsEnabled(false);
-	})
+	self.notificationsEnabled = m.prop(swhelper.isSubscribed());
 
 	self.enableNotifications = function (bool) {
 		if (bool) {
 			return swhelper.register(identity.me().jwt)
-			.then(self.notificationsEnabled, self.notificationsEnabled)
-			.catch(error.renderError.bind(error))
 		} else {
 			swhelper.deregister(identity.me().jwt);
 		}
