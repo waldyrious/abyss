@@ -458,13 +458,13 @@ module.exports.view = function(ctrl, args, extras) {
 				onclick: m.withAttr('id', ctrl.toggleSmallImages),
 				style: ctrl.smallImages() ? {
 					'object-fit': 'contain',
-					'max-width': '70%',
-					'max-height': '70%',
+					'max-width': '50%',
+					'max-height': '40em',
 					'cursor': 'zoom-in'
 				} : {
 					'object-fit': 'contain',
 					'max-width': '100%',
-					'max-height': '100%',
+					'max-height': '80em',
 					'cursor': 'zoom-out'
 				}
 			})
