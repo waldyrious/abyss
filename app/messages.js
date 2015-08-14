@@ -266,7 +266,7 @@ module.exports.controller = function(args, extras) {
 	};
 
 	self.refresh = self.getConversations = function() {
-		self.working(true);
+		self.working(true, 0);
 		return m.request({
 				method: 'GET',
 				config: identity.withAuth,
@@ -546,7 +546,7 @@ module.exports.view = function(ctrl, args, extras) {
 			]),
 			m('div.col-sm-9#right', [
 				m('div', {
-				config: fadesIn,
+				// config: fadesIn,
 				style: {
 					'margin-bottom': '1em'
 				}
