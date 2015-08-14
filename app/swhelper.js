@@ -17,7 +17,7 @@ function checkRegistration() {
 			}
 			return registration.pushManager.getSubscription()
 			.then(function (subscription) {
-				if (subscription != null)
+				if (subscription != null) 
 					last(true);
 				return subscription;
 			})
@@ -59,6 +59,7 @@ module.exports.register = function (jwt) {
 			})
 			.then(function () {
 				last(true);
+				m.redraw();
 			})
 		})
 	})
@@ -68,21 +69,24 @@ module.exports.deregister = function (jwt) {
 	if (existingRegistration) {
 		existingRegistration.pushManager.getSubscription().then(function (receivedSubscription) {
 			var subscription = receivedSubscription;
-			return subscription.unsubscribe()
-			.then(function (success) {
-				if (success) {
-					console.log('deleting subscription ' + JSON.stringify(subscription));
-					fetch('/api/registration/subscription/?endpoint=' + encodeURIComponent(subscription.endpoint) , {
-						credentials: 'include',
-						method: 'delete',
-						headers: {
-							'Authorization': 'Bearer ' + jwt
-						},
-					}).then(function () {
-						last(false);
-					})
-				}
-			})
+			if (subscription !== null) {
+				return subscription.unsubscribe()
+				.then(function (success) {
+					if (success) {
+						console.log('deleting subscription ' + JSON.stringify(subscription));
+						fetch('/api/registration/subscription/?endpoint=' + encodeURIComponent(subscription.endpoint) , {
+							credentials: 'include',
+							method: 'delete',
+							headers: {
+								'Authorization': 'Bearer ' + jwt
+							},
+						}).then(function () {
+							last(false);
+							m.redraw();
+						})
+					}
+				})
+			}
 		})
 	}
 }
