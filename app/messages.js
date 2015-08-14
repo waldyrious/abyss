@@ -514,9 +514,6 @@ module.exports.view = function(ctrl, args, extras) {
 			},
 
 			[
-				ctrl.editMode() ? m('button.btn btn-danger glyphicon glyphicon-fire', {
-					onclick: fadesOut(ctrl.delete.bind(this, message))
-				}) : null,
 				m('div', {
 					style: {
 						'text-align': 'center',
@@ -526,6 +523,15 @@ module.exports.view = function(ctrl, args, extras) {
 						'font-size': '90%'
 					}
 				}, fromNow),
+
+				ctrl.editMode() ? m('button.btn btn-danger glyphicon glyphicon-fire', {
+					onclick: fadesOut(ctrl.delete.bind(this, message)),
+					style: {
+						'margin-right': '0.5em',
+						'margin-top': '0.5em'
+					}
+				}) : null,
+
 				// m('i', ' ' + moment(message.date).fromNow()),
 				// ' ',
 				m('b', fromMe(message) ? (identity.me().nickname ? identity.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
