@@ -69,7 +69,11 @@ module.exports.view = function(ctrl, args, extras) {
 				m('button.btn btn-default', {
 					onclick: ctrl.changeNickname
 				}, 'Change Nickname'),
-				m('label', [
+				m('label', {
+						style: {
+							'margin-left': '1em'
+						}
+				},[
 					m('input[type=checkbox]', {
 						onclick: function() {
 				            ctrl.enableNotifications(this.checked);

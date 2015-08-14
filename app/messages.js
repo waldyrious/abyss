@@ -39,10 +39,10 @@ module.exports.controller = function(args, extras) {
 	var self = this;
 	self.working = (function () {
 		var working = false;
-		return function (bool) {
+		return function (bool, delay) {
 			if (working !== bool) {
 				if (bool) {
-					spinner.spin();
+					spinner.spin(delay);
 				} else {
 					spinner.stop();
 				}
@@ -230,7 +230,7 @@ module.exports.controller = function(args, extras) {
 	};
 
 	self.send = function() {
-		self.working(true);
+		self.working(true, 0);
 		m.request({
 				method: 'POST',
 				config: identity.withAuth,

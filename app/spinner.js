@@ -31,11 +31,14 @@ var Promise = require('bluebird');
 var promise;
 
 module.exports = {
-    spin: function () {
+    spin: function (delay) {
+        if (!delay && delay !== 0) {
+            delay = 600;
+        }
         count++;
         if (count === 1) {
             var target = document.getElementById('spinner');
-            promise = Promise.delay(300)
+            promise = Promise.delay(delay)
             .cancellable()
             .then(function () {
                 spinner = new Spinner(opts).spin(target);
