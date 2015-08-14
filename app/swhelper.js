@@ -72,7 +72,7 @@ module.exports.deregister = function (jwt) {
 			.then(function (success) {
 				if (success) {
 					console.log('deleting subscription ' + JSON.stringify(subscription));
-					fetch('/api/registration/subscription/' + subscription.subscriptionId , {
+					fetch('/api/registration/subscription/?endpoint=' + encodeURIComponent(subscription.endpoint) , {
 						credentials: 'include',
 						method: 'delete',
 						headers: {
