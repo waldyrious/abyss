@@ -26,7 +26,7 @@ module.exports.controller = function(args, extras) {
 		}
 	}
 
-	self.notificationsEnabled = m.prop(swhelper.isSubscribed());
+	self.notificationsEnabled = swhelper.isSubscribed;
 
 	self.enableNotifications = function (bool) {
 		if (bool) {

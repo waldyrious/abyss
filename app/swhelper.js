@@ -1,8 +1,9 @@
 var existingRegistration;
 
 var Promise = require('bluebird');
+var m = require('mithril');
 
-module.exports.lastIsSubscribed = false;
+var last = module.exports.isSubscribed = m.prop(false);
 
 function checkRegistration() {
 	Promise.try(function () {
@@ -11,26 +12,24 @@ function checkRegistration() {
 			existingRegistration = registration;
 
 			if (!registration.pushManager) {
-				module.exports.lastIsSubscribed = false;
+				last(false);
 				return false;
 			}
 			return registration.pushManager.getSubscription()
 			.then(function (subscription) {
-				console.log(subscription);
-				module.exports.lastIsSubscribed = true;
+				if (subscription != null)
+					last(true);
 				return subscription;
 			})
 		})
 	})
-	.catch(function () {
-		module.exports.lastIsSubscribed = false;
+	.catch(function (err) {
+		console.error(err)
+		last(false);
 		return false;
 	})
 }
-
-module.exports.isSubscribed = function () {
-	return module.exports.lastIsSubscribed;
-}
+checkRegistration();
 
 module.exports.register = function (jwt) {
 	return navigator.serviceWorker.register('/sw.js')
@@ -59,7 +58,7 @@ module.exports.register = function (jwt) {
 				body: JSON.stringify(subscription)
 			})
 			.then(function () {
-				module.exports.lastIsSubscribed = true;
+				last(true);
 			})
 		})
 	})
@@ -80,7 +79,7 @@ module.exports.deregister = function (jwt) {
 							'Authorization': 'Bearer ' + jwt
 						},
 					}).then(function () {
-						module.exports.lastIsSubscribed = false;
+						last(false);
 					})
 				}
 			})
