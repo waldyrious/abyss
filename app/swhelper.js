@@ -45,7 +45,7 @@ module.exports.register = function (jwt) {
 			return;
 		}
 
-		return registration.pushManager.subscribe()
+		return registration.pushManager.subscribe({userVisibleOnly: true})
 		.then(function (subscription) {
 			console.log(subscription);
 			fetch('/api/registration/subscription', {

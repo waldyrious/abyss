@@ -32,7 +32,7 @@ module.exports.controller = function(args, extras) {
 		if (bool) {
 			return swhelper.register(identity.me().jwt)
 		} else {
-			swhelper.deregister(identity.me().jwt);
+			return swhelper.deregister(identity.me().jwt);
 		}
 	}
 
