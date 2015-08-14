@@ -526,7 +526,7 @@ module.exports.view = function(ctrl, args, extras) {
 	return m('div', [
 		error.renderError(ctrl.error),
 		// m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
-		[m('div.col-sm-3#left', [m('h3', 'Conversations'),
+		[m('div.col-sm-3#left', [//m('h3', 'Conversations'),
 				ctrl.conversations.map(function(grouping) {
 					return [m('button.btn ', {
 						style: {
@@ -544,9 +544,13 @@ module.exports.view = function(ctrl, args, extras) {
 					m('br')]
 				})
 			]),
-			m('div.col-sm-9#right', [m('h3', {
-				config: fadesIn
-			}, 'Messages ',
+			m('div.col-sm-9#right', [
+				m('div', {
+				config: fadesIn,
+				style: {
+					'margin-bottom': '1em'
+				}
+			}, //'Messages ',
 
 				m('.input-group',
 					m('button.btn btn-default glyphicon glyphicon-refresh', {
