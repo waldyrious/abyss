@@ -83,23 +83,29 @@ if (secret.cluster && cluster.isMaster) {
 	}
 
 	var server;
+
+	var ws = require('./lib/ws')
+
 	if (secret.spdy) {
 		console.log('SPDY enabled');
 		server = spdy.createServer(credentials, app.callback());
-	} else if (secret.http2) {
-		console.log('HTTP2 enabled');
-		server = http2.createServer(credentials, app.callback());
 	} else if (secret.https) {
 		console.log('HTTPS enabled');
 		server = https.createServer(credentials, app.callback());
 	}
 	if (server) {
 		server.listen(httpsPort);
+		ws.register(server)
 		console.log('HTTPS server listening on port ' + httpsPort);
 	}
 
-	http.createServer(app.callback()).listen(httpPort);
+	var httpServer = http.createServer(app.callback());
+	httpServer.listen(httpPort);
 	console.log('HTTP server listening on port ' + httpPort);
+
+	if (!secret.https && !secret.spdy) {
+		ws.register(httpServer)
+	}
 }
 
 /*
