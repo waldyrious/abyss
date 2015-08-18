@@ -159,7 +159,7 @@ module.exports.controller = function(args, extras) {
 		} else if (ph === identity.me().id) {
 			return identity.me().nickname;
 		} else {
-			return null;
+			return '';
 		}
 	}
 
@@ -210,10 +210,12 @@ module.exports.controller = function(args, extras) {
 	}
 
 	self.setConversations = function(value) {
-		self.conversations = value.groupings;
-		self.nicknames = value.nicknames;
-
-		// immediate(self.selectFirstGroup);
+		self.conversations = value;
+		value.map(function (item) {
+			item.group.map(function (member, index) {
+				self.nicknames[member] = item.details[index].nickname;
+			})
+		})
 	}
 
 	function multiTo(message) {
