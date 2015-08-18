@@ -446,6 +446,8 @@ module.exports.view = function(ctrl, args, extras) {
 	}
 
 	var lastTimeDisplayed = null;
+	var lastConversationTimeDisplayed = null;
+
 
 	function displayMessageWithFile(message) {
 
@@ -556,12 +558,15 @@ module.exports.view = function(ctrl, args, extras) {
 		// m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
 		[m('div.col-sm-3#left', [//m('h3', 'Conversations'),
 				ctrl.conversations.map(function(grouping) {
-					return [
+					var fromNow = moment(grouping.last).fromNow();
+
+					var retval = [
 						m('div', {
 							style: {
 								'text-align': 'center',
 								'font-style': 'italic',
-								// 'line-height': '400%',
+								'display': lastConversationTimeDisplayed === fromNow ? 'none' : 'inherit',
+								'line-height': '400%',
 								'font-size': '90%'
 							}
 						}, moment(grouping.last).fromNow()),
@@ -569,8 +574,7 @@ module.exports.view = function(ctrl, args, extras) {
 						style: {
 							'border-radius': '1em',
 							cursor: 'pointer',
-							margin: '4px',
-							'margin-bottom': '2em'
+							margin: '4px'
 						},
 						onclick: function() {
 							ctrl.selectGroup(grouping.group)
@@ -580,6 +584,12 @@ module.exports.view = function(ctrl, args, extras) {
 						return m('div', ph + (ctrl.getNickname(ph) ? ' ' + ctrl.getNickname(ph) : ''))
 					})]),
 					m('br')]
+
+					if (lastConversationTimeDisplayed !== fromNow) {
+						lastConversationTimeDisplayed = fromNow;
+					}
+
+					return retval;
 				})
 			]),
 			m('div.col-sm-9#right', [
