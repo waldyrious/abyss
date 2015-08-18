@@ -252,7 +252,6 @@ module.exports.controller = function(args, extras) {
 	};
 
 	self.getMessages = function() {
-		console.log('getmsgs')
 		self.working(true);
 		m.request({
 				method: 'GET',
