@@ -51,11 +51,11 @@ module.exports.controller = function(args, extras) {
 		}
 	})();
 
-	var evtSource = new EventSource('/api/updates',  { withCredentials: true } );
-
-	evtSource.addEventListener("message", function(e) {
-		console.log('SSE ping ' + e);
-	})
+	var evtSource = new EventSource('/api/updates',  {withCredentials: true} );
+	evtSource.onmessage = function(e) {
+		console.log('SSE event ' + JSON.stringify(e))
+		self.refresh();
+	}
 
 	window.addEventListener('message', receiveMessage);
 	window.addEventListener('paste', handlePaste);
