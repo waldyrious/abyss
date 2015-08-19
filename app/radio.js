@@ -7,11 +7,12 @@ var randomProperty = function (obj) {
 };
 
 var audioSources = {
-	'Trap': 'http://208.113.211.151:443/trap/;',
 	'Chillstep': 'http://208.113.211.151:443/chillstep/;',
 	'Progressive House': 'http://208.113.211.151:443/prog-house/;',
 	'Dubstep': 'http://208.113.211.151:443/dubstep/;',
-	'Pop': 'http://208.113.211.151:443/getpsyched/;'
+	'Pop': 'http://208.113.211.151:443/getpsyched/;',
+    'Melodic Drum & Bass': 'http://208.113.211.151:443/dnb/;',
+    'Trap': 'http://208.113.211.151:443/trap/;'
 }
 // var audioKey = 'Trap';
 var audioKey = randomProperty(audioSources);
