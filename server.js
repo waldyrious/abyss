@@ -84,8 +84,6 @@ if (secret.cluster && cluster.isMaster) {
 
 	var server;
 
-	var ws = require('./lib/ws')
-
 	if (secret.spdy) {
 		console.log('SPDY enabled');
 		server = spdy.createServer(credentials, app.callback());
@@ -96,7 +94,6 @@ if (secret.cluster && cluster.isMaster) {
 	var sockets = require('./lib/sockets')
 	if (server) {
 		server.listen(httpsPort);
-		ws.register(server)
 		sockets.register(require('socket.io').listen(server));
 
 		console.log('HTTPS server listening on port ' + httpsPort);
@@ -106,10 +103,6 @@ if (secret.cluster && cluster.isMaster) {
 	httpServer.listen(httpPort);
 	console.log('HTTP server listening on port ' + httpPort);
 	sockets.register(require('socket.io').listen(httpServer));
-
-	if (!secret.https && !secret.spdy) {
-		ws.register(httpServer)
-	}
 }
 
 /*
