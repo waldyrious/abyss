@@ -22,6 +22,7 @@ var clone = require('lodash/lang/clone');
 var union = require('lodash/array/union');
 var merge = require('lodash/object/merge');
 var html = require('html-escaper');
+var _ = require('lodash');
 
 // my custom mithril components
 var error = require('./error');
@@ -30,14 +31,6 @@ var fileuploader = require('./fileuploader');
 // spinner
 var spinner = require('./spinner');
 var identity = require('./identity');
-
-var io = require('socket.io-client')
-var socket = io();
-
-socket.on('changes', function (msg) {
-	console.log(msg);
-
-})
 
 var mountedDragAndDrop = false;
 
@@ -58,12 +51,6 @@ module.exports.controller = function(args, extras) {
 			}
 		}
 	})();
-
-	var evtSource = new EventSource('/api/updates',  {withCredentials: true} );
-	evtSource.onmessage = function(e) {
-		console.log('SSE event ' + JSON.stringify(e))
-		self.refresh();
-	}
 
 	window.addEventListener('message', receiveMessage);
 	window.addEventListener('paste', handlePaste);
@@ -109,11 +96,48 @@ module.exports.controller = function(args, extras) {
 	function handlePaste (ev) {
 		if (ev.clipboardData && ev.clipboardData.items && ev.clipboardData.items.length > 0) {
 			var items = ev.clipboardData.items;
-			fileuploader.uploadFile(items);
+			var hasImage = false;
+			_.map(items, function (item) {
+				if (item.type.startsWith('image')) {
+					hasImage = true;
+				}
+			})
+			if (hasImage) {
+				fileuploader.uploadFile(items);
+			}
+		}
+	}
+
+
+	var io = require('socket.io-client')
+	var socket = io();
+
+	socket.on('changes', handleChange);
+	function handleChange (msg) {
+		console.log(msg);
+
+		msg = JSON.parse(msg);
+
+		// {"new_val":{"date":"2015-08-20T01:15:04.881Z","from":"5558675309","id":"8582e043-0663-4775-be6a-778b340730d8","text":"","to":["5558675309"]},"old_val":null}
+		if (msg.new_val) {
+			msg	 = msg.new_val;
+			var group = _.without(_.union(msg.to, [msg.from]), identity.me().id);
+			if (_.isEqual(group, self.to)) {
+				console.log('new messsage in current conversation');
+				self.messages.unshift(msg);
+				m.redraw();
+			} else {
+				console.log('dunno, just gonna refresh')
+				self.refresh();
+			}
+		} else {
+			console.log('dunno, just gonna refresh')
+			self.refresh();
 		}
 	}
 
 	self.onunload = function () {
+		socket.off('changes', handleChange);
 		window.removeEventListener('message', receiveMessage);
 		window.removeEventListener('paste', handlePaste);
 	}
@@ -259,7 +283,7 @@ module.exports.controller = function(args, extras) {
 			.then(function() {
 				self.message('');
 			})
-			.then(self.refresh, self.error)
+			// .then(self.refresh, self.error)
 			.then(function () {
 				self.working(false);
 			})
@@ -309,8 +333,7 @@ module.exports.controller = function(args, extras) {
 	};
 	self.getMessagesStreaming = self.getMessages // quick uncommentable to disable streaming messages
 
-
-	self.refresh = self.getConversations = function() {
+	self.refreshConversations = function() {
 		self.working(true, 0);
 		return m.request({
 				method: 'GET',
@@ -323,12 +346,17 @@ module.exports.controller = function(args, extras) {
 				return result;
 			})
 			.then(self.setConversations, self.error)
+	};
+
+	self.refresh = self.getConversations = function() {
+		return self.refreshConversations()
 			.then(self.getMessagesStreaming, self.error)
 			.then(function () {
 				self.working(false);
 			})
 
 	};
+
 
 	function getMessagesUrl() {
 		self.to = filter(self.to, function(item) {
