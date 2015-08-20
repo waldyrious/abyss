@@ -119,12 +119,26 @@ module.exports.controller = function(args, extras) {
 		msg = JSON.parse(msg);
 
 		// {"new_val":{"date":"2015-08-20T01:15:04.881Z","from":"5558675309","id":"8582e043-0663-4775-be6a-778b340730d8","text":"","to":["5558675309"]},"old_val":null}
-		if (msg.new_val) {
+		if (msg.new_val && msg.old_val === null) { // new message!
 			msg	 = msg.new_val;
 			var group = _.without(_.union(msg.to, [msg.from]), identity.me().id);
 			if (_.isEqual(group, self.to)) {
 				console.log('new messsage in current conversation');
 				self.messages.unshift(msg);
+				m.redraw();
+			} else {
+				console.log('dunno, just gonna refresh')
+				self.refresh();
+			}
+		} else if (msg.new_val === null && msg.old_val) { // message deleted!
+			msg = msg.old_val;
+			var group = _.without(_.union(msg.to, [msg.from]), identity.me().id);
+			if (_.isEqual(group, self.to)) {
+				console.log('deleted messsage in current conversation' + msg.id);
+				self.messages = _.reject(self.messages, function (message) {
+					return message.id === msg.id;
+				})
+				// self.messages.splice(self.messages.indexOf(msg), 1);
 				m.redraw();
 			} else {
 				console.log('dunno, just gonna refresh')
