@@ -123,8 +123,16 @@ module.exports.controller = function(args, extras) {
 			msg	 = msg.new_val;
 			var group = _.without(_.union(msg.to, [msg.from]), identity.me().id);
 			if (_.isEqual(group, self.to)) {
+				var conversations = self.conversations;
 				console.log('new messsage in current conversation');
 				self.messages.unshift(msg);
+				var convo_index = _.findIndex(conversations, function (item) {
+					return _.isEqual(item.group, group);
+				})
+				var convo = conversations[convo_index];
+				convo.last = msg.date;
+				conversations.splice(convo_index, 1)
+				conversations.unshift(convo);
 				m.redraw();
 			} else {
 				console.log('dunno, just gonna refresh')
