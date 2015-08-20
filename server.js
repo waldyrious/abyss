@@ -93,15 +93,19 @@ if (secret.cluster && cluster.isMaster) {
 		console.log('HTTPS enabled');
 		server = https.createServer(credentials, app.callback());
 	}
+	var sockets = require('./lib/sockets')
 	if (server) {
 		server.listen(httpsPort);
 		ws.register(server)
+		sockets.register(require('socket.io').listen(server));
+
 		console.log('HTTPS server listening on port ' + httpsPort);
 	}
 
 	var httpServer = http.createServer(app.callback());
 	httpServer.listen(httpPort);
 	console.log('HTTP server listening on port ' + httpPort);
+	sockets.register(require('socket.io').listen(httpServer));
 
 	if (!secret.https && !secret.spdy) {
 		ws.register(httpServer)

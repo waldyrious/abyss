@@ -31,6 +31,14 @@ var fileuploader = require('./fileuploader');
 var spinner = require('./spinner');
 var identity = require('./identity');
 
+var io = require('socket.io-client')
+var socket = io();
+
+socket.on('changes', function (msg) {
+	console.log(msg);
+
+})
+
 var mountedDragAndDrop = false;
 
 module.exports.controller = function(args, extras) {
