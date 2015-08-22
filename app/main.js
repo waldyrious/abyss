@@ -3,8 +3,6 @@ require('bootstrap/less/bootstrap.less');
 require('./s.css');
 require('setimmediate');
 
-var ws = require('ws')
-
 var m = require('mithril');
 var mainElement = document.getElementById('main');
 
