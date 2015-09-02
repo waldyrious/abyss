@@ -52,6 +52,7 @@
     "phones": "^0.1.0",
     "pony": "^1.0.0",
     "request": "^2.61.0",
+    "request-promise": "^0.4.3",
     "rethinkdbdash": "^2.1.7",
     "setimmediate": "^1.0.2",
     "slow-stream": "0.0.4",
