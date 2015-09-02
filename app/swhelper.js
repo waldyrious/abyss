@@ -17,6 +17,7 @@ function checkRegistration() {
 			}
 			return registration.pushManager.getSubscription()
 			.then(function (subscription) {
+				console.log('The subscription is '+ JSON.stringify(subscription));
 				if (subscription != null)
 					last(true);
 				return subscription;
@@ -48,7 +49,7 @@ module.exports.register = function (jwt) {
 
 			return registration.pushManager.subscribe({userVisibleOnly: true})
 			.then(function (subscription) {
-				console.log(subscription);
+				console.log('Subscribed to ' + JSON.stringify(subscription));
 				fetch('/api/registration/subscription', {
 					credentials: 'include',
 					method: 'post',
