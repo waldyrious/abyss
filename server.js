@@ -20,6 +20,7 @@ global.Promise = Promise;
 
 */
 
+const sticky = require('socketio-sticky-session');
 const fs = require('fs');
 const net = require('net');
 const app = require('./lib/app');
@@ -27,7 +28,6 @@ const secret = require('./secret/secret.json');
 
 const http = require('http');
 const spdy = require('spdy');
-const http2 = require('http2');
 const https = require('https');
 
 const cluster = require('cluster');
@@ -77,8 +77,8 @@ if (secret.cluster && cluster.isMaster) {
 		console.error(e);
 	}
 
-	if (!credentials && (secret.spdy || secret.http2 || secret.https)) {
-		console.error("SSL certs need to be installed for SPDY/HTTP2/HTTPS");
+	if (!credentials && (secret.spdy || secret.https)) {
+		console.error("SSL certs need to be installed for SPDY/HTTPS");
 		process.exit(1);
 	}
 
