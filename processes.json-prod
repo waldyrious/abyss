@@ -1,0 +1,28 @@
+{
+  "apps" : [{
+    "name"        : "web",
+    "script"      : "web.js",
+    "args"        : [],
+    "watch"       : false,
+    "node_args"   : "",
+    "merge_logs"  : true,
+    "cwd"         : "/home/joe/yobro"
+  },
+  {
+    "name"        : "webtls",
+    "script"      : "webtls.js",
+    "args"        : [],
+    "watch"       : false,
+    "node_args"   : "",
+    "merge_logs"  : true,
+    "cwd"         : "/home/joe/yobro"
+  }, {
+    "name"        : "proxy",
+    "script"      : "proxy.js",
+    "args"        : [],
+    "watch"       : false,
+    "node_args"   : "",
+    "merge_logs"  : true,
+    "cwd"         : "/home/joe/yobro"
+  }]
+}
