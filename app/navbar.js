@@ -46,11 +46,11 @@ module.exports.controller = function(args, extras) {
 
 module.exports.view = function(ctrl, args, extras) {
 	return [
-		m('nav.navbar navbar-default', {
-				style: {
-					'margin-top': '1rem',
-					'padding-top': '7px'
-				}
+		m('nav.navbar navbar-default navbar-static-top', {
+				// style: {
+				// 	'margin-top': '1rem',
+				// 	'padding-top': '7px'
+				// }
 			},
 
 			m('div.container-fluid', ['Logged in as: ' + identity.me().id + ' ',
