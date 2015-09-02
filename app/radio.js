@@ -55,21 +55,8 @@ module.exports.controller = function(args, extras) {
 }
 
 module.exports.view = function(ctrl, args, extras) {
-	return m('span', [
-		m('button.btn btn-default glyphicon', { // needed for mobile safari
-				class: playing ? 'glyphicon-pause' : 'glyphicon-play',
-				style: {
-					float: 'right',
-					'margin-right': '16em'
-				},
-				onclick: toggle
-			}
-			// , playing ? ' Pause' : ' Play'
-		),
+	return m('li', [
 		m('select', {
-			style: {
-				float: 'right'
-			},
 			value: audioKey,
 			onchange: function() {
 				ctrl.changeStation(this.options[this.selectedIndex].value)
@@ -79,6 +66,12 @@ module.exports.view = function(ctrl, args, extras) {
 				value: item,
                 // selected: item == audioKey
 			}, item)
-		}))
+		})),
+        m('button.btn btn-default glyphicon', { // needed for mobile safari
+				class: playing ? 'glyphicon-pause' : 'glyphicon-play',
+				onclick: toggle
+			}
+			// , playing ? ' Pause' : ' Play'
+		)
 	])
 }
