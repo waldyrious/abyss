@@ -3,7 +3,7 @@
 var nodemon = require('nodemon');
 
 nodemon({
-	script: 'web.js',
+	script: 'webtls.js',
 	ext: 'js json',
 	"execMap": {
 		"js": "node --harmony"

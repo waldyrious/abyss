@@ -1,7 +1,16 @@
 {
   "apps" : [{
-    "name"        : "server",
-    "script"      : "server.js",
+    "name"        : "web",
+    "script"      : "web.js",
+    "args"        : [],
+    "watch"       : true,
+    "node_args"   : "",
+    "merge_logs"  : true,
+    "cwd"         : "/home/joe/yobro"
+  },
+  {
+    "name"        : "webtls",
+    "script"      : "webtls.js",
     "args"        : [],
     "watch"       : true,
     "node_args"   : "",
@@ -17,4 +26,3 @@
     "cwd"         : "/home/joe/yobro"
   }]
 }
-
