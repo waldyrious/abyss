@@ -41,6 +41,7 @@
     "koa-serve-static": "0.0.1",
     "koa-session": "^3.3.1",
     "koa-static": "^1.4.9",
+    "koa-unless": "0.0.1",
     "lodash": "^3.10.1",
     "mithril": "^0.2.0",
     "mithril.sugartags": "0.0.8",
