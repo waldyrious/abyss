@@ -14,12 +14,12 @@
 
 	#left {
 		overflow-y: scroll;
-		height: 92vh;
+		height: 89vh;
 	}
 
 	#right {
 		overflow-y: scroll;
-		height: 92vh;
+		height: 89vh;
 	}
 /*
 	.faq {
@@ -29,8 +29,7 @@
 }
 
 body {
-	/*text-align: center;*/
-	font-family: "Lucida Grande",Tahoma,Verdana,Arial,sans-serif;
+	family: Tahoma,Verdana,Arial,sans-serif;
 }
 /*
 .faq {

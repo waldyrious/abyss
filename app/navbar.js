@@ -46,43 +46,40 @@ module.exports.controller = function(args, extras) {
 
 module.exports.view = function(ctrl, args, extras) {
 	return [
-		m('nav.navbar navbar-default navbar-static-top',
-			m('ul.nav navbar-nav', [
-				m('li', ['Logged in as: ' + identity.me().id + ' ',
-					ctrl.isChangingNickname ? m('input', {
-						oninput: m.withAttr('value', ctrl.nicknameInput),
-						value: ctrl.nicknameInput()
-					}) : identity.me().nickname
-				]),
-				m('li', [
-					m('button.btn btn-default', {
-						onclick: ctrl.changeNickname
-					}, 'Change Nickname')
-				]),
-				m('li',	m('input[type=checkbox]', {
+		m('nav.navbar navbar-custom navbar-static-top',
+			m('div.container-fluid', [
+				m('ul.nav navbar-nav', [
+					m('li', ['Logged in as: ' + identity.me().id + ' ',
+						ctrl.isChangingNickname ? m('input', {
+							oninput: m.withAttr('value', ctrl.nicknameInput),
+							value: ctrl.nicknameInput()
+						}) : identity.me().nickname
+					]),
+					m('li', [
+						m('button.btn btn-default', {
+							onclick: ctrl.changeNickname
+						}, 'Change Nickname')
+					]),
+					m('li', m('input[type=checkbox]', {
 						onclick: function() {
 							ctrl.enableNotifications(this.checked);
 						},
 						checked: ctrl.notificationsEnabled()
 					}), ' Receive notifications (on this browser)'),
-				m.component(radio),
-				m('span', {
-					// style: {
-					// 	float: 'right',
-					// 	'margin-right': '1em'
-					// }
-				}, 'Featuring ', m('a', {
-					href: 'http://loungetek.com/radio/',
-					target: '_blank'
-				}, 'LoungeTek Radio'))
+					m.component(radio),
+					m('li', 'Featuring ', m('a', {
+						href: 'http://loungetek.com/radio/',
+						target: '_blank'
+					}, 'LoungeTek Radio'))
+				]),
+				m('ul.nav navbar-nav navbar-right', [
+					m('li', m('a', {
+						href: '/logout/',
+						onclick: ctrl.logout
+					}, 'Logout ' + identity.me().nickname))
+				])
 			]),
-			m('ul.nav navbar-nav navbar-right', [
-				m('li', m('a', {
-                	href: '/logout/',
-					onclick: ctrl.logout
-            	}, 'Logout ' + identity.me().nickname))			
-			])
-		),
-		m.component(messages)
+			m.component(messages)
+		)
 	]
 }
