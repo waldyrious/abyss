@@ -74,7 +74,6 @@ module.exports.view = function(ctrl, args, extras) {
 				]),
 				m('ul.nav navbar-nav navbar-right', [
 					m('li', m('a', {
-						href: '/logout/',
 						onclick: ctrl.logout
 					}, 'Logout ' + identity.me().nickname))
 				])

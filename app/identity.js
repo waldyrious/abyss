@@ -24,12 +24,12 @@ var me = module.exports.me = (function() {
     return function (value) {
         if (value) {
             // console.log("new identity " + JSON.stringify(value));
-            if (value.jwt) {
-                Cookies.set('jwt', value.jwt, {
-                    expires: Infinity
-                });
-                console.log('New jwt ' + value.jwt);
-            }
+            // if (value.jwt) {
+            //     Cookies.set('jwt', value.jwt, {
+            //         expires: Infinity
+            //     });
+            //     console.log('New jwt ' + value.jwt);
+            // }
 
             if (!value.nickname) {
                 value.nickname = '';
