@@ -1,48 +1,22 @@
-
-
-@media (max-width: 768px) {
-
-}
 @media (min-width: 768px) {
 	.leftanchor {
 		opacity: 0;
 	}
-
 	.rightanchor {
 		opacity: 0;
 	}
-
 	#left {
 		overflow-y: scroll;
 		height: 89vh;
 	}
-
 	#right {
 		overflow-y: scroll;
 		height: 89vh;
 	}
-/*
-	.faq {
-		margin-left: 20rem;
-		margin-right: 20rem;
-	}*/
 }
-
-body {
-	family: Tahoma,Verdana,Arial,sans-serif;
-}
-/*
-.faq {
-	margin-left: 1em;
-	margin-right: 1em;
-}*/
 
 audio {
     background-color: rgb(28, 119, 199);
-}
-
-.btn {
-	/*box-shadow: 2px 2px 1px #888888;*/
 }
 
 #left {
