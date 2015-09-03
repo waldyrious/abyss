@@ -107,7 +107,7 @@ module.exports.view = function(ctrl) {
 	}
 
 	var codeInputValid = function() {
-		return validator.isLength(ctrl.codssssseInput(), 6, 6);
+		return validator.isLength(ctrl.codeInput(), 6, 6);
 	}
 
 	var showFaqButton = function() {
