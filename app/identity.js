@@ -18,30 +18,7 @@ module.exports.oboeAuth = function() {
     }
 }
 
-var me = module.exports.me = (function() {
-    var currentMe = m.prop({});
-
-    return function (value) {
-        if (value) {
-            // console.log("new identity " + JSON.stringify(value));
-            // if (value.jwt) {
-            //     Cookies.set('jwt', value.jwt, {
-            //         expires: Infinity
-            //     });
-            //     console.log('New jwt ' + value.jwt);
-            // }
-
-            if (!value.nickname) {
-                value.nickname = '';
-            }
-            currentMe(value);
-            return value;
-        } else {
-            // console.log("current identity " + JSON.stringify(me()));
-            return currentMe();
-        }
-    };
-})();
+var me = module.exports.me =  m.prop({});
 
 var changeNickname = module.exports.changeNickname = function(nickname) {
     return m.request({
