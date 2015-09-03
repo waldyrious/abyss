@@ -585,7 +585,8 @@ module.exports.view = function(ctrl, args, extras) {
 				key: message.id,
 				config: fadesIn,
 				style: {
-					"font-size": "1.15em"
+					"font-size": "1.15em",
+					"margin-bottom": "1em"
 				}
 			},
 
@@ -610,7 +611,11 @@ module.exports.view = function(ctrl, args, extras) {
 
 				// m('i', ' ' + moment(message.date).fromNow()),
 				// ' ',
-				m('b', fromMe(message) ? (identity.me().nickname ? identity.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
+				m('b', {
+					style: {
+						opacity: "0.5"
+					}
+				}, fromMe(message) ? (identity.me().nickname ? identity.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
 				': ',
 
 				message.file ? displayMessageWithFile(message) :
