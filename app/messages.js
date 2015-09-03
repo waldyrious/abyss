@@ -583,7 +583,10 @@ module.exports.view = function(ctrl, args, extras) {
 
 		var retval = m('div', {
 				key: message.id,
-				config: fadesIn
+				config: fadesIn,
+				style: {
+					"font-size": "1.15em"
+				}
 			},
 
 			[
