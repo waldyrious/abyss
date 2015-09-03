@@ -87,7 +87,6 @@ module.exports.controller = function(args, extras) {
 				self.needCode(false);
 				self.codeInput('');
 				m.route('/conversations');
-				return identity.whoami();
 			}, self.error)
 	};
 
