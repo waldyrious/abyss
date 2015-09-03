@@ -50,7 +50,7 @@ module.exports.view = function(ctrl, args, extras) {
 			m('div.container-fluid', [
 				m('ul.nav navbar-nav', [
 					m('li', ['Logged in as: ' + identity.me().id + ' ',
-						ctrl.isChangingNickname ? m('input', {
+						ctrl.isChangingNickname ? m('input.black', {
 							oninput: m.withAttr('value', ctrl.nicknameInput),
 							value: ctrl.nicknameInput()
 						}) : identity.me().nickname
