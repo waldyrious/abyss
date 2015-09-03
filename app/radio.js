@@ -57,12 +57,18 @@ module.exports.controller = function(args, extras) {
 module.exports.view = function(ctrl, args, extras) {
 	return m('li', [
 		m('select', {
+			style: {
+				"color": "black"
+			},
 			value: audioKey,
 			onchange: function() {
 				ctrl.changeStation(this.options[this.selectedIndex].value)
 			},
 		}, Object.keys(audioSources).map(function(item) {
 			return m('option', {
+				style: {
+					"color": "black"
+				},
 				value: item,
 				// selected: item == audioKey
 			}, item)
