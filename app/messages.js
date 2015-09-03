@@ -38,9 +38,9 @@ module.exports.controller = function(args, extras) {
 	// m.redraw.strategy("all")
 
 	var self = this;
-	self.working = (function () {
+	self.working = (function() {
 		var working = false;
-		return function (bool, delay) {
+		return function(bool, delay) {
 			if (working !== bool) {
 				if (bool) {
 					spinner.spin(delay);
@@ -56,24 +56,26 @@ module.exports.controller = function(args, extras) {
 	window.addEventListener('paste', handlePaste);
 
 	function dragdrop(element, options) {
-	    options = options || {}
+		options = options || {}
 
-	    element.addEventListener("dragover", activate)
-	    element.addEventListener("dragleave", deactivate)
-	    element.addEventListener("dragend", deactivate)
-	    element.addEventListener("drop", deactivate)
-	    element.addEventListener("drop", update)
+		element.addEventListener("dragover", activate)
+		element.addEventListener("dragleave", deactivate)
+		element.addEventListener("dragend", deactivate)
+		element.addEventListener("drop", deactivate)
+		element.addEventListener("drop", update)
 
-	    function activate(e) {
-	        e.preventDefault()
-	    }
-	    function deactivate() {}
-	    function update(e) {
-	        e.preventDefault()
-	        if (typeof options.onchange == "function") {
-	            options.onchange((e.dataTransfer || e.target).files)
-	        }
-	    }
+		function activate(e) {
+			e.preventDefault()
+		}
+
+		function deactivate() {}
+
+		function update(e) {
+			e.preventDefault()
+			if (typeof options.onchange == "function") {
+				options.onchange((e.dataTransfer || e.target).files)
+			}
+		}
 	}
 
 	if (!mountedDragAndDrop) {
@@ -93,11 +95,11 @@ module.exports.controller = function(args, extras) {
 		}
 	}
 
-	function handlePaste (ev) {
+	function handlePaste(ev) {
 		if (ev.clipboardData && ev.clipboardData.items && ev.clipboardData.items.length > 0) {
 			var items = ev.clipboardData.items;
 			var hasImage = false;
-			_.map(items, function (item) {
+			_.map(items, function(item) {
 				if (item.type.startsWith('image')) {
 					hasImage = true;
 				}
@@ -113,20 +115,21 @@ module.exports.controller = function(args, extras) {
 	var socket = io();
 
 	socket.on('changes', handleChange);
-	function handleChange (msg) {
+
+	function handleChange(msg) {
 		console.log(msg);
 
 		msg = JSON.parse(msg);
 
 		// {"new_val":{"date":"2015-08-20T01:15:04.881Z","from":"5558675309","id":"8582e043-0663-4775-be6a-778b340730d8","text":"","to":["5558675309"]},"old_val":null}
 		if (msg.new_val && msg.old_val === null) { // new message!
-			msg	 = msg.new_val;
+			msg = msg.new_val;
 			var group = _.without(_.union(msg.to, [msg.from]), identity.me().id);
 			if (_.isEqual(group, self.to)) {
 				var conversations = self.conversations;
 				console.log('new messsage in current conversation');
 				self.messages.unshift(msg);
-				var convo_index = _.findIndex(conversations, function (item) {
+				var convo_index = _.findIndex(conversations, function(item) {
 					return _.isEqual(item.group, group);
 				})
 				var convo = conversations[convo_index];
@@ -143,10 +146,10 @@ module.exports.controller = function(args, extras) {
 			var group = _.without(_.union(msg.to, [msg.from]), identity.me().id);
 			if (_.isEqual(group, self.to)) {
 				console.log('deleted messsage in current conversation' + msg.id);
-				self.messages = _.reject(self.messages, function (message) {
-					return message.id === msg.id;
-				})
-				// self.messages.splice(self.messages.indexOf(msg), 1);
+				self.messages = _.reject(self.messages, function(message) {
+						return message.id === msg.id;
+					})
+					// self.messages.splice(self.messages.indexOf(msg), 1);
 				m.redraw();
 			} else {
 				console.log('dunno, just gonna refresh')
@@ -158,7 +161,7 @@ module.exports.controller = function(args, extras) {
 		}
 	}
 
-	self.onunload = function () {
+	self.onunload = function() {
 		socket.off('changes', handleChange);
 		window.removeEventListener('message', receiveMessage);
 		window.removeEventListener('paste', handlePaste);
@@ -177,30 +180,30 @@ module.exports.controller = function(args, extras) {
 	self.per_page = m.prop(50);
 
 	self.smallImages = m.prop(true);
-	self.toggleSmallImages = function (id) {
+	self.toggleSmallImages = function(id) {
 		self.smallImages(!self.smallImages());
 
 		if (id) {
-			setImmediate(function () {
+			setImmediate(function() {
 				// setImmediate - allow for layout to occur.
 				document.getElementById(id).scrollIntoView();
 			})
 		}
 	}
 
-	self.nextPage = function () {
+	self.nextPage = function() {
 		self.page(self.page() + 1);
 		self.getMessagesStreaming()
 	}
 
-	self.previousPage = function () {
+	self.previousPage = function() {
 		if (self.page() !== 0) {
 			self.page(self.page() - 1);
 			self.getMessagesStreaming()
 		}
 	}
 
-	self.allPages = function () {
+	self.allPages = function() {
 		self.page(0);
 		self.per_page(Infinity);
 		self.getMessagesStreaming()
@@ -233,7 +236,7 @@ module.exports.controller = function(args, extras) {
 		self.refresh();
 	};
 
-	self.newMessage = function () {
+	self.newMessage = function() {
 		m.route('/conversations');
 		// self.to = [''];
 		// self.reselectGroup();
@@ -271,8 +274,8 @@ module.exports.controller = function(args, extras) {
 
 	self.setConversations = function(value) {
 		self.conversations = value;
-		value.map(function (item) {
-			item.group.map(function (member, index) {
+		value.map(function(item) {
+			item.group.map(function(member, index) {
 				self.nicknames[member] = item.details[index].nickname;
 			})
 		})
@@ -306,7 +309,7 @@ module.exports.controller = function(args, extras) {
 				self.message('');
 			})
 			// .then(self.refresh, self.error)
-			.then(function () {
+			.then(function() {
 				self.working(false);
 			})
 	};
@@ -318,40 +321,40 @@ module.exports.controller = function(args, extras) {
 				config: identity.withAuth,
 				url: getMessagesUrl()
 			})
-			.then(function (response) {
+			.then(function(response) {
 				return response;
 			})
 			.then(self.setMessages, self.error)
-			.then(function () {
+			.then(function() {
 				self.working(false);
 			})
 	};
 
 
 	self.getMessagesStreaming = function() {
-			// Stream in first 10 messages and try to render them ASAP, then we load the rest
-			var count = 0;
-			var show = 9;
+		// Stream in first 10 messages and try to render them ASAP, then we load the rest
+		var count = 0;
+		var show = 9;
 
-			m.startComputation();
-			self.working(true);
-			self.messages = [];
-			oboe({
-					url: getMessagesUrl(),
-					headers: identity.oboeAuth()
-				}).node('![*]', function(item) {
-					self.messages.push(item);
-					count++;
-					if (count == show) {
-						m.endComputation();
-						m.startComputation();
-					}
-					return oboe.drop;
-				})
-				.done(function() {
-					self.working(false);
+		m.startComputation();
+		self.working(true);
+		self.messages = [];
+		oboe({
+				url: getMessagesUrl(),
+				headers: identity.oboeAuth()
+			}).node('![*]', function(item) {
+				self.messages.push(item);
+				count++;
+				if (count == show) {
 					m.endComputation();
-				});
+					m.startComputation();
+				}
+				return oboe.drop;
+			})
+			.done(function() {
+				self.working(false);
+				m.endComputation();
+			});
 	};
 	self.getMessagesStreaming = self.getMessages // quick uncommentable to disable streaming messages
 
@@ -363,7 +366,7 @@ module.exports.controller = function(args, extras) {
 				background: false,
 				url: '/api/conversations'
 			})
-			.then(function (result) {
+			.then(function(result) {
 				self.working(false);
 				return result;
 			})
@@ -373,7 +376,7 @@ module.exports.controller = function(args, extras) {
 	self.refresh = self.getConversations = function() {
 		return self.refreshConversations()
 			.then(self.getMessagesStreaming, self.error)
-			.then(function () {
+			.then(function() {
 				self.working(false);
 			})
 
@@ -384,7 +387,7 @@ module.exports.controller = function(args, extras) {
 		self.to = filter(self.to, function(item) {
 			return item !== '' && item !== ' ' && item !== null;
 		});
-		 return '/api/messages?' + m.route.buildQueryString({
+		return '/api/messages?' + m.route.buildQueryString({
 			to: self.to,
 			page: self.page(),
 			'per_page': self.per_page()
@@ -400,7 +403,7 @@ module.exports.controller = function(args, extras) {
 				url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))
 			})
 			.then(self.refresh, self.error)
-			.then(function () {
+			.then(function() {
 				self.working(false);
 			})
 	};
@@ -413,7 +416,7 @@ module.exports.controller = function(args, extras) {
 				background: false,
 				url: '/api/messages/' + encodeURIComponent(message.id)
 			})
-			.then(function () {
+			.then(function() {
 				self.working(false);
 			})
 			// .then(function () {
@@ -425,7 +428,7 @@ module.exports.controller = function(args, extras) {
 	if (m.route.param('to')) {
 		var to = m.route.param('to');
 		if (typeof to === 'string')
-		 	to = [to];
+			to = [to];
 
 		if (to && !isEqual(to, self.to)) {
 			self.to = to;
@@ -433,7 +436,7 @@ module.exports.controller = function(args, extras) {
 		}
 	}
 
- 	self.refresh();
+	self.refresh();
 };
 
 module.exports.view = function(ctrl, args, extras) {
@@ -542,14 +545,15 @@ module.exports.view = function(ctrl, args, extras) {
 				}, message.file.name),
 				' ',
 				m('video', {
-				src: '/api/file/' + encodeURIComponent(message.id),
-				style: {
-					'max-width': '100%',
-					'max-height': '100%'
-				},
-				preload: 'none',
-				controls: true
-			})]
+					src: '/api/file/' + encodeURIComponent(message.id),
+					style: {
+						'max-width': '100%',
+						'max-height': '100%'
+					},
+					preload: 'none',
+					controls: true
+				})
+			]
 		} else if (file.type.indexOf('audio') > -1) {
 			return [
 				m('a', {
@@ -557,10 +561,11 @@ module.exports.view = function(ctrl, args, extras) {
 				}, message.file.name),
 				' ',
 				m('audio', {
-				src: '/api/file/' + encodeURIComponent(message.id),
-				preload: 'none',
-				controls: true
-			})]
+					src: '/api/file/' + encodeURIComponent(message.id),
+					preload: 'none',
+					controls: true
+				})
+			]
 		} else {
 			return m('a', {
 				href: '/api/file/' + encodeURIComponent(message.id),
@@ -606,7 +611,7 @@ module.exports.view = function(ctrl, args, extras) {
 				': ',
 
 				message.file ? displayMessageWithFile(message) :
-					m.trust(autolinker.link(html.escape(message.text)).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
+				m.trust(autolinker.link(html.escape(message.text)).replace(/(?:\r\n|\r|\n)/g, '<br/>'))
 			]
 		)
 
@@ -619,7 +624,7 @@ module.exports.view = function(ctrl, args, extras) {
 	return m('div', [
 		error.renderError(ctrl.error),
 		// m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
-		[m('div.col-sm-3#left', [//m('h3', 'Conversations'),
+		[m('section.col-sm-3#left', [ //m('h3', 'Conversations'),
 				ctrl.conversations.map(function(grouping) {
 					var fromNow = moment(grouping.last).fromNow();
 
@@ -634,19 +639,20 @@ module.exports.view = function(ctrl, args, extras) {
 							}
 						}, moment(grouping.last).fromNow()),
 						m('button.btn ', {
-						style: {
-							'border-radius': '1em',
-							cursor: 'pointer',
-							margin: '4px'
-						},
-						onclick: function() {
-							ctrl.selectGroup(grouping.group)
-						},
-						class: isEqual(flatten(grouping.group), ctrl.to) ? 'btn-success' : 'btn-default'
-					}, [simplify(grouping.group).map(function(ph) {
-						return m('div', ph + (ctrl.getNickname(ph) ? ' ' + ctrl.getNickname(ph) : ''))
-					})]),
-					m('br')]
+							style: {
+								'border-radius': '1em',
+								cursor: 'pointer',
+								margin: '4px'
+							},
+							onclick: function() {
+								ctrl.selectGroup(grouping.group)
+							},
+							class: isEqual(flatten(grouping.group), ctrl.to) ? 'btn-success' : 'btn-default'
+						}, [simplify(grouping.group).map(function(ph) {
+							return m('div', ph + (ctrl.getNickname(ph) ? ' ' + ctrl.getNickname(ph) : ''))
+						})]),
+						m('br')
+					]
 
 					if (lastConversationTimeDisplayed !== fromNow) {
 						lastConversationTimeDisplayed = fromNow;
@@ -655,59 +661,59 @@ module.exports.view = function(ctrl, args, extras) {
 					return retval;
 				})
 			]),
-			m('div.col-sm-9#right', [
+			m('section.col-sm-9#right', [
 				m('div', {
-				// config: fadesIn,
-				style: {
-					'margin-bottom': '1em'
-				}
-			}, //'Messages ',
+						// config: fadesIn,
+						style: {
+							'margin-bottom': '1em'
+						}
+					}, //'Messages ',
 
-				m('.input-group',
-					m('button.btn btn-default glyphicon glyphicon-refresh', {
-						onclick: ctrl.refresh
-					}, ' Refresh'),
-					m('button.btn btn-default glyphicon glyphicon-envelope', {
-						onclick: ctrl.newMessage,
-					}, ' New Message'),
-					m('button.btn btn-default glyphicon glyphicon-edit', {
-						onclick: ctrl.toggleEditMode,
-					}, ctrl.editMode() ? ' Done' : ' Show Actions')
-				)),
+					m('.input-group',
+						m('button.btn btn-default glyphicon glyphicon-refresh', {
+							onclick: ctrl.refresh
+						}, ' Refresh'),
+						m('button.btn btn-default glyphicon glyphicon-envelope', {
+							onclick: ctrl.newMessage,
+						}, ' New Message'),
+						m('button.btn btn-default glyphicon glyphicon-edit', {
+							onclick: ctrl.toggleEditMode,
+						}, ctrl.editMode() ? ' Done' : ' Show Actions')
+					)),
 
 				m('div', [
 					m('label', 'To: '), m('span', ' '),
 					ctrl.to.map(function(item, index) {
 						return m('span.nowrap', m('input', {
-							style: {
-								margin: '2px',
-								padding: '4px'
-							},
-							placeholder: 'Phone number...',
-							type: 'tel',
-							onchange: m.withAttr('value', function(value) {
-								ctrl.to[index] = value
+								style: {
+									margin: '2px',
+									padding: '4px'
+								},
+								placeholder: 'Phone number...',
+								type: 'tel',
+								onchange: m.withAttr('value', function(value) {
+									ctrl.to[index] = value
+								}),
+								value: ctrl.to[index]
 							}),
-							value: ctrl.to[index]
-						}),
-						m('button.btn btn-default btn-default', {
-							index: index,
-							style: {
-								'border-radius': '10em',
-								margin: '1px',
-								position: 'relative',
-								right: '1em'
-							},
-							onclick: m.withAttr('index', ctrl.toMinus)
-						}, '✗'))
+							m('button.btn btn-default btn-default', {
+								index: index,
+								style: {
+									'border-radius': '100%',
+									margin: '1px',
+									position: 'relative',
+									right: '1em'
+								},
+								onclick: m.withAttr('index', ctrl.toMinus)
+							}, '✗'))
 					}),
 					' ',
 					m('button.btn btn-default btn-success glyphicon glyphicon-plus', {
 						style: {
-							'border-radius': '10em',
+							'border-radius': '100%',
 							margin: '1px'
-							// position: 'relative',
-							// left: '1em'
+								// position: 'relative',
+								// left: '1em'
 						},
 						onclick: ctrl.toPlus
 					}),
@@ -733,7 +739,7 @@ module.exports.view = function(ctrl, args, extras) {
 						}
 					}, ' Send message'),
 
-					m('br'),m('br'),
+					m('br'), m('br'),
 					m('label', 'Upload Files: '), m('br'),
 
 					m.component(fileuploader, {
@@ -744,42 +750,42 @@ module.exports.view = function(ctrl, args, extras) {
 				),
 				ctrl.messages.map(displayMessage),
 				m('div.hoveropaque btn-group', {
+					style: {
+						position: 'fixed',
+						bottom: '10px',
+						right: '2px'
+					}
+				}, [
+					m('a.leftanchor btn btn-default glyphicon glyphicon-th-list', {
+						href: '#left'
+					}),
+					m('a.rightanchor btn btn-default glyphicon glyphicon-envelope', {
+						href: '#right'
+					}),
+					m('button.btn btn-default glyphicon glyphicon-arrow-left', {
+						onclick: ctrl.previousPage,
+						disabled: ctrl.page() === 0 || ctrl.per_page() === Infinity,
 						style: {
-							position: 'fixed',
-							bottom: '10px',
-							right: '2px'
+							'margin-right': '1em',
+							display: ctrl.per_page() === Infinity ? 'none' : 'initial'
 						}
-				},[
-				m('a.leftanchor btn btn-default glyphicon glyphicon-th-list', {
-					href: '#left'
-				}),
-				m('a.rightanchor btn btn-default glyphicon glyphicon-envelope', {
-					href: '#right'
-				}),
-				m('button.btn btn-default glyphicon glyphicon-arrow-left', {
-					onclick: ctrl.previousPage,
-					disabled: ctrl.page() === 0 || ctrl.per_page() === Infinity,
-					style: {
-						'margin-right': '1em',
-						display: ctrl.per_page() === Infinity ? 'none' : 'initial'
-					}
-				}),
-				// m('span', ctrl.per_page() === Infinity ? '' : 'Page ' + (ctrl.page()+1) + ' '),
-				m('button.btn btn-default glyphicon glyphicon-arrow-right', {
-					onclick: ctrl.nextPage,
-					disabled:  ctrl.per_page() === Infinity || ctrl.messages.length === 0 || ctrl.messages.length < ctrl.per_page(),
-					style: {
-						'margin-right': '1em',
-						display: ctrl.per_page() === Infinity ? 'none' : 'initial'
-					}
-				}),
-				m('button.btn btn-default glyphicon glyphicon-arrow-down', {
-					onclick: ctrl.allPages,
-					style: {
-						'margin-right': '1em',
-						display: ctrl.per_page() === Infinity ? 'none' : 'initial'
-					}
-				})
+					}),
+					// m('span', ctrl.per_page() === Infinity ? '' : 'Page ' + (ctrl.page()+1) + ' '),
+					m('button.btn btn-default glyphicon glyphicon-arrow-right', {
+						onclick: ctrl.nextPage,
+						disabled: ctrl.per_page() === Infinity || ctrl.messages.length === 0 || ctrl.messages.length < ctrl.per_page(),
+						style: {
+							'margin-right': '1em',
+							display: ctrl.per_page() === Infinity ? 'none' : 'initial'
+						}
+					}),
+					m('button.btn btn-default glyphicon glyphicon-arrow-down', {
+						onclick: ctrl.allPages,
+						style: {
+							'margin-right': '1em',
+							display: ctrl.per_page() === Infinity ? 'none' : 'initial'
+						}
+					})
 				])
 
 			])

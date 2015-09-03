@@ -1,6 +1,6 @@
 'use strict';
 require('bootstrap/less/bootstrap.less');
-// require('./less/grayscale.less');
+require('./less/grayscale.less');
 require('./s.css');
 
 require('setimmediate');

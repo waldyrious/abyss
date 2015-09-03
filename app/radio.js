@@ -1,20 +1,20 @@
 'use strict';
 var m = require('mithril');
 
-var randomProperty = function (obj) {
-    var keys = Object.keys(obj)
-    return keys[ keys.length * Math.random() << 0];
+var randomProperty = function(obj) {
+	var keys = Object.keys(obj)
+	return keys[keys.length * Math.random() << 0];
 };
 
 var audioSources = {
-	'Chillstep': 'http://208.113.211.151:443/chillstep/;',
-	'Progressive House': 'http://208.113.211.151:443/prog-house/;',
-	'Dubstep': 'http://208.113.211.151:443/dubstep/;',
-	'Pop': 'http://208.113.211.151:443/getpsyched/;',
-    'Melodic Drum & Bass': 'http://208.113.211.151:443/dnb/;',
-    'Trap': 'http://208.113.211.151:443/trap/;'
-}
-// var audioKey = 'Trap';
+		'Chillstep': 'http://208.113.211.151:443/chillstep/;',
+		'Progressive House': 'http://208.113.211.151:443/prog-house/;',
+		'Dubstep': 'http://208.113.211.151:443/dubstep/;',
+		// 'Pop': 'http://208.113.211.151:443/getpsyched/;',
+		'Melodic Drum & Bass': 'http://208.113.211.151:443/dnb/;',
+		'Trap': 'http://208.113.211.151:443/trap/;'
+	}
+	// var audioKey = 'Trap';
 var audioKey = randomProperty(audioSources);
 var element = new Audio(audioSources[audioKey]);
 element.preload = 'none';
@@ -64,10 +64,13 @@ module.exports.view = function(ctrl, args, extras) {
 		}, Object.keys(audioSources).map(function(item) {
 			return m('option', {
 				value: item,
-                // selected: item == audioKey
+				// selected: item == audioKey
 			}, item)
 		})),
-        m('button.btn btn-default glyphicon', { // needed for mobile safari
+		m('button.btn-circle glyphicon', { // needed for mobile safari
+				style: {
+					"text-align": "center"
+				},
 				class: playing ? 'glyphicon-pause' : 'glyphicon-play',
 				onclick: toggle
 			}
