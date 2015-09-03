@@ -17,7 +17,6 @@ module.exports.controller = function(args, extras) {
 	self.needCode = m.prop(false);
 	self.codeInput = m.prop('');
 	self.nicknameInput = m.prop('');
-	self.jwt = m.prop(Cookies.get('jwt'));
 
 	self.me = function(value) {
 		if (value) {
