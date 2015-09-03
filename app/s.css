@@ -37,3 +37,6 @@ audio {
 .hoveropaque:hover {
 	opacity: 0.9
 }
+.black {
+	color: black;
+}

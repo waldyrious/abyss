@@ -684,7 +684,7 @@ module.exports.view = function(ctrl, args, extras) {
 				m('div', [
 					m('label', 'To: '), m('span', ' '),
 					ctrl.to.map(function(item, index) {
-						return m('span.nowrap', m('input', {
+						return m('span.nowrap', m('input.black', {
 								style: {
 									margin: '2px',
 									padding: '4px'

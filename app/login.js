@@ -92,8 +92,12 @@ module.exports.controller = function(args, extras) {
 			}, self.error)
 	};
 
-	self.gotoConversations = function () {	m.route('/conversations');	}
-	self.gotoNavbar = function () {	m.route('/navbar');	}
+	self.gotoConversations = function() {
+		m.route('/conversations');
+	}
+	self.gotoNavbar = function() {
+		m.route('/navbar');
+	}
 };
 var showFaq = false;
 
@@ -103,36 +107,36 @@ module.exports.view = function(ctrl) {
 	}
 
 	var codeInputValid = function() {
-		return validator.isLength(ctrl.codeInput(), 6, 6);
+		return validator.isLength(ctrl.codssssseInput(), 6, 6);
 	}
 
 	var showFaqButton = function() {
 		showFaq = !showFaq;
 	}
 
-	return [
+	return m('div.container', [
 		m('h4', 'Simple group messaging and file sharing. Erasable conversations.'),
 		ctrl.needCode() ? [
 			m('.col-md1',
-			m('.input-group', {
-					style: {
-						width: '30em'
-					}
-				},
-				m('input.form-control', {
-					placeholder: 'Enter 6-digit verification code...',
-					type: 'tel',
-					oninput: m.withAttr('value', ctrl.codeInput),
-					value: ctrl.codeInput()
-				}),
-				m('span.input-group-btn', m('button.btn btn-default', {
-					class: codeInputValid() ? 'btn-success' : '',
-					disabled: !codeInputValid(),
-					onclick: ctrl.submitCode
-				}, 'Submit Code')),
-				m('span.input-group-btn', m('button.btn btn-default', {
-					onclick: ctrl.cancelCode
-				}, 'Cancel'))))
+				m('.input-group', {
+						style: {
+							width: '30em'
+						}
+					},
+					m('input.form-control', {
+						placeholder: 'Enter 6-digit verification code...',
+						type: 'tel',
+						oninput: m.withAttr('value', ctrl.codeInput),
+						value: ctrl.codeInput()
+					}),
+					m('span.input-group-btn', m('button.btn btn-default', {
+						class: codeInputValid() ? 'btn-success' : '',
+						disabled: !codeInputValid(),
+						onclick: ctrl.submitCode
+					}, 'Submit Code')),
+					m('span.input-group-btn', m('button.btn btn-default', {
+						onclick: ctrl.cancelCode
+					}, 'Cancel'))))
 		] : [
 			m('div', ['Just sign in with your existing mobile phone number. ', identity.me().id]),
 			m('div.input-group', {
@@ -162,5 +166,5 @@ module.exports.view = function(ctrl) {
 			}
 		}, 'Frequently Asked Questions')),
 		showFaq ? m.component(faq) : null
-	]
+	])
 };
