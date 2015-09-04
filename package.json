@@ -61,6 +61,7 @@
     "socketio-sticky-session": "^0.3.0",
     "spdy": "^2.0.5",
     "spin.js": "^2.3.2",
+    "sticky-session": "^0.1.0",
     "stream-to-buffer": "^0.1.0",
     "superb": "^1.2.0",
     "thunkify": "^2.1.2",

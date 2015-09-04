@@ -15,45 +15,47 @@ const net = require('net');
 const app = require('./lib/app');
 const secret = require('./secret/secret.json');
 
-const http = require('http');
-
-const cluster = require('cluster');
-const numCPUs = require('os').cpus().length;
+var cluster = require('cluster');
+var numCPUs = require('os').cpus().length;
 
 const sockets = require('./lib/sockets')
 
-if (secret.cluster && cluster.isMaster) {
-	// Fork workers.
-	for (var i = 0; i < numCPUs; i++) {
-		cluster.fork();
-	}
+var httpPort = 3000;
 
-	cluster.on('exit', function(worker, code, signal) {
-		console.log('worker ' + worker.process.pid + ' died');
+if (process.getuid() === 0) { // if we are root
+	httpPort = 80;
+} else { // we are not root, can only use sockets >1024
+	httpPort = 3000;
+}
+
+function getServer() {
+	var http = require('http');
+	var httpServer = http.createServer(app.callback());
+
+	sockets.register(require('socket.io').listen(httpServer));
+	return httpServer;
+}
+
+if (secret.cluster) {
+	sticky(function () {
+		return getServer();
+	}).listen(httpPort, function () {
+		console.log('Cluster worker ' + (cluster.worker ? cluster.worker.id : '') + ' HTTP server listening on port ' + httpPort);
 	});
 } else {
-	var httpPort;
-	if (process.getuid() === 0) { // if we are root
-		httpPort = 80;
-	} else { // we are not root, can only use sockets >1024
-		httpPort = 3000;
-	}
+	getServer().listen(httpPort, function () {
+		console.log('HTTP server (no cluster) listening on port ' + httpPort);
+	});
+}
 
-	var httpServer = http.createServer(app.callback());
-	httpServer.listen(httpPort);
+if (process.getuid() === 0) { // if we are root
+	// we have opened the sockets, now drop our root privileges
+	process.setgid('nobody');
+	process.setuid('nobody');
 
-	console.log('HTTP server listening on port ' + httpPort);
-	sockets.register(require('socket.io').listen(httpServer));
-
-	if (process.getuid() === 0) { // if we are root
-		// we have opened the sockets, now drop our root privileges
-		process.setgid('nobody');
-		process.setuid('nobody');
-
-		// Newer node versions allow you to set the effective uid/gid
-		if (process.setegid) {
-			process.setegid('nobody');
-			process.seteuid('nobody');
-		}
+	// Newer node versions allow you to set the effective uid/gid
+	if (process.setegid) {
+		process.setegid('nobody');
+		process.seteuid('nobody');
 	}
 }
