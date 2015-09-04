@@ -604,7 +604,7 @@ module.exports.view = function(ctrl, args, extras) {
 					}
 				}, fromNow),
 
-				ctrl.editMode() ? m('button.btn btn-danger glyphicon glyphicon-fire', {
+				ctrl.editMode() ? m('button.btn btn-default btn-lg glyphicon glyphicon-fire', {
 					onclick: fadesOut(ctrl.delete.bind(this, message)),
 					style: {
 						'margin-right': '0.5em',
@@ -692,8 +692,10 @@ module.exports.view = function(ctrl, args, extras) {
 						}, ctrl.editMode() ? ' Done' : ' Show Actions')
 					)),
 
-				m('div', [
-					m('label', 'To: '), m('span', ' '),
+				m('div.form-group', [
+					m('button.btn btn-default btn-sm glyphicon glyphicon-plus', {
+						onclick: ctrl.toPlus
+					}, ' To'),
 					ctrl.to.map(function(item, index) {
 						return m('span.nowrap', m('input.black', {
 								style: {
@@ -715,20 +717,14 @@ module.exports.view = function(ctrl, args, extras) {
 								},
 								onclick: m.withAttr('index', ctrl.toMinus)
 							}, '✗'))
-					}),
-					m('button.btn btn-default btn-success glyphicon glyphicon-plus', {
-						style: {
-							"margin-left": ctrl.to.length > 0 ? "-1em" : ''
-						},
-						onclick: ctrl.toPlus
-					}),
-					m('br'),
+					})
 				]),
 
-				m('div.form-group', m('label', 'New Message: '), m('br'),
+				m('div.form-group',
+					// m('label', 'New Message: '), m('br'),
 					m('textarea.form-control', {
 						rows: 1,
-						placeholder: 'Message Text...',
+						placeholder: 'Message...',
 						onchange: m.withAttr('value', function(value) {
 							ctrl.message(value);
 						}),
@@ -736,7 +732,7 @@ module.exports.view = function(ctrl, args, extras) {
 						config: textInputAreaConfig,
 						value: ctrl.message()
 					}),
-					m('button.btn btn-success glyphicon glyphicon-comment', {
+					m('button.btn btn-default btn-sm glyphicon glyphicon-comment', {
 						onclick: ctrl.send,
 						config: sendButtonConfig,
 						style: {

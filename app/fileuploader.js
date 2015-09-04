@@ -195,7 +195,7 @@ module.exports.view = function(ctrl, args, extras) {
 				)
 			}
 		}) : '',
-		m('button.btn btn-success glyphicon glyphicon-send', {
+		m('button.btn btn-default btn-sm glyphicon glyphicon-send', {
 			disabled: ctrl.files() ? false : true,
 			onclick: ctrl.uploadFile,
 			config: sendButtonConfig
