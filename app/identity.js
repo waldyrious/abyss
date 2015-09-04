@@ -59,6 +59,7 @@ module.exports.logout = function() {
         .then(function(response) {
             me(response);
             Cookies.expire('jwt');
+            m.route('/login');
         })
 };
 
@@ -76,4 +77,19 @@ Object.defineProperty(module.exports, 'nickname', {
     set: function (value) {
         return changeNickname(value);
     }
-})
+});
+
+Object.defineProperty(module.exports, 'jwt', {
+    get: function () {
+        return Cookies.get('jwt');
+    }
+});
+
+
+Object.defineProperty(module.exports, 'authHeaders', {
+    get: function () {
+        return {
+            'Authorization': 'Bearer ' + Cookies.get('jwt')
+        }
+    }
+});

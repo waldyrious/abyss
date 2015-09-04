@@ -11,7 +11,14 @@ module.exports.controller = function(args, extras) {
 
 	var self = this;
 	self.error = error.ErrorHolder();
-	self.nicknameInput = m.prop(identity.nickname);
+	self.nicknameInput = m.prop('');
+
+	identity.whoami()
+	.then(function (me) {
+		if (me.nickname) {
+			self.nicknameInput(me.nickname);
+		}
+	})
 
 	self.isChangingNickname = false;
 	self.changeNickname = function(ev) {
@@ -25,14 +32,13 @@ module.exports.controller = function(args, extras) {
 				}, self.error)
 		}
 	}
-
 	self.notificationsEnabled = swhelper.isSubscribed;
 
 	self.enableNotifications = function(bool) {
 		if (bool) {
-			return swhelper.register(identity.me().jwt)
+			return swhelper.register()
 		} else {
-			return swhelper.deregister(identity.me().jwt);
+			return swhelper.deregister();
 		}
 	}
 
@@ -74,6 +80,7 @@ module.exports.view = function(ctrl, args, extras) {
 				]),
 				m('ul.nav navbar-nav navbar-right', [
 					m('li', m('a', {
+						href: '#',
 						onclick: ctrl.logout
 					}, 'Logout ' + identity.me().nickname))
 				])

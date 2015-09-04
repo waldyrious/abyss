@@ -3,6 +3,8 @@ var existingRegistration;
 var Promise = require('bluebird');
 var m = require('mithril');
 
+var identity = require('./identity');
+
 var last = module.exports.isSubscribed = m.prop(false);
 
 function checkRegistration() {
@@ -32,7 +34,7 @@ function checkRegistration() {
 }
 var initialCheck = checkRegistration();
 
-module.exports.register = function (jwt) {
+module.exports.register = function () {
 	return initialCheck.then(function(){
 		return navigator.serviceWorker.register('/sw.js')
 		.then(function (registration) {
@@ -54,7 +56,7 @@ module.exports.register = function (jwt) {
 					credentials: 'include',
 					method: 'post',
 					headers: {
-						'Authorization': 'Bearer ' + jwt,
+						'Authorization': 'Bearer ' + identity.jwt,
 						'Content-type': 'application/json'
 					},
 					body: JSON.stringify(subscription)
@@ -69,7 +71,7 @@ module.exports.register = function (jwt) {
 
 };
 
-module.exports.deregister = function (jwt) {
+module.exports.deregister = function () {
 	return initialCheck.then(function(){
 
 		if (existingRegistration) {
@@ -84,7 +86,7 @@ module.exports.deregister = function (jwt) {
 								credentials: 'include',
 								method: 'delete',
 								headers: {
-									'Authorization': 'Bearer ' + jwt
+									'Authorization': 'Bearer ' + identity.jwt
 								},
 							}).then(function () {
 								last(false);
