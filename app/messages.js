@@ -34,6 +34,8 @@ var identity = require('./identity');
 
 var mountedDragAndDrop = false;
 
+var conversations = null;
+
 module.exports.controller = function(args, extras) {
 	// m.redraw.strategy("all")
 
@@ -126,7 +128,6 @@ module.exports.controller = function(args, extras) {
 			msg = msg.new_val;
 			var group = _.without(_.union(msg.to, [msg.from]), identity.me().id);
 			if (_.isEqual(group, self.to)) {
-				var conversations = self.conversations;
 				console.log('new messsage in current conversation');
 				self.messages.unshift(msg);
 				var convo_index = _.findIndex(conversations, function(item) {
@@ -139,7 +140,7 @@ module.exports.controller = function(args, extras) {
 				m.redraw();
 			} else {
 				console.log('dunno, just gonna refresh')
-				self.refresh();
+				self.refresh(true);
 			}
 		} else if (msg.new_val === null && msg.old_val) { // message deleted!
 			msg = msg.old_val;
@@ -153,11 +154,11 @@ module.exports.controller = function(args, extras) {
 				m.redraw();
 			} else {
 				console.log('dunno, just gonna refresh')
-				self.refresh();
+				self.refresh(true);
 			}
 		} else {
 			console.log('dunno, just gonna refresh')
-			self.refresh();
+			self.refresh(true);
 		}
 	}
 
@@ -168,7 +169,6 @@ module.exports.controller = function(args, extras) {
 	}
 
 	self.messages = [];
-	self.conversations = [];
 	self.nicknames = {};
 	self.to = [];
 	self.message = m.prop('');
@@ -246,15 +246,6 @@ module.exports.controller = function(args, extras) {
 		self.getMessagesStreaming();
 	};
 
-	self.selectFirstGroup = function() {
-		return; // disable for now, might be nicer from a UI perspe
-		if (isEqual(self.to, ['']) && self.conversations[0]) {
-			self.page(0);
-			self.to = clone(self.conversations[0].group);
-			self.getMessagesStreaming();
-		}
-	};
-
 	function fromMe(message) {
 		return message.from === identity.me().id;
 	}
@@ -273,7 +264,7 @@ module.exports.controller = function(args, extras) {
 	}
 
 	self.setConversations = function(value) {
-		self.conversations = value;
+		conversations = value;
 		value.map(function(item) {
 			item.group.map(function(member, index) {
 				self.nicknames[member] = item.details[index].nickname;
@@ -358,7 +349,11 @@ module.exports.controller = function(args, extras) {
 	};
 	self.getMessagesStreaming = self.getMessages // quick uncommentable to disable streaming messages
 
-	self.refreshConversations = function() {
+	self.refreshConversations = function(force) {
+		if (conversations !== null && !force) {
+			return Promise.resolve(conversations);
+		}
+
 		self.working(true, 0);
 		return m.request({
 				method: 'GET',
@@ -373,8 +368,8 @@ module.exports.controller = function(args, extras) {
 			.then(self.setConversations, self.error)
 	};
 
-	self.refresh = self.getConversations = function() {
-		return self.refreshConversations()
+	self.refresh = self.getConversations = function(force) {
+		return self.refreshConversations(force)
 			.then(self.getMessagesStreaming, self.error)
 			.then(function() {
 				self.working(false);
@@ -636,7 +631,7 @@ module.exports.view = function(ctrl, args, extras) {
 		error.renderError(ctrl.error),
 		// m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
 		[m('section.col-sm-3#left', [ //m('h3', 'Conversations'),
-				ctrl.conversations.map(function(grouping) {
+				conversations.map(function(grouping) {
 					var fromNow = moment(grouping.last).fromNow();
 
 					var retval = [
@@ -682,7 +677,9 @@ module.exports.view = function(ctrl, args, extras) {
 
 					m('.input-group',
 						m('button.btn btn-default glyphicon glyphicon-refresh', {
-							onclick: ctrl.refresh
+							onclick: function () {
+								ctrl.refresh(true);
+							}
 						}, ' Refresh'),
 						m('button.btn btn-default glyphicon glyphicon-envelope', {
 							onclick: ctrl.newMessage,
