@@ -72,11 +72,11 @@ module.exports.view = function(ctrl, args, extras) {
 						},
 						checked: ctrl.notificationsEnabled()
 					}), ' Receive notifications (on this browser)'),
-					m.component(radio),
 					m('li', 'Featuring ', m('a', {
 						href: 'http://loungetek.com/radio/',
 						target: '_blank'
-					}, 'LoungeTek Radio'))
+					}, 'LoungeTek Radio')),
+					m.component(radio)
 				]),
 				m('ul.nav navbar-nav navbar-right', [
 					m('li', m('a', {

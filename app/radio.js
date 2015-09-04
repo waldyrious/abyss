@@ -56,6 +56,15 @@ module.exports.controller = function(args, extras) {
 
 module.exports.view = function(ctrl, args, extras) {
 	return m('li', [
+		m('button.btn-circle glyphicon', { // needed for mobile safari
+				style: {
+					"text-align": "center"
+				},
+				class: playing ? 'glyphicon-pause' : 'glyphicon-play',
+				onclick: toggle
+			}
+			// , playing ? ' Pause' : ' Play'
+		),
 		m('select', {
 			style: {
 				"color": "black"
@@ -72,15 +81,6 @@ module.exports.view = function(ctrl, args, extras) {
 				value: item,
 				// selected: item == audioKey
 			}, item)
-		})),
-		m('button.btn-circle glyphicon', { // needed for mobile safari
-				style: {
-					"text-align": "center"
-				},
-				class: playing ? 'glyphicon-pause' : 'glyphicon-play',
-				onclick: toggle
-			}
-			// , playing ? ' Pause' : ' Play'
-		)
+		}))	
 	])
 }
