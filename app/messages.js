@@ -210,9 +210,9 @@ module.exports.controller = function(args, extras) {
 	}
 
 	self.toggleEditMode = function() {
-		if (self.editMode()) {
-			self.refresh();
-		}
+		// if (self.editMode()) {
+		// 	self.refresh();
+		// }
 		self.editMode(!self.editMode());
 	}
 
