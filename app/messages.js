@@ -138,6 +138,10 @@ module.exports.controller = function(args, extras) {
 				convo.last = msg.date;
 				conversations.splice(convo_index, 1)
 				conversations.unshift(convo);
+
+				if (convo_index !== 0) {
+					self.refresh(true);
+				}
 				m.redraw();
 			} else {
 				console.log('dunno, just gonna refresh')
