@@ -35,6 +35,7 @@ var identity = require('./identity');
 var mountedDragAndDrop = false;
 
 var conversations = null;
+var nicknames = {};
 
 module.exports.controller = function(args, extras) {
 	// m.redraw.strategy("all")
@@ -169,7 +170,6 @@ module.exports.controller = function(args, extras) {
 	}
 
 	self.messages = [];
-	self.nicknames = {};
 	self.to = [];
 	self.message = m.prop('');
 	self.error = error.ErrorHolder();
@@ -217,8 +217,8 @@ module.exports.controller = function(args, extras) {
 	}
 
 	self.getNickname = function(ph) {
-		if (self.nicknames[ph] !== undefined) {
-			return self.nicknames[ph];
+		if (nicknames[ph] !== undefined) {
+			return nicknames[ph];
 		} else if (ph === identity.me().id) {
 			return identity.me().nickname;
 		} else {
@@ -267,7 +267,7 @@ module.exports.controller = function(args, extras) {
 		conversations = value;
 		value.map(function(item) {
 			item.group.map(function(member, index) {
-				self.nicknames[member] = item.details[index].nickname;
+				nicknames[member] = item.details[index].nickname;
 			})
 		})
 	}
