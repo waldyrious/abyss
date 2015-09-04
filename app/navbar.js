@@ -15,7 +15,7 @@ module.exports.controller = function(args, extras) {
 
 	identity.whoami()
 	.then(function (me) {
-		if (me.nickname) {
+		if (me && me.nickname) {
 			self.nicknameInput(me.nickname);
 		}
 	})

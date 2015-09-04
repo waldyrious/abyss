@@ -446,7 +446,10 @@ module.exports.view = function(ctrl, args, extras) {
 
 	function withKey(key, callback) {
 		return function(e) {
-			if (key == e.keyCode && e.ctrlKey) callback(key);
+			if (key == e.keyCode && !e.shiftKey) {
+				e.preventDefault();
+				callback(key);
+			}
 			else m.redraw.strategy("none"); // don't do a redraw, the default is to redraw in event listeners.
 		}
 	}
@@ -730,8 +733,8 @@ module.exports.view = function(ctrl, args, extras) {
 
 				m('div.form-group', m('label', 'New Message: '), m('br'),
 					m('textarea.form-control', {
-						rows: 2,
-						placeholder: 'Message Text...\nControl + Enter sends.',
+						rows: 1,
+						placeholder: 'Message Text...',
 						onchange: m.withAttr('value', function(value) {
 							ctrl.message(value);
 						}),
