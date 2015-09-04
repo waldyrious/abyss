@@ -18,7 +18,7 @@ module.exports.oboeAuth = function() {
     }
 }
 
-var me = module.exports.me =  m.prop({});
+var me = module.exports.me = m.prop({});
 
 var changeNickname = module.exports.changeNickname = function(nickname) {
     return m.request({
@@ -32,13 +32,23 @@ var changeNickname = module.exports.changeNickname = function(nickname) {
         .then(me)
 };
 
-var whoami = module.exports.whoami = function() {
-    return m.request({
-            url: '/api/me',
-            config: withAuth
-        })
-        .then(me)
-};
+var whoami = module.exports.whoami = (function () {
+    var promise = null;
+
+    return function (retry) {
+        if (promise === null || retry) {
+            promise = m.request({
+                url: '/api/me',
+                config: withAuth
+            })
+            .then(me, function (err) {
+                Cookies.expire('jwt');
+                m.route('/login');
+            })
+        }
+        return promise;
+    }
+})();
 
 module.exports.logout = function() {
     return m.request({
