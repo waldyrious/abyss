@@ -697,7 +697,7 @@ module.exports.view = function(ctrl, args, extras) {
 					ctrl.to.map(function(item, index) {
 						return m('span.nowrap', m('input.black', {
 								style: {
-									margin: '2px',
+									margin: '8px',
 									padding: '4px'
 								},
 								placeholder: 'Phone number...',
@@ -707,24 +707,18 @@ module.exports.view = function(ctrl, args, extras) {
 								}),
 								value: ctrl.to[index]
 							}),
-							m('button.btn btn-default btn-default', {
+							m('button.btn btn-default btn-xs', {
 								index: index,
 								style: {
-									'border-radius': '100%',
-									margin: '1px',
 									position: 'relative',
-									right: '1em'
+									right: '2.7em'
 								},
 								onclick: m.withAttr('index', ctrl.toMinus)
 							}, '✗'))
 					}),
-					' ',
 					m('button.btn btn-default btn-success glyphicon glyphicon-plus', {
 						style: {
-							'border-radius': '100%',
-							margin: '1px'
-								// position: 'relative',
-								// left: '1em'
+							"margin-left": ctrl.to.length > 0 ? "-1em" : ''
 						},
 						onclick: ctrl.toPlus
 					}),
