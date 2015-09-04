@@ -10,41 +10,35 @@ const Promise = require('bluebird');
 Promise.longStackTraces();
 
 const sticky = require('socketio-sticky-session');
-const fs = require('fs');
-const net = require('net');
-const app = require('./lib/app');
 const secret = require('./secret/secret.json');
 
 var cluster = require('cluster');
-var numCPUs = require('os').cpus().length;
 
 const sockets = require('./lib/sockets')
 
-var httpPort = 3000;
+var port = 3000;
 
 if (process.getuid() === 0) { // if we are root
-	httpPort = 80;
+	port = 80;
 } else { // we are not root, can only use sockets >1024
-	httpPort = 3000;
+	port = 3000;
 }
 
 function getServer() {
-	var http = require('http');
-	var httpServer = http.createServer(app.callback());
-
-	sockets.register(require('socket.io').listen(httpServer));
-	return httpServer;
+	var server = require('http').createServer(require('./lib/app').callback());
+	sockets.register(require('socket.io').listen(server));
+	return server;
 }
 
 if (secret.cluster) {
 	sticky(function () {
 		return getServer();
-	}).listen(httpPort, function () {
-		console.log('Cluster worker ' + (cluster.worker ? cluster.worker.id : '') + ' HTTP server listening on port ' + httpPort);
+	}).listen(port, function () {
+		console.log('Cluster worker ' + (cluster.worker ? cluster.worker.id : '') + ' HTTP server listening on port ' + port);
 	});
 } else {
-	getServer().listen(httpPort, function () {
-		console.log('HTTP server (no cluster) listening on port ' + httpPort);
+	getServer().listen(port, function () {
+		console.log('HTTP server (no cluster) listening on port ' + port);
 	});
 }
 
