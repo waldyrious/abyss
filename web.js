@@ -1,27 +1,19 @@
 'use strict';
-
 console.log('Starting server at ' + (new Date).toISOString());
-
 process.on('exit', function () {
 	console.log('Process exit at ' + (new Date).toISOString());
 });
 
 const Promise = require('bluebird');
-Promise.longStackTraces();
-
 const sticky = require('socketio-sticky-session');
 const secret = require('./secret/secret.json');
-
-var cluster = require('cluster');
-
+const cluster = require('cluster');
 const sockets = require('./lib/sockets')
 
-var port = 3000;
-
 if (process.getuid() === 0) { // if we are root
-	port = 80;
+	var port = 80;
 } else { // we are not root, can only use sockets >1024
-	port = 3000;
+	var port = 3000;
 }
 
 function getServer() {

@@ -1,34 +1,23 @@
 'use strict';
-
 console.log('Starting TLS server at ' + (new Date).toISOString());
-
 process.on('exit', function () {
 	console.log('Process exit at ' + (new Date).toISOString());
 });
 
 const Promise = require('bluebird');
-Promise.longStackTraces();
-
 const sticky = require('socketio-sticky-session');
 const fs = require('fs');
 const secret = require('./secret/secret.json');
 const cluster = require('cluster');
-
 const sockets = require('./lib/sockets')
 
-var port = 3000;
-
 if (process.getuid() === 0) { // if we are root
-	port = 443;
+	var port = 443;
 } else { // we are not root, can only use sockets >1024
-	port = 8443;
+	var port = 8443;
 }
 
-var credentials;
-
-var privateKey = fs.readFileSync('secret/server.key', 'utf8');
-var certificate = fs.readFileSync('secret/server.crt', 'utf8');
-credentials = {key: privateKey, cert: certificate};
+const credentials = {key: fs.readFileSync('secret/server.key', 'utf8'), cert: fs.readFileSync('secret/server.crt', 'utf8')};
 
 if (!credentials && (secret.spdy || secret.https)) {
 	console.error("SSL certs need to be installed for SPDY/HTTPS");
@@ -64,7 +53,6 @@ if (process.getuid() === 0) { // if we are root
 	// we have opened the sockets, now drop our root privileges
 	process.setgid('nobody');
 	process.setuid('nobody');
-
 	// Newer node versions allow you to set the effective uid/gid
 	if (process.setegid) {
 		process.setegid('nobody');
