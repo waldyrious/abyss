@@ -20,8 +20,9 @@ function checkRegistration() {
 			return registration.pushManager.getSubscription()
 			.then(function (subscription) {
 				console.log('The subscription is '+ JSON.stringify(subscription));
-				if (subscription != null)
+				if (subscription !== null) {
 					last(true);
+				}
 				return subscription;
 			})
 		})

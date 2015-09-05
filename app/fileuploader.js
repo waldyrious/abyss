@@ -66,7 +66,7 @@ module.exports.controller = function(args, extras) {
 	module.exports.uploadFile = self.uploadFile = function(arg) {
 		var files;
 
-		if (window.DataTransferItemList && arg instanceof DataTransferItemList) {
+		if (window.DataTransferItemList && arg instanceof window.DataTransferItemList) {
 			var newfiles = [];
 			for (var i=0; i<arg.length; i++) {
 				if (arg[i].kind === 'file') {
@@ -74,7 +74,7 @@ module.exports.controller = function(args, extras) {
 				}
 			}
 			files = newfiles;
-		} else if (window.FileList && arg instanceof FileList) {
+		} else if (window.FileList && arg instanceof window.FileList) {
 			files = Array.prototype.slice.call(arg);
 		} else {
 			files = Array.prototype.slice.call(self.fileInput().files);

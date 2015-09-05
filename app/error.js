@@ -27,7 +27,7 @@ module.exports.ErrorHolder = function() {
 };
 
 module.exports.renderError = function (error) {
-	if (!error || error() == null || error() == {} ) {
+	if (!error || error() === null || error() === {} ) {
 		return null;
 	}
 
