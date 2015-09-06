@@ -5,26 +5,10 @@
 	.rightanchor {
 		opacity: 0;
 	}
-	#left {
-		overflow-y: scroll;
-		/*height: 89vh;*/
-	}
-	#right {
-		overflow-y: scroll;
-		/*height: 89vh;*/
-	}
 }
 
 audio {
     background-color: red;
-}
-
-#left {
-	text-align: center
-}
-
-#right {
-	word-wrap: break-word; /* prevent long URLs from widening the view. */
 }
 
 .nowrap {
@@ -40,7 +24,6 @@ audio {
 .black {
 	color: black;
 }
-
 
 * {
     scrollbar-face-color: #367CD2;

@@ -27,7 +27,9 @@ function resize(ev) {
         var newHeight = h - navHeight + "px";
         if (w > 768) {
             left.style.height = newHeight;
+            left.style.overflowY = 'scroll';
             right.style.height = newHeight;
+            right.style.overflowY = 'scroll';
         } else {
             left.style.height = '100%';
             right.style.height = '100%';

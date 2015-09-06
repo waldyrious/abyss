@@ -639,7 +639,10 @@ module.exports.view = function(ctrl, args, extras) {
 		error.renderError(ctrl.error),
 		// m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
 		[m('section.col-sm-3#left', {
-			config: resize.registerLeft
+			config: resize.registerLeft,
+			style: {
+				"text-align": "center"
+			}
 		}, [ //m('h3', 'Conversations'),
 				conversations.map(function(grouping) {
 					var fromNow = moment(grouping.last).fromNow();
@@ -678,7 +681,10 @@ module.exports.view = function(ctrl, args, extras) {
 				})
 			]),
 			m('section.col-sm-9#right', {
-				config: resize.registerRight
+				config: resize.registerRight,
+				style: {
+					"word-wrap": "break-word"
+				}
 			}, [
 				m('div', {
 						// config: fadesIn,
