@@ -7,11 +7,11 @@
 	}
 	#left {
 		overflow-y: scroll;
-		height: 89vh;
+		/*height: 89vh;*/
 	}
 	#right {
 		overflow-y: scroll;
-		height: 89vh;
+		/*height: 89vh;*/
 	}
 }
 

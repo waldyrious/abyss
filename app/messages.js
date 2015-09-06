@@ -29,6 +29,8 @@ var _ = require('lodash');
 var error = require('./error');
 var fileuploader = require('./fileuploader');
 
+var resize = require('./resize');
+
 // spinner
 var spinner = require('./spinner');
 var identity = require('./identity');
@@ -633,10 +635,12 @@ module.exports.view = function(ctrl, args, extras) {
 		return retval;
 	}
 
-	return m('div', [
+	return m('div#messages', [
 		error.renderError(ctrl.error),
 		// m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
-		[m('section.col-sm-3#left', [ //m('h3', 'Conversations'),
+		[m('section.col-sm-3#left', {
+			config: resize.registerLeft
+		}, [ //m('h3', 'Conversations'),
 				conversations.map(function(grouping) {
 					var fromNow = moment(grouping.last).fromNow();
 
@@ -673,7 +677,9 @@ module.exports.view = function(ctrl, args, extras) {
 					return retval;
 				})
 			]),
-			m('section.col-sm-9#right', [
+			m('section.col-sm-9#right', {
+				config: resize.registerRight
+			}, [
 				m('div', {
 						// config: fadesIn,
 						style: {

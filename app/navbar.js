@@ -6,6 +6,7 @@ var messages = require('./messages');
 var error = require('./error');
 var swhelper = require('./swhelper'); //serviceworker helper
 var validator = require('validator');
+var resize = require('./resize');
 
 module.exports.controller = function(args, extras) {
 
@@ -52,7 +53,9 @@ module.exports.controller = function(args, extras) {
 
 module.exports.view = function(ctrl, args, extras) {
 	return [
-		m('nav.navbar navbar-custom navbar-static-top',
+		m('nav#nav.navbar navbar-custom navbar-static-top', {
+			config: resize.registerNav
+		},
 			m('div.container-fluid', [
 				m('ul.nav navbar-nav', [
 					m('li', ['Logged in as: ' + identity.me().id + ' ',
@@ -84,8 +87,7 @@ module.exports.view = function(ctrl, args, extras) {
 						onclick: ctrl.logout
 					}, 'Logout ' + identity.me().nickname))
 				])
-			]),
-			m.component(messages)
-		)
+			])),
+		m.component(messages)
 	]
 }
