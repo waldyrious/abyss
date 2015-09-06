@@ -43,8 +43,8 @@ var nicknames = {};
 module.exports.controller = function(args, extras) {
 	// m.redraw.strategy("all")
 
-	var self = this;
-	self.working = (function() {
+	var ctrl = this;
+	ctrl.working = (function() {
 		var working = false;
 		return function(bool, delay) {
 			if (working !== bool) {
@@ -97,7 +97,7 @@ module.exports.controller = function(args, extras) {
 		console.log('Received window message: ')
 		console.log(messageEvent);
 		if (messageEvent.data === 'notificationclick') {
-			self.refresh();
+			ctrl.refresh();
 		}
 	}
 
@@ -132,9 +132,9 @@ module.exports.controller = function(args, extras) {
 		if (msg.new_val && msg.old_val === null) { // new message!
 			msg = msg.new_val;
 			group = _.without(_.union(msg.to, [msg.from]), identity.me().id);
-			if (_.isEqual(group, self.to)) {
+			if (_.isEqual(group, ctrl.to)) {
 				console.log('new messsage in current conversation');
-				self.messages.unshift(msg);
+				ctrl.messages.unshift(msg);
 				var convo_index = _.findIndex(conversations, function(item) {
 					return _.isEqual(item.group, group);
 				})
@@ -144,52 +144,52 @@ module.exports.controller = function(args, extras) {
 				conversations.unshift(convo);
 
 				if (convo_index !== 0) {
-					self.refresh(true);
+					ctrl.refresh(true);
 				}
 				m.redraw();
 			} else {
 				console.log('dunno, just gonna refresh')
-				self.refresh(true);
+				ctrl.refresh(true);
 			}
 		} else if (msg.new_val === null && msg.old_val) { // message deleted!
 			msg = msg.old_val;
 			group = _.without(_.union(msg.to, [msg.from]), identity.me().id);
-			if (_.isEqual(group, self.to)) {
+			if (_.isEqual(group, ctrl.to)) {
 				console.log('deleted messsage in current conversation' + msg.id);
-				self.messages = _.reject(self.messages, function(message) {
+				ctrl.messages = _.reject(ctrl.messages, function(message) {
 						return message.id === msg.id;
 					})
-					// self.messages.splice(self.messages.indexOf(msg), 1);
+					// ctrl.messages.splice(ctrl.messages.indexOf(msg), 1);
 				m.redraw();
 			} else {
 				console.log('dunno, just gonna refresh')
-				self.refresh(true);
+				ctrl.refresh(true);
 			}
 		} else {
 			console.log('dunno, just gonna refresh')
-			self.refresh(true);
+			ctrl.refresh(true);
 		}
 	}
 
-	self.onunload = function() {
+	ctrl.onunload = function() {
 		socket.off('changes', handleChange);
 		window.removeEventListener('message', receiveMessage);
 		window.removeEventListener('paste', handlePaste);
 	}
 
-	self.messages = [];
-	self.to = [];
-	self.message = m.prop('');
-	self.error = error.ErrorHolder();
+	ctrl.messages = [];
+	ctrl.to = [];
+	ctrl.message = m.prop('');
+	ctrl.error = error.ErrorHolder();
 
-	self.editMode = m.prop(false);
+	ctrl.editMode = m.prop(false);
 
-	self.page = m.prop(0);
-	self.per_page = m.prop(50);
+	ctrl.page = m.prop(0);
+	ctrl.per_page = m.prop(50);
 
-	self.smallImages = m.prop(true);
-	self.toggleSmallImages = function(id) {
-		self.smallImages(!self.smallImages());
+	ctrl.smallImages = m.prop(true);
+	ctrl.toggleSmallImages = function(id) {
+		ctrl.smallImages(!ctrl.smallImages());
 
 		if (id) {
 			setImmediate(function() {
@@ -199,32 +199,32 @@ module.exports.controller = function(args, extras) {
 		}
 	}
 
-	self.nextPage = function() {
-		self.page(self.page() + 1);
-		self.getMessagesStreaming()
+	ctrl.nextPage = function() {
+		ctrl.page(ctrl.page() + 1);
+		ctrl.getMessagesStreaming()
 	}
 
-	self.previousPage = function() {
-		if (self.page() !== 0) {
-			self.page(self.page() - 1);
-			self.getMessagesStreaming()
+	ctrl.previousPage = function() {
+		if (ctrl.page() !== 0) {
+			ctrl.page(ctrl.page() - 1);
+			ctrl.getMessagesStreaming()
 		}
 	}
 
-	self.allPages = function() {
-		self.page(0);
-		self.per_page(Infinity);
-		self.getMessagesStreaming()
+	ctrl.allPages = function() {
+		ctrl.page(0);
+		ctrl.per_page(Infinity);
+		ctrl.getMessagesStreaming()
 	}
 
-	self.toggleEditMode = function() {
-		// if (self.editMode()) {
-		// 	self.refresh();
+	ctrl.toggleEditMode = function() {
+		// if (ctrl.editMode()) {
+		// 	ctrl.refresh();
 		// }
-		self.editMode(!self.editMode());
+		ctrl.editMode(!ctrl.editMode());
 	}
 
-	self.getNickname = function(ph) {
+	ctrl.getNickname = function(ph) {
 		if (nicknames[ph] !== undefined) {
 			return nicknames[ph];
 		} else if (ph === identity.me().id) {
@@ -234,24 +234,24 @@ module.exports.controller = function(args, extras) {
 		}
 	}
 
-	self.selectGroup = function(group) {
+	ctrl.selectGroup = function(group) {
 		m.route('/conversations?' + m.route.buildQueryString({
 			to: group
 		}));
 		return;
-		// self.page(0);
-		// self.to = clone(group);
-		// self.refresh();
+		// ctrl.page(0);
+		// ctrl.to = clone(group);
+		// ctrl.refresh();
 	};
 
-	self.newMessage = function() {
+	ctrl.newMessage = function() {
 		m.route('/conversations');
-		// self.to = [''];
-		// self.reselectGroup();
+		// ctrl.to = [''];
+		// ctrl.reselectGroup();
 	}
 
-	self.reselectGroup = function() {
-		self.getMessagesStreaming();
+	ctrl.reselectGroup = function() {
+		ctrl.getMessagesStreaming();
 	};
 
 	function fromMe(message) {
@@ -267,11 +267,11 @@ module.exports.controller = function(args, extras) {
 		});
 	}
 
-	self.setMessages = function(value) {
-		self.messages = value;
+	ctrl.setMessages = function(value) {
+		ctrl.messages = value;
 	}
 
-	self.setConversations = function(value) {
+	ctrl.setConversations = function(value) {
 		conversations = value;
 		value.map(function(item) {
 			item.group.map(function(member, index) {
@@ -284,37 +284,37 @@ module.exports.controller = function(args, extras) {
 		return !fromMe(message) && message.to.length && message.to.length > 1;
 	}
 
-	self.toPlus = function() {
-		self.to.push('');
+	ctrl.toPlus = function() {
+		ctrl.to.push('');
 	};
 
-	self.toMinus = function(index) {
-		self.to.splice(index, 1);
-		self.reselectGroup();
+	ctrl.toMinus = function(index) {
+		ctrl.to.splice(index, 1);
+		ctrl.reselectGroup();
 	};
 
-	self.send = function() {
-		self.working(true, 0);
+	ctrl.send = function() {
+		ctrl.working(true, 0);
 		m.request({
 				method: 'POST',
 				config: identity.withAuth,
 				background: false,
 				url: getMessagesUrl(),
 				data: {
-					text: self.message()
+					text: ctrl.message()
 				}
 			})
 			.then(function() {
-				self.message('');
+				ctrl.message('');
 			})
-			// .then(self.refresh, self.error)
+			// .then(ctrl.refresh, ctrl.error)
 			.then(function() {
-				self.working(false);
+				ctrl.working(false);
 			})
 	};
 
-	self.getMessages = function() {
-		self.working(true);
+	ctrl.getMessages = function() {
+		ctrl.working(true);
 		m.request({
 				method: 'GET',
 				config: identity.withAuth,
@@ -323,26 +323,26 @@ module.exports.controller = function(args, extras) {
 			.then(function(response) {
 				return response;
 			})
-			.then(self.setMessages, self.error)
+			.then(ctrl.setMessages, ctrl.error)
 			.then(function() {
-				self.working(false);
+				ctrl.working(false);
 			})
 	};
 
 
-	self.getMessagesStreaming = function() {
+	ctrl.getMessagesStreaming = function() {
 		// Stream in first 10 messages and try to render them ASAP, then we load the rest
 		var count = 0;
 		var show = 9;
 
 		m.startComputation();
-		self.working(true);
-		self.messages = [];
+		ctrl.working(true);
+		ctrl.messages = [];
 		oboe({
 				url: getMessagesUrl(),
 				headers: identity.oboeAuth()
 			}).node('![*]', function(item) {
-				self.messages.push(item);
+				ctrl.messages.push(item);
 				count++;
 				if (count == show) {
 					m.endComputation();
@@ -351,18 +351,18 @@ module.exports.controller = function(args, extras) {
 				return oboe.drop;
 			})
 			.done(function() {
-				self.working(false);
+				ctrl.working(false);
 				m.endComputation();
 			});
 	};
-	self.getMessagesStreaming = self.getMessages // quick uncommentable to disable streaming messages
+	ctrl.getMessagesStreaming = ctrl.getMessages // quick uncommentable to disable streaming messages
 
-	self.refreshConversations = function(force) {
+	ctrl.refreshConversations = function(force) {
 		if (conversations !== null && !force) {
 			return Promise.resolve(conversations);
 		}
 
-		self.working(true, 0);
+		ctrl.working(true, 0);
 		return m.request({
 				method: 'GET',
 				config: identity.withAuth,
@@ -370,49 +370,49 @@ module.exports.controller = function(args, extras) {
 				url: '/api/conversations'
 			})
 			.then(function(result) {
-				self.working(false);
+				ctrl.working(false);
 				return result;
 			})
-			.then(self.setConversations, self.error)
+			.then(ctrl.setConversations, ctrl.error)
 	};
 
-	self.refresh = self.getConversations = function(force) {
-		return self.refreshConversations(force)
-			.then(self.getMessagesStreaming, self.error)
+	ctrl.refresh = ctrl.getConversations = function(force) {
+		return ctrl.refreshConversations(force)
+			.then(ctrl.getMessagesStreaming, ctrl.error)
 			.then(function() {
-				self.working(false);
+				ctrl.working(false);
 			})
 
 	};
 
 
 	function getMessagesUrl() {
-		self.to = filter(self.to, function(item) {
+		ctrl.to = filter(ctrl.to, function(item) {
 			return item !== '' && item !== ' ' && item !== null;
 		});
 		return '/api/messages?' + m.route.buildQueryString({
-			to: self.to,
-			page: self.page(),
-			'per_page': self.per_page()
+			to: ctrl.to,
+			page: ctrl.page(),
+			'per_page': ctrl.per_page()
 		});
 	}
 
-	self.clearMessages = function() {
-		self.working(true);
+	ctrl.clearMessages = function() {
+		ctrl.working(true);
 		m.request({
 				method: 'DELETE',
 				config: identity.withAuth,
 				background: false,
-				url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(self.to))
+				url: '/api/messages?group=' + encodeURIComponent(JSON.stringify(ctrl.to))
 			})
-			.then(self.refresh, self.error)
+			.then(ctrl.refresh, ctrl.error)
 			.then(function() {
-				self.working(false);
+				ctrl.working(false);
 			})
 	};
 
-	self.delete = function(message) {
-		self.working(true);
+	ctrl.delete = function(message) {
+		ctrl.working(true);
 		m.request({
 				method: 'DELETE',
 				config: identity.withAuth,
@@ -420,12 +420,12 @@ module.exports.controller = function(args, extras) {
 				url: '/api/messages/' + encodeURIComponent(message.id)
 			})
 			.then(function() {
-				self.working(false);
+				ctrl.working(false);
 			})
 			// .then(function () {
-			// 	self.messages.splice(self.messages.indexOf(message), 1);
-			// }, self.error);
-			// .then(self.refresh, self.error)
+			// 	ctrl.messages.splice(ctrl.messages.indexOf(message), 1);
+			// }, ctrl.error);
+			// .then(ctrl.refresh, ctrl.error)
 	};
 
 	if (m.route.param('to')) {
@@ -433,13 +433,13 @@ module.exports.controller = function(args, extras) {
 		if (typeof to === 'string')
 			to = [to];
 
-		if (to && !isEqual(to, self.to)) {
-			self.to = to;
-			// self.reselectGroup();
+		if (to && !isEqual(to, ctrl.to)) {
+			ctrl.to = to;
+			// ctrl.reselectGroup();
 		}
 	}
 
-	self.refresh();
+	ctrl.refresh();
 };
 
 module.exports.view = function(ctrl, args, extras) {
