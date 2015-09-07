@@ -42,3 +42,5 @@ function resize(ev) {
 }
 
 window.onresize = resize;
+
+// document.documentElement.style.backgroundImage = require('./img/intro-bg.jpg');

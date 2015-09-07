@@ -9,7 +9,7 @@
 
 body {
 	transition: background 2s ease-in-out;
-	background-image: url('~./img/intro-bg.jpg');
+	background-image: url('~./img/dark.jpg');
 	background-size: cover;
 }
 
