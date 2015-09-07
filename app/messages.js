@@ -286,6 +286,7 @@ module.exports.controller = function(args, extras) {
 
 	ctrl.toPlus = function() {
 		ctrl.to.push('');
+		ctrl.messages = [];
 	};
 
 	ctrl.toMinus = function(index) {
@@ -720,7 +721,8 @@ module.exports.view = function(ctrl, args, extras) {
 								placeholder: 'Phone number...',
 								type: 'tel',
 								onchange: m.withAttr('value', function(value) {
-									ctrl.to[index] = value
+									ctrl.to[index] = value;
+									ctrl.reselectGroup();
 								}),
 								value: ctrl.to[index]
 							}),
