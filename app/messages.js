@@ -245,7 +245,7 @@ module.exports.controller = function(args, extras) {
 	};
 
 	ctrl.newMessage = function() {
-		m.route('/conversations');
+		m.route('/newmessage');
 		// ctrl.to = [''];
 		// ctrl.reselectGroup();
 	}
@@ -316,14 +316,19 @@ module.exports.controller = function(args, extras) {
 
 	ctrl.getMessages = function() {
 		ctrl.working(true);
-		m.request({
-				method: 'GET',
-				config: identity.withAuth,
-				url: getMessagesUrl()
-			})
-			.then(function(response) {
-				return response;
-			})
+
+		var initial;
+		if (ctrl.to.length === 1 && ctrl.to[0].trim() === '') {
+			initial = Promise.resolve([])
+		} else {
+			initial =  m.request({
+					method: 'GET',
+					config: identity.withAuth,
+					url: getMessagesUrl()
+				})
+		}
+
+		return initial
 			.then(ctrl.setMessages, ctrl.error)
 			.then(function() {
 				ctrl.working(false);
@@ -439,8 +444,10 @@ module.exports.controller = function(args, extras) {
 			// ctrl.reselectGroup();
 		}
 	}
-
-	ctrl.refresh();
+	if (m.route() === '/newmessage') {
+		ctrl.to = [''];
+	}
+	ctrl.refresh()
 };
 
 module.exports.view = function(ctrl, args, extras) {

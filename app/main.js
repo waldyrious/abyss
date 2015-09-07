@@ -21,6 +21,7 @@ m.route(mainElement, "/conversations", {
     '/message': messages,
     '/conversations': navbar,
     '/conversations/:group': navbar,
+    '/newmessage': navbar,
     '/radio': radio
 });
 
