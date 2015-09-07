@@ -113,7 +113,11 @@ module.exports.view = function(ctrl) {
 	}
 
 	return m('div.container', [
-		m('h4', 'Simple group messaging and file sharing. Erasable conversations.'),
+		m('h4', {
+			style: {
+				"margin-top": "1em"
+			}
+		}, 'Simple group messaging and file sharing. Erasable conversations.'),
 		ctrl.needCode() ? [
 			m('.col-md1',
 				m('.input-group', {
@@ -136,7 +140,7 @@ module.exports.view = function(ctrl) {
 						onclick: ctrl.cancelCode
 					}, 'Cancel'))))
 		] : [
-			m('div', ['Just sign in with your existing mobile phone number. ', identity.me().id]),
+			m('div', ['Enter your mobile phone number:', identity.me().id]),
 			m('div.input-group', {
 					style: {
 						width: '18em'
@@ -162,7 +166,7 @@ module.exports.view = function(ctrl) {
 			style: {
 				cursor: 'pointer'
 			}
-		}, 'Frequently Asked Questions')),
+		}, 'What is this?')),
 		showFaq ? m.component(faq) : null
 	])
 };
