@@ -14,8 +14,9 @@ var audioSources = {
 		'Melodic Drum & Bass': 'http://208.113.211.151:443/dnb/;',
 		'Trap': 'http://208.113.211.151:443/trap/;'
 	}
-	// var audioKey = 'Trap';
-var audioKey = randomProperty(audioSources);
+
+var audioKey = 'Progressive House';
+// var audioKey = randomProperty(audioSources);
 var element = new Audio(audioSources[audioKey]);
 element.preload = 'none';
 
@@ -81,6 +82,6 @@ module.exports.view = function(ctrl, args, extras) {
 				value: item,
 				// selected: item == audioKey
 			}, item)
-		}))	
+		}))
 	])
 }

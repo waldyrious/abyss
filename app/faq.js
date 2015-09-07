@@ -3,8 +3,7 @@ var m = require('mithril');
 
 module.exports.view = function(ctrl, args, extras) {
 	return m('ul.list-unstyled faq', [
-		m('li', 'The Abyss (abyss.online) is instant messaging with a twist. You own and control every message (and file) you send. At any time in the future, if you choose to, you can drop it into the abyss, erasing it for good.'
-		+ ' Why? Sometimes you just to have an off the cuff conversation, or share a file without jumping through a bunch of hoops.'),
+		m('li', 'The Abyss (abyss.online) is instant messaging with a twist. You own and control every message (and file) you send. At any time in the future, if you choose to, you can drop it into the abyss, erasing it for good.' + ' Why? Sometimes you just to have an off the cuff conversation, or share a file without jumping through a bunch of hoops.'),
 		m('br'),
 		m('li', 'There are no usernames or passwords to remember. Just sign in with your mobile number, and a verification code will be sent to your phone. Currently compatible with AT&T, Sprint, T-Mobile and Verizon. You must also not have disabled email-to-SMS at your wireless carrier.'),
 		m('br'),

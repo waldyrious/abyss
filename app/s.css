@@ -7,6 +7,11 @@
 	}
 }
 
+body {
+	background-image: url('~./img/intro-bg.jpg');
+	background-size: cover;
+}
+
 audio {
     background-color: red;
 }
@@ -38,13 +43,13 @@ audio {
     width: 12px;
 }
 *::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px #408ccb);
+    -webkit-box-shadow: inset 0 0 6px #002a4d);
     -webkit-border-radius: 10px;
     border-radius: 10px;
 }
 *::-webkit-scrollbar-thumb {
     -webkit-border-radius: 10px;
     border-radius: 10px;
-    background: #408ccb;
-    -webkit-box-shadow: inset 0 0 6px #408ccb);
+    background: #002a4d;
+    -webkit-box-shadow: inset 0 0 6px #002a4d);
 }
