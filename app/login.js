@@ -117,7 +117,7 @@ module.exports.view = function(ctrl) {
 			style: {
 				"margin-top": "1em"
 			}
-		}, 'Simple group messaging and file sharing. Erasable conversations.'),
+		}, 'Ephemeral group messaging and file sharing.'),
 		ctrl.needCode() ? [
 			m('.col-md1',
 				m('.input-group', {
