@@ -22,7 +22,7 @@ module.exports.view = function(ctrl, args, extras) {
 		m('li', 'Q. Can I send files?'),
 		m('li', 'A. You can upload or drag and drop files. Chrome supports pasting images from the clipboard.'),
 		m('br'),
-		m('li', 'Q. What do I do if The Abyss goes down?'),
-		m('li', 'A. The Abyss is probably all you need to communicate most of the time, but in the unfortunate circumstance that it is not working, you will not be able to read this message.'),
+		m('li', 'Q. What do I do if abyss.online goes down?'),
+		m('li', 'A. abyss.online is probably all you need to communicate most of the time, but in the unfortunate circumstance that it is not working, you will not be able to read this message.'),
 	]);
 }
