@@ -1,5 +1,6 @@
 'use strict';
 
+var m = require('mithril');
 var nav;
 var left;
 var right;
@@ -21,17 +22,26 @@ module.exports.registerRight = function (theRight) {
 }
 
 function resize(ev) {
-    var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
-    var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+    var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    var route = m.route();
+    if (route) {
+        route = route.split('/');
+        console.log(route);
+    }
 
-    if (w > 768) {
-        body.style.background = "inherit";
-        body.style.backgroundSize = "cover";
-        body.style.backgroundImage = "url('img/dark.jpg')";
-        body.style.backgroundRepeat = "none";
+    if (w > 768 && route && route[1] === 'login') {
+        if (body.style.background !== "url('img/dark.jpg') no-repeat center center fixed") {
+            // if check avoids repaint in safari.
+            body.style.background = "url('img/dark.jpg') no-repeat center center fixed";
+            body.style.backgroundSize = "cover";
+        }
+        // body.style.background = "inherit";
+        // body.style.backgroundImage = "url('img/dark.jpg')";
+        // body.style.backgroundRepeat = "none";
     } else {
-        body.style.backgroundImage = "none";
-        body.style.backgroundColor = "black";
+        body.style.background = 'black';
+        // body.style.backgroundColor = "black";
     }
 
     if (nav && left && right && w > 768) {
@@ -51,5 +61,5 @@ function resize(ev) {
         }
     }
 }
-resize();
 window.onresize = resize;
+module.exports = resize;

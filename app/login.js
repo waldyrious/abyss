@@ -10,7 +10,11 @@ var faq = require('./faq');
 
 var error = require('./error');
 
+var resize = require('./resize');
+
 module.exports.controller = function(args, extras) {
+	resize();
+
 	var self = this;
 	self.error = error.ErrorHolder();
 	self.phoneInput = m.prop('');
