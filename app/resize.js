@@ -30,11 +30,13 @@ function resize(ev) {
         console.log(route);
     }
 
-    if (w > 768 && route && route[1] === 'login') {
-        if (body.style.background !== "url('img/dark.jpg') no-repeat center center fixed") {
+    // if (w > 768 && route && route[1] === 'login') {
+    if (route && route[1] === 'login') {
+        if (body.style.background !== "url('img/dark.jpg') no-repeat") {
             // if check avoids repaint in safari.
-            body.style.background = "url('img/dark.jpg') no-repeat center center fixed";
+            body.style.background = "url('img/dark.jpg') no-repeat";
             body.style.backgroundSize = "cover";
+            body.style.backgroundColor = 'black';
         }
         // body.style.background = "inherit";
         // body.style.backgroundImage = "url('img/dark.jpg')";

@@ -15,14 +15,11 @@ var radio = require('./radio');
 var faq = require('./faq');
 
 m.route(mainElement, "/conversations", {
-    '/faq': faq,
-    '/navbar': navbar,
     '/login': login,
     '/message': messages,
     '/conversations': navbar,
     '/conversations/:group': navbar,
-    '/newmessage': navbar,
-    '/radio': radio
+    '/newmessage': navbar
 });
 
 // var login = m.mount(mainElement, Login);

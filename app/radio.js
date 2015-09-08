@@ -15,7 +15,7 @@ var audioSources = {
 		'Trap': 'http://208.113.211.151:443/trap/;'
 	}
 
-var audioKey = 'Progressive House';
+var audioKey = 'Chillstep';
 // var audioKey = randomProperty(audioSources);
 var element = new Audio(audioSources[audioKey]);
 element.preload = 'none';
