@@ -76,7 +76,8 @@ module.exports.controller = function(args, extras) {
 
 	ctrl.changeNicknameConfig = function (el) {
 		var r = chooseEl.getBoundingClientRect();
-		el.style.transition = 'opacity 1s linear';
+		el.style.zIndex = 1000;
+		el.style.transition = 'opacity 0.3s linear';
 		el.style.position = 'absolute';
 		el.style.top = r.bottom + 2 + 'px';
 		if (r.left > 20) {
