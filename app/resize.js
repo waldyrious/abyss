@@ -21,6 +21,7 @@ module.exports.registerRight = function (theRight) {
     resize();
 }
 
+var lastRouteWasLogin = false;
 function resize(ev) {
     var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -37,14 +38,20 @@ function resize(ev) {
             body.style.backgroundColor = '';
             body.style.background = "url('img/dark.jpg') no-repeat black";
             body.style.backgroundSize = "cover";
+            lastRouteWasLogin = true;
         }
     } else {
-        body.style.transition = 'background 0s ease-in-out';
-        body.style.background = 'none white';
-        setTimeout(function () {
-            body.style.transition = 'background 1s ease-in-out';
+        if (lastRouteWasLogin) {
+            lastRouteWasLogin = false;
+            body.style.transition = 'background 0s ease-in-out';
+            body.style.background = 'none white';
+            setTimeout(function () {
+                body.style.transition = 'background 1s ease-in-out';
+                body.style.background = 'none black';
+            }, 100);
+        } else {
             body.style.background = 'none black';
-        }, 100);
+        }
     }
 
     if (nav && left && right && w > 768) {
