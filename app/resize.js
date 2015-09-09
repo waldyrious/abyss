@@ -32,18 +32,19 @@ function resize(ev) {
 
     // if (w > 768 && route && route[1] === 'login') {
     if (route && route[1] === 'login') {
-        if (body.style.background !== "url('img/dark.jpg') no-repeat") {
-            // if check avoids repaint in safari.
-            body.style.background = "url('img/dark.jpg') no-repeat";
+        // The if check avoids repaints in safari.
+        if (body.style.background !== "url('img/dark.jpg') no-repeat black") {
+            body.style.backgroundColor = '';
+            body.style.background = "url('img/dark.jpg') no-repeat black";
             body.style.backgroundSize = "cover";
-            body.style.backgroundColor = 'black';
         }
-        // body.style.background = "inherit";
-        // body.style.backgroundImage = "url('img/dark.jpg')";
-        // body.style.backgroundRepeat = "none";
     } else {
-        body.style.background = 'black';
-        // body.style.backgroundColor = "black";
+        body.style.transition = 'background 0s ease-in-out';
+        body.style.background = 'none white';
+        setTimeout(function () {
+            body.style.transition = 'background 1s ease-in-out';
+            body.style.background = 'none black';
+        }, 100);
     }
 
     if (nav && left && right && w > 768) {

@@ -7,13 +7,6 @@
 	}
 }
 
-body {
-	/*background: black;*/
-	transition: background 1s ease-in-out;
-	/*background-image: url('img/dark.jpg');*/
-	/*background-size: cover;*/
-}
-
 audio {
     background-color: red;
 }
