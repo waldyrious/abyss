@@ -58,15 +58,12 @@ module.exports.view = function(ctrl, args, extras) {
 		},
 			m('div.container-fluid', [
 				m('ul.nav navbar-nav', [
-					m('li', 'abyss.online'),
-
-
-					navigator.serviceWorker ? m('li', m('input[type=checkbox]', {
-						onclick: function() {
-							ctrl.enableNotifications(this.checked);
-						},
-						checked: ctrl.notificationsEnabled()
-					}), ' Receive notifications (on this browser)') : '',
+					m('li', {
+						style: {
+							"margin-right": "1em",
+							"color": "grey"
+						}
+					},'abyss.online'),
 					m('li', 'Featuring ', m('a', {
 						href: 'http://loungetek.com/radio/',
 						target: '_blank'
@@ -74,11 +71,18 @@ module.exports.view = function(ctrl, args, extras) {
 					m.component(radio)
 				]),
 				m('ul.nav navbar-nav navbar-right', [
-					m('li', [ctrl.isChangingNickname ? m('input.black', {
+					navigator.serviceWorker ? m('li', m('a', {
+						href: '#',
+						onclick: function() {
+							ctrl.enableNotifications(!ctrl.notificationsEnabled());
+						},
+					}, ctrl.notificationsEnabled() ? 'Disable Push Notifications' : ' Enable Push Notifications' )) : '',
+					m('li', ctrl.isChangingNickname ? m('input.form-control', {
 							oninput: m.withAttr('value', ctrl.nicknameInput),
-							value: ctrl.nicknameInput()
+							value: ctrl.nicknameInput(),
+							placeholder: 'Nickname...'
 						}) : ''
-					]),
+					),
 					m('li', [
 						m('a', {
 							href: '#',

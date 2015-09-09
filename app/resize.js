@@ -28,7 +28,6 @@ function resize(ev) {
     var route = m.route();
     if (route) {
         route = route.split('/');
-        console.log(route);
     }
 
     // if (w > 768 && route && route[1] === 'login') {
