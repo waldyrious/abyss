@@ -76,12 +76,17 @@ module.exports.controller = function(args, extras) {
 
 	ctrl.changeNicknameConfig = function (el) {
 		var r = chooseEl.getBoundingClientRect();
+		el.style.transition = 'opacity 1s linear';
 		el.style.position = 'absolute';
 		el.style.top = r.bottom + 2 + 'px';
 		if (r.left > 20) {
 			el.style.left = r.left - 20 + 'px';
 		}
 		el.style.display = '';
+		el.style.opacity = '0';
+		setImmediate(function () {
+			el.style.opacity = '1';
+		});
 	}
 }
 
