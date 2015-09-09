@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "autolinker": "^0.18.1",
-    "bluebird": "^2.9.34",
+    "bluebird": "^2.10.0",
     "bluebird-co": "^1.4.0-beta",
     "bootstrap": "^3.3.5",
     "brute-rethinkdb": "2.0.0",

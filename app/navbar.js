@@ -50,11 +50,12 @@ module.exports.controller = function(args, extras) {
 			})
 	}
 
+	var chooseEl;
 	ctrl.chooseConfig = (function () {
 		var interval;
 
 		return function (el) {
-
+			chooseEl = el;
 			if (identity.me().nickname === '' && !ctrl.isChangingNickname) {
 				clearInterval(interval);
 				el.style.transition = 'color 1s ease-in-out';
@@ -72,6 +73,16 @@ module.exports.controller = function(args, extras) {
 
 		}
 	})();
+
+	ctrl.changeNicknameConfig = function (el) {
+		var r = chooseEl.getBoundingClientRect();
+		el.style.position = 'absolute';
+		el.style.top = r.bottom + 2 + 'px';
+		if (r.left > 20) {
+			el.style.left = r.left - 20 + 'px';
+		}
+		el.style.display = '';
+	}
 }
 
 module.exports.view = function(ctrl, args, extras) {
@@ -100,12 +111,15 @@ module.exports.view = function(ctrl, args, extras) {
 							ctrl.enableNotifications(!ctrl.notificationsEnabled());
 						},
 					}, ctrl.notificationsEnabled() ? 'Disable Notifications' : ' Enable Notifications' )) : '',
-					m('li', ctrl.isChangingNickname ? m('input.form-control', {
+					ctrl.isChangingNickname ? m('li', {
+						config: ctrl.changeNicknameConfig,
+						style: { display: 'none' } // don't mess up the layout.
+					}, m('input.form-control', {
 							oninput: m.withAttr('value', ctrl.nicknameInput),
 							value: ctrl.nicknameInput(),
 							placeholder: 'Nickname...'
-						}) : ''
-					),
+						})
+					) : '',
 					m('li', [
 						m('a', {
 							href: '#',
