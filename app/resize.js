@@ -25,6 +25,24 @@ var lastRouteWasLogin = false;
 function resize(ev) {
     var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+    if (nav && left && right && w > 768) {
+        var navHeight = nav.clientHeight;
+        var newHeight = h - navHeight + "px";
+
+        left.style.height = newHeight;
+        right.style.height = newHeight;
+        left.style.overflowY = 'scroll';
+        right.style.overflowY = 'scroll';
+    } else {
+        if (left) {
+            left.style.height = '100%';
+        }
+        if (right) {
+            right.style.height = '100%';
+        }
+    }
+
     var route = m.route();
     if (route) {
         route = route.split('/');
@@ -53,22 +71,6 @@ function resize(ev) {
         }
     }
 
-    if (nav && left && right && w > 768) {
-        var navHeight = nav.clientHeight;
-        var newHeight = h - navHeight + "px";
-
-        left.style.height = newHeight;
-        right.style.height = newHeight;
-        left.style.overflowY = 'scroll';
-        right.style.overflowY = 'scroll';
-    } else {
-        if (left) {
-            left.style.height = '100%';
-        }
-        if (right) {
-            right.style.height = '100%';
-        }
-    }
 }
 window.onresize = resize;
-module.exports = resize;
+module.exports.resize = resize;

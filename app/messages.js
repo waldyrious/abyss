@@ -40,11 +40,9 @@ var mountedDragAndDrop = false;
 var conversations = null;
 var nicknames = {};
 
-var resize = require('./resize');
-
 module.exports.controller = function(args, extras) {
 	// m.redraw.strategy("all")
-	resize();
+	resize.resize();
 
 	var ctrl = this;
 	ctrl.working = (function() {

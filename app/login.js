@@ -13,7 +13,7 @@ var error = require('./error');
 var resize = require('./resize');
 
 module.exports.controller = function(args, extras) {
-	resize();
+	resize.resize();
 
 	var self = this;
 	self.error = error.ErrorHolder();
