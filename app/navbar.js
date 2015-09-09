@@ -69,12 +69,12 @@ module.exports.view = function(ctrl, args, extras) {
 							onclick: ctrl.changeNickname
 						}, 'Change Nickname')
 					]),
-					m('li', m('input[type=checkbox]', {
+					navigator.serviceWorker ? m('li', m('input[type=checkbox]', {
 						onclick: function() {
 							ctrl.enableNotifications(this.checked);
 						},
 						checked: ctrl.notificationsEnabled()
-					}), ' Receive notifications (on this browser)'),
+					}), ' Receive notifications (on this browser)') : '',
 					m('li', 'Featuring ', m('a', {
 						href: 'http://loungetek.com/radio/',
 						target: '_blank'
