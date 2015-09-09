@@ -10,32 +10,32 @@ var resize = require('./resize');
 
 module.exports.controller = function(args, extras) {
 
-	var self = this;
-	self.error = error.ErrorHolder();
-	self.nicknameInput = m.prop('');
+	var ctrl = this;
+	ctrl.error = error.ErrorHolder();
+	ctrl.nicknameInput = m.prop('');
 
 	identity.whoami()
 	.then(function (me) {
 		if (me && me.nickname) {
-			self.nicknameInput(me.nickname);
+			ctrl.nicknameInput(me.nickname);
 		}
 	})
 
-	self.isChangingNickname = false;
-	self.changeNickname = function(ev) {
-		if (self.isChangingNickname === false) {
-			self.isChangingNickname = true;
+	ctrl.isChangingNickname = false;
+	ctrl.changeNickname = function(ev) {
+		if (ctrl.isChangingNickname === false) {
+			ctrl.isChangingNickname = true;
 		} else {
-			identity.changeNickname(self.nicknameInput().trim())
+			identity.changeNickname(ctrl.nicknameInput().trim())
 				.then(function() {
-					self.nicknameInput(identity.nickname);
-					self.isChangingNickname = false;
-				}, self.error)
+					ctrl.nicknameInput(identity.nickname);
+					ctrl.isChangingNickname = false;
+				}, ctrl.error)
 		}
 	}
-	self.notificationsEnabled = swhelper.isSubscribed;
+	ctrl.notificationsEnabled = swhelper.isSubscribed;
 
-	self.enableNotifications = function(bool) {
+	ctrl.enableNotifications = function(bool) {
 		if (bool) {
 			return swhelper.register()
 		} else {
@@ -43,12 +43,35 @@ module.exports.controller = function(args, extras) {
 		}
 	}
 
-	self.logout = function(ev) {
+	ctrl.logout = function(ev) {
 		return identity.logout()
 			.then(function() {
 				m.route('/')
 			})
 	}
+
+	ctrl.chooseConfig = (function () {
+		var interval;
+
+		return function (el) {
+
+			if (identity.me().nickname === '' && !ctrl.isChangingNickname) {
+				clearInterval(interval);
+				el.style.transition = 'color 1s ease-in-out';
+				interval = setInterval(function () {
+					if (el.style.color === 'red') {
+						el.style.color = 'blue';
+					} else {
+						el.style.color = 'red';
+					}
+				}, 1000)
+			} else {
+				// el.style.color = '';
+				clearInterval(interval);
+			}
+
+		}
+	})();
 }
 
 module.exports.view = function(ctrl, args, extras) {
@@ -87,10 +110,11 @@ module.exports.view = function(ctrl, args, extras) {
 						m('a', {
 							href: '#',
 							onclick: ctrl.changeNickname,
+							config: ctrl.chooseConfig,
 							style: {
 								color: identity.me().nickname === '' ? 'red' : ''
 							}
-						}, ctrl.isChangingNickname ? 'Save Nickname' : (identity.me().nickname === '' ? 'Choose Nickname' : 'Change Nickname'))
+						}, ctrl.isChangingNickname ? 'Save Nickname' : (identity.me().nickname === '' ? 'Change Nickname' : 'Change Nickname'))
 					]),
 					m('li', m('a', {
 						href: '#',
