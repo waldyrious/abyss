@@ -58,17 +58,9 @@ module.exports.view = function(ctrl, args, extras) {
 		},
 			m('div.container-fluid', [
 				m('ul.nav navbar-nav', [
-					m('li', ['Logged in as: ' + identity.me().id + ' ',
-						ctrl.isChangingNickname ? m('input.black', {
-							oninput: m.withAttr('value', ctrl.nicknameInput),
-							value: ctrl.nicknameInput()
-						}) : identity.me().nickname
-					]),
-					m('li', [
-						m('button.btn btn-default', {
-							onclick: ctrl.changeNickname
-						}, 'Change Nickname')
-					]),
+					m('li', 'abyss.online'),
+
+
 					navigator.serviceWorker ? m('li', m('input[type=checkbox]', {
 						onclick: function() {
 							ctrl.enableNotifications(this.checked);
@@ -82,6 +74,20 @@ module.exports.view = function(ctrl, args, extras) {
 					m.component(radio)
 				]),
 				m('ul.nav navbar-nav navbar-right', [
+					m('li', [ctrl.isChangingNickname ? m('input.black', {
+							oninput: m.withAttr('value', ctrl.nicknameInput),
+							value: ctrl.nicknameInput()
+						}) : ''
+					]),
+					m('li', [
+						m('a', {
+							href: '#',
+							onclick: ctrl.changeNickname,
+							style: {
+								color: identity.me().nickname === '' ? 'red' : ''
+							}
+						}, ctrl.isChangingNickname ? 'Save Nickname' : (identity.me().nickname === '' ? 'Choose Nickname' : 'Change Nickname'))
+					]),
 					m('li', m('a', {
 						href: '#',
 						onclick: ctrl.logout
