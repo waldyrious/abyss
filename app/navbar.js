@@ -99,7 +99,7 @@ module.exports.view = function(ctrl, args, extras) {
 						onclick: function() {
 							ctrl.enableNotifications(!ctrl.notificationsEnabled());
 						},
-					}, ctrl.notificationsEnabled() ? 'Disable Push Notifications' : ' Enable Push Notifications' )) : '',
+					}, ctrl.notificationsEnabled() ? 'Disable Notifications' : ' Enable Notifications' )) : '',
 					m('li', ctrl.isChangingNickname ? m('input.form-control', {
 							oninput: m.withAttr('value', ctrl.nicknameInput),
 							value: ctrl.nicknameInput(),
