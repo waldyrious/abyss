@@ -630,7 +630,7 @@ module.exports.view = function(ctrl, args, extras) {
 					style: {
 						opacity: "0.5"
 					}
-				}, fromMe(message) ? (identity.me().nickname ? identity.me().nickname : 'me') : message.from + (ctrl.getNickname(message.from) ? ' ' + ctrl.getNickname(message.from) : '')),
+				}, fromMe(message) ? (identity.me().nickname ? identity.me().nickname : 'me') :(ctrl.getNickname(message.from) ? ctrl.getNickname(message.from) :  message.from)),
 				': ',
 
 				message.file ? displayMessageWithFile(message) :
@@ -778,8 +778,8 @@ module.exports.view = function(ctrl, args, extras) {
 				m('div.hoveropaque btn-group', {
 					style: {
 						position: 'fixed',
-						bottom: '10px',
-						right: '2px'
+						bottom: '3px',
+						right: '0'
 					}
 				}, [
 					m('a.leftanchor btn btn-default glyphicon glyphicon-th-list', {
