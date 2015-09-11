@@ -797,7 +797,7 @@ module.exports.view = function(ctrl, args, extras) {
 					style: {
 						position: 'fixed',
 						bottom: '3px',
-						right: '0'
+						right: '1em'
 					}
 				}, [
 					m('a.leftanchor btn btn-default glyphicon glyphicon-th-list', {
@@ -808,26 +808,23 @@ module.exports.view = function(ctrl, args, extras) {
 					}),
 					m('button.btn btn-default glyphicon glyphicon-arrow-left', {
 						onclick: ctrl.previousPage,
-						disabled: ctrl.page() === 0 || ctrl.per_page() === Infinity,
+						// disabled: ctrl.page() === 0 || ctrl.per_page() === Infinity,
 						style: {
-							'margin-right': '1em',
-							display: ctrl.per_page() === Infinity ? 'none' : 'initial'
+							display: ctrl.page() === 0 || ctrl.per_page() === Infinity ? 'none' : ''
 						}
 					}),
 					// m('span', ctrl.per_page() === Infinity ? '' : 'Page ' + (ctrl.page()+1) + ' '),
 					m('button.btn btn-default glyphicon glyphicon-arrow-right', {
 						onclick: ctrl.nextPage,
-						disabled: ctrl.per_page() === Infinity || ctrl.messages.length === 0 || ctrl.messages.length < ctrl.per_page(),
+						// disabled: ctrl.per_page() === Infinity || ctrl.messages.length === 0 || ctrl.messages.length < ctrl.per_page(),
 						style: {
-							'margin-right': '1em',
-							display: ctrl.per_page() === Infinity ? 'none' : 'initial'
+							display: ctrl.per_page() === Infinity || ctrl.messages.length === 0 || ctrl.messages.length < ctrl.per_page() ? 'none' : ''
 						}
 					}),
 					m('button.btn btn-default glyphicon glyphicon-arrow-down', {
 						onclick: ctrl.allPages,
 						style: {
-							'margin-right': '1em',
-							display: ctrl.per_page() === Infinity ? 'none' : 'initial'
+							display:ctrl.per_page() === Infinity || ctrl.messages.length === 0 || ctrl.messages.length < ctrl.per_page() ? 'none' : 'initial'
 						}
 					})
 				])
