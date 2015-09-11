@@ -712,18 +712,20 @@ module.exports.view = function(ctrl, args, extras) {
 						}, ' New Message'),
 						m('button.btn btn-default btn-sm glyphicon glyphicon-edit', {
 							onclick: ctrl.toggleEditMode,
-						}, ctrl.editMode() ? ' Done' : ' Show Actions')
+						}, ctrl.editMode() ? ' Hide Actions' : ' Show Actions'),
+						m('button.btn btn-default btn-sm glyphicon glyphicon-plus', {
+							onclick: ctrl.toPlus
+						}, ' To')
 					)),
 
 				m('div.form-group', [
-					m('button.btn btn-default btn-sm glyphicon glyphicon-plus', {
-						onclick: ctrl.toPlus
-					}, ' To'),
+
 					ctrl.to.map(function(item, index) {
 						return m('span.nowrap', m('input.black', {
 								style: {
-									margin: '8px',
-									padding: '4px'
+									'margin-bottom': '4px',
+									padding: '4px',
+									width: '10em'
 								},
 								placeholder: 'Phone number...',
 								type: 'tel',
@@ -737,7 +739,7 @@ module.exports.view = function(ctrl, args, extras) {
 								index: index,
 								style: {
 									position: 'relative',
-									right: '2.7em'
+									right: '2em'
 								},
 								onclick: m.withAttr('index', ctrl.toMinus)
 							}, '✗'))
@@ -760,7 +762,8 @@ module.exports.view = function(ctrl, args, extras) {
 						onclick: ctrl.send,
 						config: sendButtonConfig,
 						style: {
-							'margin-right': '1em'
+							'margin-right': '1em',
+							'margin-top': '4px'
 						}
 					}, ' Send message'),
 
