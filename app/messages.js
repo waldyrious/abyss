@@ -747,13 +747,6 @@ module.exports.view = function(ctrl, args, extras) {
 
 				m('table.form-group',
 					m('tr', [
-						m('td.btn btn-default glyphicon glyphicon-comment', {
-							onclick: ctrl.send,
-							config: sendButtonConfig,
-							style: {
-								'margin-right': '2px',
-							}
-						}, ' Send message'),
 						m('td', {
 							style: {
 								width: '100%'
@@ -771,7 +764,14 @@ module.exports.view = function(ctrl, args, extras) {
 							onkeyup: withKey(13, clickSend),
 							config: textInputAreaConfig,
 							value: ctrl.message()
-						}))
+						})),
+						m('td.btn btn-default glyphicon glyphicon-comment', {
+							onclick: ctrl.send,
+							config: sendButtonConfig,
+							style: {
+								'margin-left': '8px',
+							}
+						}, '')
 					])
 				),
 				m.component(fileuploader, {
