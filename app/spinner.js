@@ -1,3 +1,4 @@
+'use strict';
 var Spinner = require('spin.js');
 
 var opts = {

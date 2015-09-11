@@ -1,3 +1,4 @@
+'use strict';
 var m = require('mithril');
 
 var identity = require('./identity');

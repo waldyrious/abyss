@@ -1,3 +1,4 @@
+'use strict';
 // https://developers.google.com/web/updates/2015/03/push-notificatons-on-the-open-web
 
 self.addEventListener('push', function(event) {

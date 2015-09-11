@@ -2,7 +2,6 @@
 var m = require('mithril');
 var identity = require('./identity');
 var messages = require('./messages');
-var Cookies = require('cookies-js');
 var validator = require('validator');
 
 var radio = require('./radio');
@@ -15,47 +14,47 @@ var resize = require('./resize');
 module.exports.controller = function(args, extras) {
 	resize.resize();
 
-	var self = this;
-	self.error = error.ErrorHolder();
-	self.phoneInput = m.prop('');
-	self.needCode = m.prop(false);
-	self.codeInput = m.prop('');
-	self.nicknameInput = m.prop('');
+	var ctrl = this;
+	ctrl.error = error.ErrorHolder();
+	ctrl.phoneInput = m.prop('');
+	ctrl.needCode = m.prop(false);
+	ctrl.codeInput = m.prop('');
+	ctrl.nicknameInput = m.prop('');
 
-	self.me = function(value) {
+	ctrl.me = function(value) {
 		if (value) {
 			identity.me(value);
-			self.codeInput('');
-			self.needCode(false);
-			self.phoneInput('');
+			ctrl.codeInput('');
+			ctrl.needCode(false);
+			ctrl.phoneInput('');
 			if (identity.me().nickname === null) {
-				self.nicknameInput('');
+				ctrl.nicknameInput('');
 			} else {
-				self.nicknameInput(identity.me().nickname);
+				ctrl.nicknameInput(identity.me().nickname);
 			}
-			self.isChangingNickname = false;
+			ctrl.isChangingNickname = false;
 		} else {
 			return identity.me();
 		}
 	};
 
-	self.isChangingNickname = false;
-	self.changeNickname = function(ev) {
-		if (self.isChangingNickname === false) {
-			self.isChangingNickname = true;
+	ctrl.isChangingNickname = false;
+	ctrl.changeNickname = function(ev) {
+		if (ctrl.isChangingNickname === false) {
+			ctrl.isChangingNickname = true;
 		} else {
-			return self.sendNickname();
+			return ctrl.sendNickname();
 		}
 	}
 
 	this.cancelCode = function() {
-		self.codeInput('');
-		self.needCode(false);
+		ctrl.codeInput('');
+		ctrl.needCode(false);
 	};
 
 	this.logout = function() {
 		return identity.logout()
-			.then(null, self.error)
+			.then(null, ctrl.error)
 	};
 
 	this.noauth = function() {
@@ -68,13 +67,13 @@ module.exports.controller = function(args, extras) {
 				url: '/api/me',
 				config: identity.withAuth,
 				data: {
-					phonenumber: self.phoneInput().trim()
+					phonenumber: ctrl.phoneInput().trim()
 				}
 			})
 			.then(function(response) {
-				self.needCode(true);
-				self.codeInput('');
-			}, self.error)
+				ctrl.needCode(true);
+				ctrl.codeInput('');
+			}, ctrl.error)
 	};
 
 	this.submitCode = function() {
@@ -83,21 +82,21 @@ module.exports.controller = function(args, extras) {
 				url: '/api/me',
 				config: identity.withAuth,
 				data: {
-					code: self.codeInput().trim()
+					code: ctrl.codeInput().trim()
 				}
 			})
 			.then(function(response) {
 				identity.me(response);
-				self.needCode(false);
-				self.codeInput('');
+				ctrl.needCode(false);
+				ctrl.codeInput('');
 				m.route('/conversations');
-			}, self.error)
+			}, ctrl.error)
 	};
 
-	self.gotoConversations = function() {
+	ctrl.gotoConversations = function() {
 		m.route('/conversations');
 	}
-	self.gotoNavbar = function() {
+	ctrl.gotoNavbar = function() {
 		m.route('/navbar');
 	}
 };
@@ -144,7 +143,15 @@ module.exports.view = function(ctrl) {
 						onclick: ctrl.cancelCode
 					}, 'Cancel'))))
 		] : [
-			m('div', ['Enter your mobile phone number:', identity.me().id]),
+			m('div',
+				identity.me().id ? ['Logged in as: ' + identity.me().id, m("a[href='/conversations']", {
+						config: m.route
+					}, ' Conversations'),
+					m("a[href='#']", {
+						onclick: ctrl.logout
+					}, ' Logout')
+				] : 'Enter your mobile phone number:'
+			),
 			m('div.input-group', {
 					style: {
 						width: '18em'

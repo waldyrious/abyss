@@ -1,3 +1,4 @@
+'use strict';
 var existingRegistration;
 
 var Promise = require('bluebird');
