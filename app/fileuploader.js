@@ -227,7 +227,7 @@ module.exports.view = function(ctrl, args, extras) {
 			onclick: ctrl.uploadFile,
 			config: sendButtonConfig
 		}, ' Send' + ctrl.filesChosenInfo()) : '',
-		uploads.length > 1 ? m('button.btn btn-default glyphicon glyphicon-ok', {
+		uploads.length > 0 ? m('button.btn btn-default glyphicon glyphicon-ok', {
 			onclick: ctrl.clearComplete,
 		}, ' Clear Complete') : '',
 		m('input', {
