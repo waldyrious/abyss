@@ -322,11 +322,11 @@ module.exports.controller = function(args, extras) {
 		if (ctrl.to.length === 1 && ctrl.to[0].trim() === '') {
 			initial = Promise.resolve([])
 		} else {
-			initial =  m.request({
-					method: 'GET',
-					config: identity.withAuth,
-					url: getMessagesUrl()
-				})
+			initial = m.request({
+				method: 'GET',
+				config: identity.withAuth,
+				url: getMessagesUrl()
+			})
 		}
 
 		return initial
@@ -461,8 +461,7 @@ module.exports.view = function(ctrl, args, extras) {
 			if (key == e.keyCode && !e.shiftKey) {
 				e.preventDefault();
 				callback(key);
-			}
-			else m.redraw.strategy("none"); // don't do a redraw, the default is to redraw in event listeners.
+			} else m.redraw.strategy("none"); // don't do a redraw, the default is to redraw in event listeners.
 		}
 	}
 
@@ -629,7 +628,7 @@ module.exports.view = function(ctrl, args, extras) {
 					style: {
 						opacity: "0.5"
 					}
-				}, fromMe(message) ? (identity.me().nickname ? identity.me().nickname : 'me') :(ctrl.getNickname(message.from) ? ctrl.getNickname(message.from) :  message.from)),
+				}, fromMe(message) ? (identity.me().nickname ? identity.me().nickname : 'me') : (ctrl.getNickname(message.from) ? ctrl.getNickname(message.from) : message.from)),
 				': ',
 
 				message.file ? displayMessageWithFile(message) :
@@ -647,11 +646,11 @@ module.exports.view = function(ctrl, args, extras) {
 		error.renderError(ctrl.error),
 		// m('button', buttonify({onclick: ctrl.clearMessages}), 'Delete all messages!'),
 		[m('section.col-sm-3#left', {
-			config: resize.registerLeft,
-			style: {
-				"text-align": "center"
-			}
-		}, [ //m('h3', 'Conversations'),
+				config: resize.registerLeft,
+				style: {
+					"text-align": "center"
+				}
+			}, [ //m('h3', 'Conversations'),
 				conversations.map(function(grouping) {
 					var fromNow = moment(grouping.last).fromNow();
 
@@ -703,7 +702,7 @@ module.exports.view = function(ctrl, args, extras) {
 
 					m('.input-group',
 						m('button.btn btn-default glyphicon glyphicon-refresh', {
-							onclick: function () {
+							onclick: function() {
 								ctrl.refresh(true);
 							}
 						}, ' Refresh'),
@@ -746,32 +745,40 @@ module.exports.view = function(ctrl, args, extras) {
 					})
 				]),
 
-				m('div.form-group',
-					// m('label', 'New Message: '), m('br'),
-					m('textarea.form-control', {
-						rows: 1,
-						placeholder: 'Message...',
-						onchange: m.withAttr('value', function(value) {
-							ctrl.message(value);
-						}),
-						onkeyup: withKey(13, clickSend),
-						config: textInputAreaConfig,
-						value: ctrl.message()
-					}),
-					m('button.btn btn-default glyphicon glyphicon-comment', {
-						onclick: ctrl.send,
-						config: sendButtonConfig,
-						style: {
-							'margin-right': '1em',
-							'margin-top': '4px'
-						}
-					}, ' Send message'),
-					m.component(fileuploader, {
-						to: ctrl.to,
-						refresh: ctrl.refresh,
-						getMessagesStreaming: ctrl.getMessagesStreaming
-					})
+				m('table.form-group',
+					m('tr', [
+						m('td.btn btn-default glyphicon glyphicon-comment', {
+							onclick: ctrl.send,
+							config: sendButtonConfig,
+							style: {
+								'margin-right': '2px',
+							}
+						}, ' Send message'),
+						m('td', {
+							style: {
+								width: '100%'
+							}
+						}, m('textarea.form-control', {
+							style: {
+								width: '100%',
+								'margin-top': '1px'
+							},
+							rows: 1,
+							placeholder: 'Message...',
+							onchange: m.withAttr('value', function(value) {
+								ctrl.message(value);
+							}),
+							onkeyup: withKey(13, clickSend),
+							config: textInputAreaConfig,
+							value: ctrl.message()
+						}))
+					])
 				),
+				m.component(fileuploader, {
+					to: ctrl.to,
+					refresh: ctrl.refresh,
+					getMessagesStreaming: ctrl.getMessagesStreaming
+				}),
 				ctrl.messages.map(displayMessage),
 				m('div.hoveropaque btn-group', {
 					style: {
