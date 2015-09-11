@@ -651,6 +651,23 @@ module.exports.view = function(ctrl, args, extras) {
 					"text-align": "center"
 				}
 			}, [ //m('h3', 'Conversations'),
+
+				m('div',
+					m('button.btn btn-default glyphicon glyphicon-refresh', {
+						style: {
+							'border-radius': '4em 0 0 4em'
+						},
+						onclick: function() {
+							ctrl.refresh(true);
+						}
+					}, ' '),
+					m('button.btn btn-default glyphicon glyphicon-new-window', {
+						style: {
+							'border-radius': '0 4em 4em 0'
+						},
+						onclick: ctrl.newMessage,
+					}, ' New')
+				),
 				conversations.map(function(grouping) {
 					var fromNow = moment(grouping.last).fromNow();
 
@@ -701,20 +718,12 @@ module.exports.view = function(ctrl, args, extras) {
 					}, //'Messages ',
 
 					m('.input-group',
-						m('button.btn btn-default glyphicon glyphicon-refresh', {
-							onclick: function() {
-								ctrl.refresh(true);
-							}
-						}, ' Refresh'),
-						m('button.btn btn-default glyphicon glyphicon-envelope', {
-							onclick: ctrl.newMessage,
-						}, ' New Message'),
-						m('button.btn btn-default glyphicon glyphicon-edit', {
-							onclick: ctrl.toggleEditMode,
-						}, ctrl.editMode() ? ' Hide Actions' : ' Show Actions'),
 						m('button.btn btn-default glyphicon glyphicon-plus', {
 							onclick: ctrl.toPlus
-						}, ' To')
+						}, ' To'),
+						m('button.btn btn-default glyphicon glyphicon-edit', {
+							onclick: ctrl.toggleEditMode,
+						}, ' Actions')
 					)),
 
 				m('div.form-group', [
