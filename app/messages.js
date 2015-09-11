@@ -600,8 +600,7 @@ module.exports.view = function(ctrl, args, extras) {
 				key: message.id,
 				config: fadesIn,
 				style: {
-					"font-size": "1.15em",
-					"margin-bottom": "1em"
+					"font-size": "1.15em"
 				}
 			},
 
