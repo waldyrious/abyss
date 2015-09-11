@@ -21,7 +21,6 @@ module.exports.controller = function(args, extras) {
 
 	ctrl.files = m.prop();
 	ctrl.fileInput = m.prop();
-	ctrl.uploads = uploads; // keep outside of controller, to preserve across controller reinitialization.
 
 	ctrl.fileChange = function(ev) {
 		if (ev.target.files.length === 0) {
@@ -32,21 +31,21 @@ module.exports.controller = function(args, extras) {
 	}
 
 	ctrl.abortOrClear = function(upload) {
-		var index = ctrl.uploads.indexOf(upload);
+		var index = uploads.indexOf(upload);
 		var xhr = upload.xhr;
 		if (xhr.readyState === 4 || xhr.readyState === 0) {
-			ctrl.uploads.splice(index, 1);
+			uploads.splice(index, 1);
 		} else {
 			xhr.abort();
 		}
 	}
 
 	ctrl.uploadsComplete = function() {
-		if (ctrl.uploads.length === 0) {
+		if (uploads.length === 0) {
 			return true;
 		} else {
-			for (var i = 0; i < ctrl.uploads.length; i++) {
-				if (ctrl.uploads[i] && ctrl.uploads[i].xhr.readyState && ctrl.uploads[i].xhr.readyState !== 4) {
+			for (var i = 0; i < uploads.length; i++) {
+				if (uploads[i] && uploads[i].xhr.readyState && uploads[i].xhr.readyState !== 4) {
 					return false;
 				}
 			}
@@ -54,9 +53,23 @@ module.exports.controller = function(args, extras) {
 		}
 	}
 
+	ctrl.clearComplete = function() {
+		debugger
+		if (uploads.length === 0) {
+			return;
+		} else {
+			for (var i = 0; i < uploads.length; i++) {
+				if (uploads[i] && uploads[i].done) {
+					uploads.splice(i, 1);
+				}
+			}
+			m.redraw();
+		}
+	}
+
 	ctrl.remove = function(upload) {
-		var index = ctrl.uploads.indexOf(upload);
-		ctrl.uploads.splice(index, 1);
+		var index = uploads.indexOf(upload);
+		uploads.splice(index, 1);
 	}
 
 	module.exports.uploadFile = ctrl.uploadFile = function(arg) {
@@ -77,7 +90,7 @@ module.exports.controller = function(args, extras) {
 		}
 
 		return Promise.map(files, function(file, index) {
-				index = index + ctrl.uploads.length; // account for possible concurrent uploads from prior click.
+				index = index + uploads.length; // account for possible concurrent uploads from prior click.
 				var data = new FormData();
 				data.append("file", file);
 
@@ -87,28 +100,28 @@ module.exports.controller = function(args, extras) {
 					total: file.size
 				}
 
-				ctrl.uploads.push(upload);
+				uploads.push(upload);
 
 				var xhrConfig = function(xhr) {
 					xhr = identity.withAuth(xhr);
-					ctrl.uploads[ctrl.uploads.indexOf(upload)].xhr = xhr;
+					uploads[uploads.indexOf(upload)].xhr = xhr;
 					xhr.upload.addEventListener("progress", function(ev) {
-						ctrl.uploads[ctrl.uploads.indexOf(upload)].loaded = ev.loaded;
-						ctrl.uploads[ctrl.uploads.indexOf(upload)].total = ev.total;
+						uploads[uploads.indexOf(upload)].loaded = ev.loaded;
+						uploads[uploads.indexOf(upload)].total = ev.total;
 						m.redraw();
 					});
 					xhr.upload.addEventListener("abort", function(ev) {
-						ctrl.uploads[ctrl.uploads.indexOf(upload)].loaded = undefined;
-						ctrl.uploads[ctrl.uploads.indexOf(upload)].aborted = true;
+						uploads[uploads.indexOf(upload)].loaded = undefined;
+						uploads[uploads.indexOf(upload)].aborted = true;
 						m.redraw();
 					});
 					xhr.upload.addEventListener("error", function(err) {
-						ctrl.uploads[ctrl.uploads.indexOf(upload)].loaded = undefined;
-						ctrl.uploads[ctrl.uploads.indexOf(upload)].error = err;
+						uploads[uploads.indexOf(upload)].loaded = undefined;
+						uploads[uploads.indexOf(upload)].error = err;
 						m.redraw();
 					});
 					xhr.upload.addEventListener("load", function(err) {
-						ctrl.uploads[ctrl.uploads.indexOf(upload)].done = true;
+						uploads[uploads.indexOf(upload)].done = true;
 						m.redraw();
 					});
 				}
@@ -131,7 +144,7 @@ module.exports.controller = function(args, extras) {
 					})
 					.then(function() {
 						// setTimeout(function () {
-						// 	ctrl.uploads.splice(index, 1);
+						// 	uploads.splice(index, 1);
 						// 	m.redraw();
 						// }, 500);
 					}, function() {
@@ -139,14 +152,7 @@ module.exports.controller = function(args, extras) {
 					})
 			}, {
 				concurrency: 1
-			})
-			.then(function() {
-				if (ctrl.uploadsComplete()) {
-					ctrl.fileInput().value = '';
-					ctrl.uploads = [];
-					return args.refresh();
-				}
-			})
+			});
 	}
 }
 
@@ -169,7 +175,7 @@ module.exports.view = function(ctrl, args, extras) {
 			'margin-top': '4px'
 		}
 	}, [
-		ctrl.uploads.length > 0 ? ctrl.uploads.map(function(upload) {
+		uploads.length > 0 ? uploads.map(function(upload) {
 			if (upload.err) {
 				return m('div', upload.name + ' errored.')
 			} else if (upload.aborted) {
@@ -191,6 +197,13 @@ module.exports.view = function(ctrl, args, extras) {
 				)
 			}
 		}) : '',
+		uploads.length > 1 ? m('button.btn btn-default', {
+			onclick: ctrl.clearComplete,
+			style: {
+				display: 'block',
+				'margin-bottom': '4px'
+			}
+		}, 'Clear Complete') : '',
 		m('button.btn btn-default btn-sm glyphicon glyphicon-send', {
 			disabled: ctrl.files() ? false : true,
 			onclick: ctrl.uploadFile,
