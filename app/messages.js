@@ -40,6 +40,13 @@ var mountedDragAndDrop = false;
 var conversations = null;
 var nicknames = {};
 
+function renderPhoneNumber(p) {
+	if (p.length !== 10)
+		return p;
+
+	return '(' + p[0]+p[1]+p[2] + ') ' + p[3]+p[4]+[5] + '-' + p[6]+p[7]+p[8]+p[9];
+}
+
 module.exports.controller = function(args, extras) {
 	// m.redraw.strategy("all")
 	resize.resize();
@@ -692,7 +699,7 @@ module.exports.view = function(ctrl, args, extras) {
 							},
 							class: isEqual(flatten(grouping.group), ctrl.to) ? 'btn-success' : 'btn-default'
 						}, [simplify(grouping.group).map(function(ph) {
-							return m('div', ph + (ctrl.getNickname(ph) ? ' ' + ctrl.getNickname(ph) : ''))
+							return m('div', (ctrl.getNickname(ph) ? ctrl.getNickname(ph) + ' ' : '') + renderPhoneNumber(ph))
 						})]),
 						m('br')
 					]
