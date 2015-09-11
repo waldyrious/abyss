@@ -137,44 +137,34 @@ module.exports.controller = function(args, extras) {
 		var group;
 
 		// {"new_val":{"date":"2015-08-20T01:15:04.881Z","from":"5558675309","id":"8582e043-0663-4775-be6a-778b340730d8","text":"","to":["5558675309"]},"old_val":null}
-		if (msg.new_val && msg.old_val === null) { // new message!
+		if (msg.new_val && msg.old_val === null) {
+			// new message
 			msg = msg.new_val;
 			group = _.without(_.union(msg.to, [msg.from]), identity.me().id);
 			if (_.isEqual(group, ctrl.to)) {
-				console.log('new messsage in current conversation');
+				// new messsage in current conversation
 				ctrl.messages.unshift(msg);
-				var convo_index = _.findIndex(conversations, function(item) {
-					return _.isEqual(item.group, group);
-				})
-				var convo = conversations[convo_index];
-				convo.last = msg.date;
-				conversations.splice(convo_index, 1)
-				conversations.unshift(convo);
-
-				if (convo_index !== 0) {
-					ctrl.refresh(true);
-				}
-				m.redraw();
+				ctrl.refreshConversations(true);
 			} else {
-				console.log('dunno, just gonna refresh')
-				ctrl.refresh(true);
+				// new messsage in another conversation
+				ctrl.refreshConversations(true);
 			}
-		} else if (msg.new_val === null && msg.old_val) { // message deleted!
+		} else if (msg.new_val === null && msg.old_val) {
+			// message deleted
 			msg = msg.old_val;
 			group = _.without(_.union(msg.to, [msg.from]), identity.me().id);
 			if (_.isEqual(group, ctrl.to)) {
-				console.log('deleted messsage in current conversation' + msg.id);
+				// deleted messsage in current conversation
 				ctrl.messages = _.reject(ctrl.messages, function(message) {
 						return message.id === msg.id;
 					})
 					// ctrl.messages.splice(ctrl.messages.indexOf(msg), 1);
-				m.redraw();
+				ctrl.refreshConversations(true);
 			} else {
-				console.log('dunno, just gonna refresh')
-				ctrl.refresh(true);
+				// deleted messsage in another conversation
+				ctrl.refreshConversations(true);
 			}
 		} else {
-			console.log('dunno, just gonna refresh')
 			ctrl.refresh(true);
 		}
 	}
