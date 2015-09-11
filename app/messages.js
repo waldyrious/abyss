@@ -702,18 +702,18 @@ module.exports.view = function(ctrl, args, extras) {
 					}, //'Messages ',
 
 					m('.input-group',
-						m('button.btn btn-default btn-sm glyphicon glyphicon-refresh', {
+						m('button.btn btn-default glyphicon glyphicon-refresh', {
 							onclick: function () {
 								ctrl.refresh(true);
 							}
 						}, ' Refresh'),
-						m('button.btn btn-default btn-sm glyphicon glyphicon-envelope', {
+						m('button.btn btn-default glyphicon glyphicon-envelope', {
 							onclick: ctrl.newMessage,
 						}, ' New Message'),
-						m('button.btn btn-default btn-sm glyphicon glyphicon-edit', {
+						m('button.btn btn-default glyphicon glyphicon-edit', {
 							onclick: ctrl.toggleEditMode,
 						}, ctrl.editMode() ? ' Hide Actions' : ' Show Actions'),
-						m('button.btn btn-default btn-sm glyphicon glyphicon-plus', {
+						m('button.btn btn-default glyphicon glyphicon-plus', {
 							onclick: ctrl.toPlus
 						}, ' To')
 					)),
@@ -758,7 +758,7 @@ module.exports.view = function(ctrl, args, extras) {
 						config: textInputAreaConfig,
 						value: ctrl.message()
 					}),
-					m('button.btn btn-default btn-sm glyphicon glyphicon-comment', {
+					m('button.btn btn-default glyphicon glyphicon-comment', {
 						onclick: ctrl.send,
 						config: sendButtonConfig,
 						style: {

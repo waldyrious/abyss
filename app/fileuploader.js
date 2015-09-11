@@ -220,14 +220,14 @@ module.exports.view = function(ctrl, args, extras) {
 				)
 			}
 		}) : '',
-		m('button.btn btn-default btn-sm glyphicon', {
+		m('button.btn btn-default glyphicon', {
 			onclick: ctrl.chooseFilesClick,
 		}, ' Choose file(s) to upload' ),
-		ctrl.areFilesChosen() ? m('button.btn btn-default btn-sm glyphicon glyphicon-send', {
+		ctrl.areFilesChosen() ? m('button.btn btn-default glyphicon glyphicon-send', {
 			onclick: ctrl.uploadFile,
 			config: sendButtonConfig
 		}, ' Send' + ctrl.filesChosenInfo()) : '',
-		uploads.length > 1 ? m('button.btn btn-default btn-sm glyphicon glyphicon-ok', {
+		uploads.length > 1 ? m('button.btn btn-default glyphicon glyphicon-ok', {
 			onclick: ctrl.clearComplete,
 		}, ' Clear Complete') : '',
 		m('input', {
