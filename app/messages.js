@@ -766,10 +766,6 @@ module.exports.view = function(ctrl, args, extras) {
 							'margin-top': '4px'
 						}
 					}, ' Send message'),
-
-					m('br'), m('br'),
-					m('label', 'Upload Files: '), m('br'),
-
 					m.component(fileuploader, {
 						to: ctrl.to,
 						refresh: ctrl.refresh,

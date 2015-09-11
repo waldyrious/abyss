@@ -222,7 +222,7 @@ module.exports.view = function(ctrl, args, extras) {
 		}) : '',
 		m('button.btn btn-default btn-sm glyphicon', {
 			onclick: ctrl.chooseFilesClick,
-		}, ' Choose file(s)' ),
+		}, ' Choose file(s) to upload' ),
 		ctrl.areFilesChosen() ? m('button.btn btn-default btn-sm glyphicon glyphicon-send', {
 			onclick: ctrl.uploadFile,
 			config: sendButtonConfig
