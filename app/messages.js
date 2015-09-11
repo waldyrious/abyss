@@ -702,15 +702,15 @@ module.exports.view = function(ctrl, args, extras) {
 					}, //'Messages ',
 
 					m('.input-group',
-						m('button.btn btn-default glyphicon glyphicon-refresh', {
+						m('button.btn btn-default btn-sm glyphicon glyphicon-refresh', {
 							onclick: function () {
 								ctrl.refresh(true);
 							}
 						}, ' Refresh'),
-						m('button.btn btn-default glyphicon glyphicon-envelope', {
+						m('button.btn btn-default btn-sm glyphicon glyphicon-envelope', {
 							onclick: ctrl.newMessage,
 						}, ' New Message'),
-						m('button.btn btn-default glyphicon glyphicon-edit', {
+						m('button.btn btn-default btn-sm glyphicon glyphicon-edit', {
 							onclick: ctrl.toggleEditMode,
 						}, ctrl.editMode() ? ' Done' : ' Show Actions')
 					)),
