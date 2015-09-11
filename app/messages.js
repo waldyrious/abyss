@@ -472,16 +472,6 @@ module.exports.view = function(ctrl, args, extras) {
 		}
 	}
 
-	function clickSend(key) {
-		sendButton.focus();
-		sendButton.click();
-		setImmediate(function() {
-			sendButton.blur();
-			textInputArea.focus();
-			m.redraw();
-		});
-	}
-
 	function sendButtonConfig(element, isInitialized) {
 		sendButton = element;
 	}
@@ -775,10 +765,16 @@ module.exports.view = function(ctrl, args, extras) {
 							},
 							rows: 1,
 							placeholder: 'Message...',
-							onchange: m.withAttr('value', function(value) {
-								ctrl.message(value);
-							}),
-							onkeyup: withKey(13, clickSend),
+							onkeydown: function (ev) {
+								if (13 == ev.keyCode && !ev.shiftKey) {
+									ev.preventDefault(); // prevent enter key from making a new line
+								}
+								m.redraw.strategy("none");
+							},
+							onkeyup: function (ev) {
+								ctrl.message(ev.target.value);
+								withKey(13, ctrl.send)(ev);
+							},
 							config: textInputAreaConfig,
 							value: ctrl.message()
 						})),
