@@ -21,6 +21,28 @@ module.exports.controller = function(args, extras) {
 
 	ctrl.files = m.prop();
 	ctrl.fileInput = m.prop();
+	ctrl.chooseFilesClick = function (ev) {
+		ctrl.fileInput().click();
+	}
+
+	ctrl.filesChosenInfo = function () {
+		var input = ctrl.fileInput();
+		if (!input) {
+			return '';
+		}
+		if (input.files.length === 1) {
+			return ' ' + input.files[0].name;
+		} else if (input.files.length > 1) {
+			return ' ' + input.files.length + ' files';
+		} else {
+			return '';
+		}
+	}
+
+	ctrl.areFilesChosen = function () {
+		var input = ctrl.fileInput();
+		return input && input.files.length > 0;
+	}
 
 	ctrl.fileChange = function(ev) {
 		if (ev.target.files.length === 0) {
@@ -198,23 +220,19 @@ module.exports.view = function(ctrl, args, extras) {
 				)
 			}
 		}) : '',
-		uploads.length > 1 ? m('button.btn btn-default', {
-			onclick: ctrl.clearComplete,
-			style: {
-				display: 'block',
-				'margin-bottom': '4px'
-			}
-		}, 'Clear Complete') : '',
-		m('button.btn btn-default btn-sm glyphicon glyphicon-send', {
-			disabled: ctrl.files() ? false : true,
+		m('button.btn btn-default btn-sm glyphicon', {
+			onclick: ctrl.chooseFilesClick,
+		}, ' Choose file(s)' ),
+		ctrl.areFilesChosen() ? m('button.btn btn-default btn-sm glyphicon glyphicon-send', {
 			onclick: ctrl.uploadFile,
 			config: sendButtonConfig
-		}, ' Send file(s)'),
-
-		' ',
+		}, ' Send' + ctrl.filesChosenInfo()) : '',
+		uploads.length > 1 ? m('button.btn btn-default btn-sm glyphicon glyphicon-ok', {
+			onclick: ctrl.clearComplete,
+		}, ' Clear Complete') : '',
 		m('input', {
 			style: {
-				display: 'inline'
+				display: 'none'
 			},
 			type: 'file',
 			multiple: true,
