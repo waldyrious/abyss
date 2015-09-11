@@ -54,11 +54,12 @@ module.exports.controller = function(args, extras) {
 	}
 
 	ctrl.clearComplete = function() {
-		debugger
 		if (uploads.length === 0) {
 			return;
 		} else {
-			for (var i = 0; i < uploads.length; i++) {
+			var i = uploads.length;
+			while (i > 0) { // loop backwards to not splice out current position
+				i -= 1;
 				if (uploads[i] && uploads[i].done) {
 					uploads.splice(i, 1);
 				}
