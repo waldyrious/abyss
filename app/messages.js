@@ -305,9 +305,6 @@ module.exports.controller = function(args, extras) {
 			})
 			.then(function() {
 				ctrl.message('');
-			})
-			// .then(ctrl.refresh, ctrl.error)
-			.then(function() {
 				ctrl.working(false);
 			})
 	};
@@ -758,8 +755,8 @@ module.exports.view = function(ctrl, args, extras) {
 							onkeydown: function (ev) {
 								if (13 == ev.keyCode && !ev.shiftKey) {
 									ev.preventDefault(); // prevent enter key from making a new line
+									m.redraw.strategy("none");
 								}
-								m.redraw.strategy("none");
 							},
 							onkeyup: function (ev) {
 								ctrl.message(ev.target.value);
