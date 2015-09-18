@@ -450,15 +450,6 @@ module.exports.view = function(ctrl, args, extras) {
 	var sendButton;
 	var textInputArea;
 
-	function withKey(key, callback) {
-		return function(e) {
-			if (key == e.keyCode && !e.shiftKey) {
-				e.preventDefault();
-				callback(key);
-			} else m.redraw.strategy("none"); // don't do a redraw, the default is to redraw in event listeners.
-		}
-	}
-
 	function sendButtonConfig(element, isInitialized) {
 		sendButton = element;
 	}
@@ -753,15 +744,22 @@ module.exports.view = function(ctrl, args, extras) {
 							rows: 1,
 							placeholder: 'Message...',
 							onkeydown: function (ev) {
-								if (13 == ev.keyCode && !ev.shiftKey) {
-									ev.preventDefault(); // prevent enter key from making a new line
+								if (13 === ev.keyCode && !ev.shiftKey) {
+									 // prevent enter key from making a new line
+									ev.preventDefault();
+								} else if (13 !== ev.keyCode) {
 									m.redraw.strategy("none");
 								}
 							},
 							onkeyup: function (ev) {
 								ctrl.message(ev.target.value);
-								withKey(13, ctrl.send)(ev);
+								if (13 == ev.keyCode && !ev.shiftKey) {
+									ctrl.send();
+								} else if (13 !== ev.keyCode) {
+									m.redraw.strategy("none");
+								}
 							},
+							onchange: m.withAttr('value', ctrl.message),
 							config: textInputAreaConfig,
 							value: ctrl.message()
 						})),
