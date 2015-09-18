@@ -47,11 +47,11 @@
     "mithril.sugartags": "0.0.8",
     "moment": "^2.10.6",
     "morgan": "^1.6.1",
-    "nodemon": "^1.4.1",
+    "nodemon": "^1.5.1",
     "oboe": "^2.1.2",
-    "phones": "^0.1.0",
+    "phones": "^1.0.1",
     "pony": "^1.0.0",
-    "request": "^2.61.0",
+    "request": "^2.62.0",
     "request-promise": "^0.4.3",
     "rethinkdbdash": "^2.1.8",
     "setimmediate": "^1.0.2",
@@ -79,13 +79,13 @@
     "jshint": "^2.8.0",
     "jshint-loader": "^0.8.3",
     "less": "^2.5.1",
-    "less-loader": "^2.2.0",
-    "node-libs-browser": "^0.5.2",
+    "less-loader": "^2.2.1",
+    "node-libs-browser": "^0.5.3",
     "raw-loader": "^0.5.1",
-    "style-loader": "^0.12.3",
+    "style-loader": "^0.12.4",
     "svg-loader": "0.0.2",
     "tape": "^4.2.0",
     "url-loader": "^0.5.6",
-    "webpack": "^1.12.1"
+    "webpack": "^1.12.2"
   }
 }
