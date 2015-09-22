@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "autolinker": "^0.18.1",
-    "bluebird": "^2.10.0",
+    "bluebird": "^2.10.1",
     "bluebird-co": "^1.4.0-beta",
     "bootstrap": "^3.3.5",
     "brute-rethinkdb": "2.0.0",
@@ -73,7 +73,7 @@
   },
   "devDependencies": {
     "base64-font-loader": "0.0.2",
-    "css-loader": "^0.18.0",
+    "css-loader": "^0.19.0",
     "exports-loader": "^0.6.2",
     "file-loader": "^0.8.4",
     "jshint": "^2.8.0",
