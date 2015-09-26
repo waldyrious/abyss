@@ -15,17 +15,19 @@ module.exports.controller = function(args, extras) {
 	ctrl.error = error.ErrorHolder();
 	ctrl.nicknameInput = m.prop('');
 
-	identity.whoami()
-	.then(function (me) {
-		if (me && me.nickname) {
-			ctrl.nicknameInput(me.nickname);
-		}
-	})
-
 	ctrl.isChangingNickname = false;
 	ctrl.changeNickname = function(ev) {
 		if (ctrl.isChangingNickname === false) {
-			ctrl.isChangingNickname = true;
+			m.request({
+                url: '/api/me',
+                config: identity.withAuth
+            })
+			.then(function (me) {
+				if (me && me.nickname) {
+					ctrl.nicknameInput(me.nickname);
+				}
+				ctrl.isChangingNickname = true;
+			})
 		} else {
 			identity.changeNickname(ctrl.nicknameInput().trim())
 				.then(function() {
