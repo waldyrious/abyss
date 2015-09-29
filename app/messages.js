@@ -150,10 +150,10 @@ module.exports.controller = function(args, extras) {
 			if (_.isEqual(group, to)) {
 				// new messsage in current conversation
 				ctrl.messages.unshift(msg);
-				ctrl.refreshConversations(true);
+				ctrl.refreshConversations({force:true,loadingindicator:false});
 			} else {
 				// new messsage in another conversation
-				ctrl.refreshConversations(true);
+				ctrl.refreshConversations({force:true,loadingindicator:false});
 			}
 		} else if (msg.new_val === null && msg.old_val) {
 			// message deleted
@@ -165,13 +165,13 @@ module.exports.controller = function(args, extras) {
 						return message.id === msg.id;
 					})
 					// ctrl.messages.splice(ctrl.messages.indexOf(msg), 1);
-				ctrl.refreshConversations(true);
+				ctrl.refreshConversations({force:true,loadingindicator:false});
 			} else {
 				// deleted messsage in another conversation
-				ctrl.refreshConversations(true);
+				ctrl.refreshConversations({force:true,loadingindicator:false});
 			}
 		} else {
-			ctrl.refresh(true);
+			ctrl.refresh({force:true,loadingindicator:false});
 		}
 	}
 
@@ -364,12 +364,15 @@ module.exports.controller = function(args, extras) {
 	};
 	ctrl.getMessagesStreaming = ctrl.getMessages // quick uncommentable to disable streaming messages
 
-	ctrl.refreshConversations = function(force) {
-		if (conversations !== null && !force) {
+	ctrl.refreshConversations = function(opts) {
+		opts = opts || {force: false, loadingindicator: true};
+		if (conversations !== null && !opts.force) {
 			return Promise.resolve(conversations);
 		}
 
-		ctrl.working(true, 0);
+		if (opts.loadingindicator)
+			ctrl.working(true, 0);
+
 		return m.request({
 				method: 'GET',
 				config: identity.withAuth,
@@ -377,17 +380,21 @@ module.exports.controller = function(args, extras) {
 				url: '/api/conversations'
 			})
 			.then(function(result) {
-				ctrl.working(false);
+				if (opts.loadingindicator)
+					ctrl.working(false);
 				return result;
 			})
 			.then(ctrl.setConversations, ctrl.error)
 	};
 
-	ctrl.refresh = ctrl.getConversations = function(force) {
-		return ctrl.refreshConversations(force)
+	ctrl.refresh = ctrl.getConversations = function(opts) {
+		opts = opts || {force: false, loadingindicator: true};
+
+		return ctrl.refreshConversations(opts)
 			.then(ctrl.getMessagesStreaming, ctrl.error)
 			.then(function() {
-				ctrl.working(false);
+				if (opts.loadingindicator)
+					ctrl.working(false);
 			})
 
 	};
