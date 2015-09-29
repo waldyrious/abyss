@@ -135,13 +135,19 @@ module.exports.controller = function(args, extras) {
 
 		msg = JSON.parse(msg);
 		var group;
+		var to = ctrl.to.sort();
 
 		// {"new_val":{"date":"2015-08-20T01:15:04.881Z","from":"5558675309","id":"8582e043-0663-4775-be6a-778b340730d8","text":"","to":["5558675309"]},"old_val":null}
 		if (msg.new_val && msg.old_val === null) {
 			// new message
 			msg = msg.new_val;
-			group = _.without(_.union(msg.to, [msg.from]), identity.me().id);
-			if (_.isEqual(group, ctrl.to)) {
+			group = _.without(_.union(msg.to, [msg.from]), identity.me().id).sort();
+
+			console.log('group');
+			console.log(group);
+			console.log('to');
+			console.log(to);
+			if (_.isEqual(group, to)) {
 				// new messsage in current conversation
 				ctrl.messages.unshift(msg);
 				ctrl.refreshConversations(true);
@@ -152,8 +158,8 @@ module.exports.controller = function(args, extras) {
 		} else if (msg.new_val === null && msg.old_val) {
 			// message deleted
 			msg = msg.old_val;
-			group = _.without(_.union(msg.to, [msg.from]), identity.me().id);
-			if (_.isEqual(group, ctrl.to)) {
+			group = _.without(_.union(msg.to, [msg.from]), identity.me().id).sort();
+			if (_.isEqual(group, to)) {
 				// deleted messsage in current conversation
 				ctrl.messages = _.reject(ctrl.messages, function(message) {
 						return message.id === msg.id;
