@@ -5,7 +5,7 @@ mkdir dist/client
 ./node_modules/.bin/webpack --optimize-minimize --optimize-minimize
 cp -R proxy.js lib package.json web.js webtls.js model schema.js dist &&
 cp app/index.html client &&
-cp app/favicon/* client &&
+cp -R app/favicon/* client &&
 cp -R app/img client/img &&
 cp app/sw.js client &&
 cp app/manifest.json client &&
