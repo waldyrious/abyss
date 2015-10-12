@@ -47,10 +47,7 @@ module.exports.controller = function(args, extras) {
 	}
 
 	ctrl.logout = function(ev) {
-		return identity.logout()
-			.then(function() {
-				m.route('/')
-			})
+		return identity.logout();		
 	}
 
 	var chooseEl;
