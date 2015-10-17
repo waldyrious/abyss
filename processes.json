@@ -6,7 +6,7 @@
     "watch"       : true,
     "node_args"   : "",
     "merge_logs"  : true,
-    "cwd"         : "/home/joe/yobro"
+    "cwd"         : "/opt/abyss"
   },
   {
     "name"        : "webtls",
@@ -15,7 +15,7 @@
     "watch"       : true,
     "node_args"   : "",
     "merge_logs"  : true,
-    "cwd"         : "/home/joe/yobro"
+    "cwd"         : "/opt/abyss"
   }, {
     "name"        : "proxy",
     "script"      : "proxy.js",
@@ -23,6 +23,6 @@
     "watch"       : true,
     "node_args"   : "",
     "merge_logs"  : true,
-    "cwd"         : "/home/joe/yobro"
+    "cwd"         : "/opt/abyss"
   }]
 }
