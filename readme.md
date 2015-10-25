@@ -5,23 +5,7 @@
 First install:
 
 1. [RethinkDB](http://rethinkdb.com/)
-2. Preferrably the latest https://iojs.org/en/index.html , but you can use Node 0.12 if you need to. Note that iojs is getting merged back into node and is becoming the next version of node.js.
-
-On Mac...
-    
-    brew update   
-    brew install rethinkdb    
-    brew install iojs
-
-Also get [WebStorm](https://www.jetbrains.com/webstorm/) if you need an IDE. Its the best one for JavaScript!
-
-# Webstorm config
-
-Use tabs for indent. And turn off continuation indents, which are annoying with promises.
-
-1. Check use tab character in Default Indent Options
-2. Tab size 4, Indent 4, Continuation indent 0
-3. JavaScript: Tab size 4, Indent 4, Continuation indent 0
+2. Node.js 4.0 or later
 
 # Running locally
 
@@ -35,21 +19,13 @@ Use tabs for indent. And turn off continuation indents, which are annoying with 
 
 ## Setup DB Schema
 
-Run schema.js. It's safe to accidentally re-run this as it won't drop anything.
+Run schema.js. It's safe to re-run this as it won't drop anything.
 
-## Run system from WebStorm:
-1. Run the server.js from file. You have to add *--harmony* to the Node parameters in the run config! This flag enables ES6 features like *const*. If you are on iojs, you don't need `--harmony`.
+## Running the server:
 
-1. You can also run `runner.js`. This one reloads the server on every file change, but, debugging does not work in it.
-
-## Command line ways to run:
-
-1. From the command line, `node --harmony server.js` to run. If you are on iojs, you don't need `--harmony`
-1. Run `node debug --harmony server.js` to use the debugger. The command line debugger is very easy to use
-and quite fast. If you are on iojs, you don't need `--harmony`.
-1.  Run `node-debug -p 8081 --harmony server.js` to use a web based debugger. First you'll need to have run `npm i -g node-inspector` to install that program.
-
-In JavaScript, the debugger is your best friend. Love your debuggers. You will use it all the time.
+1. From the command line, `node server.js` to run.
+1. Run `node debug server.js` to debug.
+1. Run `node-debug -p 8081 server.js` to use a web based debugger. First you'll need to have run `npm i -g node-inspector` to have 'node-debug' available.
 
 # Library API reference
 
@@ -61,7 +37,7 @@ In JavaScript, the debugger is your best friend. Love your debuggers. You will u
 
 [Bluebird](https://github.com/petkaantonov/bluebird/blob/master/API.md) Promise API. Most Node modules use callback-based APIs for performance.
 Bluebird lets you easily convert them to Promise based APIs, which are much easier to use, and have better error handling and stacktraces, though they incur a small perf hit.
- 
+
 [Lodash API](https://lodash.com/docs) Utility belt library. Useful for working with arrays and objects.
 
 [Koa](http://koajs.com/) minimalist web application framework
