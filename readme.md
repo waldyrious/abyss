@@ -17,6 +17,38 @@ First install:
 `npm run build` does a single build. These are defined in package.json.
 1. Start the server. `node runner.js` This restarts the server each time you change a file. If you need to debug, `node-debug server.js` or `node server.js` will run without restarting the server on file change.
 
+## Create file secret/secret.json
+
+This is the configuration file.
+
+```
+{
+    "blobs": "/opt/abyss/blobs",
+    "cluster": false,
+    "spdy": true,
+    "http2": false,
+    "https": true,
+    "httpredirect": false,
+    "wwwredirect": false,
+    "gcmapikey": "insertkeyhere",
+    "sendverificationcodes": false,
+    "rethinkdboptions": {
+        "servers": [
+            { "host": "localhost", "port": 28015 }
+        ],
+        "db": "test",
+        "discovery": true
+    },
+    "cookieKeys": [
+        "random stuff",
+        "more random stuff"
+    ],
+    "jwtSecret": "another random string",
+    "slowstreams": false,
+    "verificationfrom": "info@abyss.online"
+}
+```
+
 ## Setup DB Schema
 
 Run schema.js. It's safe to re-run this as it won't drop anything.
