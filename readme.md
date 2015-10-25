@@ -45,7 +45,7 @@ This is the configuration file.
     ],
     "jwtSecret": "another random string",
     "slowstreams": false,
-    "verificationfrom": "info@abyss.online"
+    "verificationfrom": "info@example.com"
 }
 ```
 
