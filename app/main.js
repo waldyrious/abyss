@@ -1,4 +1,11 @@
 'use strict';
+var Promise = window.Promise = require('bluebird');
+Promise.config({
+    cancellation: true,
+    longStackTraces: true,
+    warnings: true
+})
+
 require('bootstrap/less/bootstrap.less');
 require('./less/grayscale.less');
 require('./s.css');

@@ -40,7 +40,7 @@ module.exports = {
         if (count === 1) {
             var target = document.getElementById('spinner');
             promise = Promise.delay(delay)
-            .cancellable()
+            // .cancellable()
             .then(function () {
                 spinner = new Spinner(opts).spin(target);
             })
@@ -51,12 +51,10 @@ module.exports = {
         count--;
         if (count === 0) {
             if (promise) {
-                promise.cancel()
-                .catch(function () {})
-                .finally(function () {
-                    if (spinner)
-                        spinner.stop();
-                })
+                promise.cancel();
+
+                if (spinner)
+                    spinner.stop();
             }
         }
     }
