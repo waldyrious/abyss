@@ -47,7 +47,7 @@ module.exports.controller = function(args, extras) {
 	}
 
 	ctrl.logout = function(ev) {
-		return identity.logout();		
+		return identity.logout();
 	}
 
 	var chooseEl;
@@ -104,11 +104,11 @@ module.exports.view = function(ctrl, args, extras) {
 							"color": "grey"
 						}
 					},'abyss.online'),
-					// m('li', 'Featuring ', m('a', {
-					// 	href: 'http://loungetek.com/radio/',
-					// 	target: '_blank'
-					// }, 'LoungeTek Radio')),
-					// m.component(radio)
+					m('li', 'Featuring ', m('a', {
+						href: 'http://loungetek.com/radio/',
+						target: '_blank'
+					}, 'LoungeTek Radio')),
+					m.component(radio)
 				]),
 				m('ul.nav navbar-nav navbar-right', [
 					navigator.serviceWorker ? m('li', m('a', {
