@@ -8,9 +8,6 @@ var Autolinker = require('autolinker');
 var autolinker = new Autolinker();
 var Velocity = require('velocity-animate');
 
-// streaming JSON library
-var oboe = require('oboe');
-
 // lodash modules
 var filter = require('lodash/collection/filter');
 var flatten = require('lodash/array/flatten');
@@ -205,20 +202,20 @@ module.exports.controller = function(args, extras) {
 
 	ctrl.nextPage = function() {
 		ctrl.page(ctrl.page() + 1);
-		ctrl.getMessagesStreaming()
+		ctrl.getMessages()
 	}
 
 	ctrl.previousPage = function() {
 		if (ctrl.page() !== 0) {
 			ctrl.page(ctrl.page() - 1);
-			ctrl.getMessagesStreaming()
+			ctrl.getMessages()
 		}
 	}
 
 	ctrl.allPages = function() {
 		ctrl.page(0);
 		ctrl.per_page(Infinity);
-		ctrl.getMessagesStreaming()
+		ctrl.getMessages()
 	}
 
 	ctrl.toggleEditMode = function() {
@@ -255,7 +252,7 @@ module.exports.controller = function(args, extras) {
 	}
 
 	ctrl.reselectGroup = function() {
-		ctrl.getMessagesStreaming();
+		ctrl.getMessages();
 	};
 
 	function fromMe(message) {
@@ -336,34 +333,6 @@ module.exports.controller = function(args, extras) {
 			})
 	};
 
-
-	ctrl.getMessagesStreaming = function() {
-		// Stream in first 10 messages and try to render them ASAP, then we load the rest
-		var count = 0;
-		var show = 9;
-
-		m.startComputation();
-		ctrl.working(true);
-		ctrl.messages = [];
-		oboe({
-				url: getMessagesUrl(),
-				headers: identity.oboeAuth()
-			}).node('![*]', function(item) {
-				ctrl.messages.push(item);
-				count++;
-				if (count == show) {
-					m.endComputation();
-					m.startComputation();
-				}
-				return oboe.drop;
-			})
-			.done(function() {
-				ctrl.working(false);
-				m.endComputation();
-			});
-	};
-	ctrl.getMessagesStreaming = ctrl.getMessages // quick uncommentable to disable streaming messages
-
 	ctrl.refreshConversations = function(opts) {
 		opts = opts || {force: false, loadingindicator: true};
 		if (conversations !== null && !opts.force) {
@@ -391,7 +360,7 @@ module.exports.controller = function(args, extras) {
 		opts = opts || {force: false, loadingindicator: true};
 
 		return ctrl.refreshConversations(opts)
-			.then(ctrl.getMessagesStreaming, ctrl.error)
+			.then(ctrl.getMessages, ctrl.error)
 			.then(function() {
 				if (opts.loadingindicator)
 					ctrl.working(false);
@@ -788,7 +757,7 @@ module.exports.view = function(ctrl, args, extras) {
 				m.component(fileuploader, {
 					to: ctrl.to,
 					refresh: ctrl.refresh,
-					getMessagesStreaming: ctrl.getMessagesStreaming
+					getMessages: ctrl.getMessages
 				}),
 				ctrl.messages.map(displayMessage),
 				m('div.hoveropaque btn-group', {
