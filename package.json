@@ -24,7 +24,6 @@
     "event-loop-monitor": "^0.1.0",
     "html-escaper": "^1.0.0",
     "http-proxy": "^1.12.0",
-    "http2": "^3.2.0",
     "intl": "^1.0.1",
     "json-middleware": "^1.0.2",
     "jsonwebtoken": "^5.4.1",
@@ -66,13 +65,10 @@
     "sticky-session": "^1.0.2",
     "stream-to-buffer": "^0.1.0",
     "superb": "^1.2.0",
-    "thunkify": "^2.1.2",
-    "tmp": "0.0.28",
     "uuid": "^2.0.1",
     "validate.js": "^0.9.0",
     "validator": "^4.2.1",
-    "velocity-animate": "^1.2.3",
-    "xtend": "^4.0.1"
+    "velocity-animate": "^1.2.3"
   },
   "devDependencies": {
     "base64-font-loader": "0.0.2",
