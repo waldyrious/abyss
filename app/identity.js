@@ -60,12 +60,6 @@ var withAuth = module.exports.withAuth = function withAuth (xhr) {
     return xhr;
 }
 
-module.exports.oboeAuth = function() {
-    return {
-        'Authorization': 'Bearer ' +  module.exports.jwt
-    }
-}
-
 var _me = m.prop({});
 
 var me = module.exports.me = function (item) {
