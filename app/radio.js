@@ -10,7 +10,7 @@ var audioSources = {
 		'Chillstep': 'http://208.113.211.151:443/chillstep/;',
 		'Progressive House': 'http://208.113.211.151:443/prog-house/;',
 		'Dubstep': 'http://208.113.211.151:443/dubstep/;',
-		// 'Pop': 'http://208.113.211.151:443/getpsyched/;',
+		'Deep House': 'http://208.113.211.151:443/deephouse/;',
 		'Melodic Drum & Bass': 'http://208.113.211.151:443/dnb/;',
 		'Trap': 'http://208.113.211.151:443/trap/;'
 	}
