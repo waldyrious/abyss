@@ -104,7 +104,11 @@ module.exports.view = function(ctrl, args, extras) {
 							"color": "grey"
 						}
 					},'abyss.online'),
-					m('li', 'Featuring ', m('a', {
+					m('li', {
+						style: {
+							"margin-left": '1em'
+						}
+					}, m('a', {
 						href: 'http://loungetek.com/radio/',
 						target: '_blank'
 					}, 'LoungeTek Radio')),

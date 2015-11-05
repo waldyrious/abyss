@@ -150,23 +150,27 @@ a {
 }
 
 .btn-circle {
-    width: 70px;
-    height: 70px;
+    width: 40px;
+    height: 40px;
     margin-top: 15px;
-    padding: 7px 16px;
-    border: 2px solid white;
+    margin-right: 10px;
+    padding: 7px 11px;
+    border: 2px solid rgb(6, 171, 110);
     border-radius: 100% !important;
-    font-size: 40px;
-    color: white;
+    font-size: 16px;
+    color: rgb(6, 171, 110);
     background: transparent;
     -webkit-transition: background .3s ease-in-out;
     -moz-transition: background .3s ease-in-out;
     transition: background .3s ease-in-out;
-    &:hover,
+    &:hover {
+        outline: none;
+        color: black;
+        background: rgb(6, 171, 110);
+        border-color: white;
+    }
     &:focus {
         outline: none;
-        color: white;
-        background: fade(white, 10%);
     }
     i.animated {
         -webkit-transition-property: -webkit-transform;
