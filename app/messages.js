@@ -2,33 +2,15 @@
 var Promise = require('bluebird');
 var moment = require('moment');
 var m = require('mithril');
-
-// auto convert links to HTML tags
 var Autolinker = require('autolinker');
 var autolinker = new Autolinker();
 var Velocity = require('velocity-animate');
-
-// lodash modules
-var filter = require('lodash/collection/filter');
-var flatten = require('lodash/array/flatten');
-var uniq = require('lodash/array/uniq');
-var without = require('lodash/array/without');
-var difference = require('lodash/array/difference');
-var last = require('lodash/array/last');
-var isEqual = require('lodash/lang/isEqual');
-var clone = require('lodash/lang/clone');
-var union = require('lodash/array/union');
-var merge = require('lodash/object/merge');
 var html = require('html-escaper');
 var _ = require('lodash');
-
 // my custom mithril components
 var error = require('./error');
 var fileuploader = require('./fileuploader');
-
 var resize = require('./resize');
-
-// spinner
 var spinner = require('./spinner');
 var identity = require('./identity');
 
@@ -370,7 +352,7 @@ module.exports.controller = function(args, extras) {
 
 
 	function getMessagesUrl() {
-		ctrl.to = filter(ctrl.to, function(item) {
+		ctrl.to = _.filter(ctrl.to, function(item) {
 			return item !== '' && item !== ' ' && item !== null;
 		});
 		return '/api/messages?' + m.route.buildQueryString({
@@ -416,7 +398,7 @@ module.exports.controller = function(args, extras) {
 		if (typeof to === 'string')
 			to = [to];
 
-		if (to && !isEqual(to, ctrl.to)) {
+		if (to && !_.isEqual(to, ctrl.to)) {
 			ctrl.to = to;
 			// ctrl.reselectGroup();
 		}
@@ -476,7 +458,7 @@ module.exports.view = function(ctrl, args, extras) {
 	}
 
 	function simplify(group) {
-		var ret = without(flatten(group), identity.me().id);
+		var ret = _.without(_.flatten(group), identity.me().id);
 		if (ret.length === 0)
 			ret = [identity.me().id];
 		return ret;
@@ -647,7 +629,7 @@ module.exports.view = function(ctrl, args, extras) {
 							onclick: function() {
 								ctrl.selectGroup(grouping.group)
 							},
-							class: isEqual(flatten(grouping.group), ctrl.to) ? 'btn-success' : 'btn-default'
+							class: _.isEqual(_.flatten(grouping.group), ctrl.to) ? 'btn-success' : 'btn-default'
 						}, [simplify(grouping.group).map(function(ph) {
 							// return m('div', (ctrl.getNickname(ph) ? ctrl.getNickname(ph) + ' ' : '') + renderPhoneNumber(ph))
 							return m('div', ctrl.getNickname(ph) ? ctrl.getNickname(ph) : renderPhoneNumber(ph))
