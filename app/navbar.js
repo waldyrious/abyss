@@ -109,7 +109,7 @@ module.exports.view = function(ctrl, args, extras) {
 							"margin-left": '1em'
 						}
 					}, m('a', {
-						href: 'http://loungetek.com/radio/',
+						href: 'http://loungetek.com',
 						target: '_blank'
 					}, 'LoungeTek Radio')),
 					m.component(radio)
