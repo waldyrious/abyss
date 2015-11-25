@@ -16,13 +16,5 @@
     "node_args"   : "",
     "merge_logs"  : true,
     "cwd"         : "/opt/abyss"
-  }, {
-    "name"        : "proxy",
-    "script"      : "proxy.js",
-    "args"        : [],
-    "watch"       : true,
-    "node_args"   : "",
-    "merge_logs"  : true,
-    "cwd"         : "/opt/abyss"
   }]
 }
