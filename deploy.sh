@@ -11,4 +11,4 @@ cp app/sw.js client &&
 cp app/manifest.json client &&
 cp -R client dist &&
 cp processes.json-prod dist &&
-scp -r dist/* joe@abyss.online:/opt/abyss
+scp -r dist/* joe@104.237.135.61:/opt/abyss
