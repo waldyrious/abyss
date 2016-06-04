@@ -1,6 +1,7 @@
 # Features
 
 1. Ephemeral group and individual messaging--message ownership is shared among all message recipients
+2. Push notifications
 2. Login with just your phone number (confirmed with a text code)
 3. No usernames, all identities via phone numbers
 4. Choose and change your own nickname at any time
