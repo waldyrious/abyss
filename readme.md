@@ -5,7 +5,7 @@
 3. No usernames, all identities via phone numbers
 4. Choose and change your own nickname at any time
 5. Real-time updates via socket.io and RethinkDB changefeed
-6. Drag-and-drop file uploads with automatic image resizing
+6. Drag-and-drop file uploads with automatic image rotation fix
 7. Inline display of pictures, sounds and videos. Other files are downloadable.
 8. Built-in internet radio player (needs working stations)
 
