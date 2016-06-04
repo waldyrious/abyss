@@ -1,4 +1,12 @@
+# Features
 
+1. Ephemeral group and individual messaging -- message ownership is shared among all message recipients
+2. Login with just your phone number (confirmed with a text code)
+3. No usernames, all identities are via phone numbers
+4. Choose your own nickname at any time
+5. Real-time updates via socket.io and RethinkDB changefeed
+6. Drag-and-drop file uploads with automatic image resizing
+7. Inline display of pictures, sounds and videos
 
 # Installing
 
